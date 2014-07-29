@@ -1,0 +1,53 @@
+{#
+/**
+ * @file display a single page.
+ */
+#}
+<header  id="header">
+  <div class="branding">
+    <a class="logo" href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">Aaron Froehlich</a>
+    {% if site_slogan %}
+    <div class="slogan">
+      {{ site_slogan }}
+    </div>
+    {% endif %}
+  </div>
+  {% if page.header %}
+    {{ page.header }}
+  {% endif %}
+</header>
+<div id="main-content">
+      {% if messages %}
+        <div id="messages">
+         <div class="contain clearfix">
+          {{ messages }}
+        </div>
+      </div>
+      {% endif %}
+    {% if title %}
+    <div id="title">
+      <h1 class="title" id="page-title">
+        {{ title }}
+      </h1>
+    </div>
+    {% endif %}
+    <main id="content"  role="main">
+      {% if tabs %}
+      <nav class="tabs" role="navigation">
+        {{ tabs }}
+      </nav>
+      {% endif %}
+      {{ page.help }}
+      {% if action_links %}
+      <ul class="action-links">
+        {{ action_links }}
+      </ul>
+      {% endif %}
+      {{ page.content }}
+    </main>
+    <footer  id="footer">
+          {% if page.footer %}
+          {{ page.footer }}
+          {% endif %}
+      </footer>
+  </div>

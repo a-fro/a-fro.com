@@ -1,0 +1,15 @@
+name: afro
+type: theme
+description: 'Custom theme built from Stark and Formata'
+version: 1.0
+core: 8.x
+screenshot: images/screenshot.png
+
+stylesheets:
+  all:
+    - css/style.css
+
+regions:
+  content: 'Content'
+  sidebar: 'Sidebar'
+  footer: 'Footer'
