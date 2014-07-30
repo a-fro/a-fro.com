@@ -3,20 +3,21 @@
  * @file display a single page.
  */
 #}
-<header  id="header">
-  <div class="branding">
-    <a class="logo" href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">Aaron Froehlich</a>
-    {% if site_slogan %}
-    <div class="slogan">
-      {{ site_slogan }}
+<div class="page-wrapper">
+  <header  id="header">
+    <div class="branding">
+      <a class="logo" href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">Aaron Froehlich</a>
+      {% if site_slogan %}
+      <div class="slogan">
+        {{ site_slogan }}
+      </div>
+      {% endif %}
     </div>
+    {% if page.header %}
+      {{ page.header }}
     {% endif %}
-  </div>
-  {% if page.header %}
-    {{ page.header }}
-  {% endif %}
-</header>
-<div id="main-content">
+  </header>
+  <div id="main-content">
       {% if messages %}
         <div id="messages">
          <div class="contain clearfix">
@@ -45,9 +46,10 @@
       {% endif %}
       {{ page.content }}
     </main>
-    <footer  id="footer">
-          {% if page.footer %}
-          {{ page.footer }}
-          {% endif %}
-      </footer>
   </div>
+  <footer  id="footer">
+    {% if page.footer %}
+    {{ page.footer }}
+    {% endif %}
+  </footer>
+</div>

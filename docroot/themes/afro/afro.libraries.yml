@@ -9,6 +9,7 @@ afro.corescripts:
     js/rainbow/language/javascript.js: {}
     js/rainbow/language/css.js: {}
     js/rainbow/language/php.js: {}
+    js/rainbow/language/shell.js: {}
     js/script.js: {}
   dependencies:
     - core/jquery
