@@ -1,8 +1,11 @@
 *.sass-cache
 docroot/.drupal_streamline_guard_running
 
-# Ignore default folder
-docroot/sites/default/
+# Ignore files folder
+docroot/sites/default/files/
+
+# Ignore settings
+docroot/sites/default/settings.php
 
 # Ignore the stylesheets
 docroot/themes/afro/css/
