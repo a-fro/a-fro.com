@@ -29,7 +29,7 @@ class UserAdminTest extends WebTestBase {
   function testUserAdmin() {
     $user_a = $this->drupalCreateUser();
     $user_a->name = 'User A';
-    $user_a->mail = $this->randomName() . '@example.com';
+    $user_a->mail = $this->randomMachineName() . '@example.com';
     $user_a->save();
     $user_b = $this->drupalCreateUser(array('administer taxonomy'));
     $user_b->name = 'User B';
@@ -54,6 +54,14 @@ class UserAdminTest extends WebTestBase {
     // Test for existence of edit link in table.
     $link = l(t('Edit'), "user/" . $user_a->id() . "/edit", array('query' => array('destination' => 'admin/people')));
     $this->assertRaw($link, 'Found user A edit link on admin users page');
+
+    // Test exposed filter elements.
+    foreach (array('user', 'role', 'permission', 'status') as $field) {
+      $this->assertField("edit-$field", "$field exposed filter found.");
+    }
+    // Make sure the reduce duplicates element from the ManyToOneHelper is not
+    // displayed.
+    $this->assertNoField('edit-reduce-duplicates', 'Reduce duplicates form element not found in exposed filters.');
 
     // Filter the users by name/email.
     $this->drupalGet('admin/people', array('query' => array('user' => $user_a->getUsername())));
@@ -149,15 +157,15 @@ class UserAdminTest extends WebTestBase {
       ->save();
     // Set the site and notification email addresses.
     $system = \Drupal::config('system.site');
-    $server_address = $this->randomName() . '@example.com';
-    $notify_address = $this->randomName() . '@example.com';
+    $server_address = $this->randomMachineName() . '@example.com';
+    $notify_address = $this->randomMachineName() . '@example.com';
     $system
       ->set('mail', $server_address)
       ->set('mail_notification', $notify_address)
       ->save();
     // Register a new user account.
     $edit = array();
-    $edit['name'] = $name = $this->randomName();
+    $edit['name'] = $name = $this->randomMachineName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $subject = 'Account details for ' . $edit['name'] . ' at ' . $system->get('name') . ' (pending admin approval)';

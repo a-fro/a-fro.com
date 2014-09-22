@@ -13,7 +13,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\Url
+ * @coversDefaultClass \Drupal\Component\Utility\UrlHelper
  * @group Utility
  */
 class UrlHelperTest extends UnitTestCase {
@@ -270,6 +270,22 @@ class UrlHelperTest extends UnitTestCase {
             'destination' => 'home',
           ),
           'fragment' => 'footer',
+        ),
+      ),
+      array(
+        'http://',
+        array(
+          'path' => '',
+          'query' => array(),
+          'fragment' => '',
+        ),
+      ),
+      array(
+        'https://',
+        array(
+          'path' => '',
+          'query' => array(),
+          'fragment' => '',
         ),
       ),
       array(

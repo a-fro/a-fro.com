@@ -33,9 +33,11 @@ services:
   user.data:
     class: Drupal\user\UserData
     arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
   user.autocomplete:
     class: Drupal\user\UserAutocomplete
-    arguments: ['@database', '@config.factory', '@entity.manager', '@entity.query']
+    arguments: ['@config.factory', '@entity.manager', '@entity.query']
   user_maintenance_mode_subscriber:
     class: Drupal\user\EventSubscriber\MaintenanceModeSubscriber
     arguments: ['@maintenance_mode', '@current_user']
@@ -55,6 +57,11 @@ services:
   user.tempstore:
     class: Drupal\user\TempStoreFactory
     arguments: ['@serialization.phpserialize', '@database', '@lock', '%user.tempstore.expire%']
+    tags:
+      - { name: backend_overridable }
+  user.permissions:
+    class: Drupal\user\PermissionHandler
+    arguments: ['@module_handler', '@string_translation', '@controller_resolver']
 
 parameters:
   user.tempstore.expire: 604800

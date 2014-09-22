@@ -9,10 +9,12 @@ namespace Drupal\views\Plugin\views\query;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\Plugin\views\HandlerBase;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
@@ -200,7 +202,7 @@ class Sql extends QueryPluginBase {
   /**
    * Add settings for the ui.
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $form['disable_sql_rewrite'] = array(
@@ -240,9 +242,9 @@ class Sql extends QueryPluginBase {
   /**
    * Special submit handling.
    */
-  public function submitOptionsForm(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $element = array('#parents' => array('query', 'options', 'query_tags'));
-    $value = explode(',', NestedArray::getValue($form_state['values'], $element['#parents']));
+    $value = explode(',', NestedArray::getValue($form_state->getValues(), $element['#parents']));
     $value = array_filter(array_map('trim', $value));
     form_set_value($element, $value, $form_state);
   }
@@ -1427,7 +1429,12 @@ class Sql extends QueryPluginBase {
 
         $result = $query->execute();
         $result->setFetchMode(\PDO::FETCH_CLASS, 'Drupal\views\ResultRow');
+
+        // Setup the result row objects.
         $view->result = iterator_to_array($result);
+        array_walk($view->result, function(ResultRow $row, $index) {
+          $row->index = $index;
+        });
 
         $view->pager->postExecute($view->result);
         $view->pager->updatePageInfo();

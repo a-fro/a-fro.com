@@ -7,6 +7,7 @@
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DrupalKernel;
@@ -25,8 +26,11 @@ const DRUPAL_MINIMUM_PHP = '5.4.2';
 
 /**
  * Minimum recommended value of PHP memory_limit.
+ *
+ * @todo Reduce the memory required to install on some environments in
+ *   https://www.drupal.org/node/2289201 and then decrease this limit.
  */
-const DRUPAL_MINIMUM_PHP_MEMORY_LIMIT = '32M';
+const DRUPAL_MINIMUM_PHP_MEMORY_LIMIT = '64M';
 
 /**
  * Error reporting level: display no errors.
@@ -716,19 +720,6 @@ function format_string($string, array $args = array()) {
 }
 
 /**
- * Encodes special characters in a plain-text string for display as HTML.
- *
- * @see drupal_validate_utf8()
- * @ingroup sanitization
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Utility\String::checkPlain().
- */
-function check_plain($text) {
-  return String::checkPlain($text);
-}
-
-/**
  * Checks whether a string is valid UTF-8.
  *
  * All functions designed to filter input should use drupal_validate_utf8
@@ -901,8 +892,27 @@ function watchdog($type, $message, array $variables = array(), $severity = WATCH
  *
  * @return array|null
  *   A multidimensional array with keys corresponding to the set message types.
- *   The indexed array values of each contain the set messages for that type.
- *   Or, if there are no messages set, the function returns NULL.
+ *   The indexed array values of each contain the set messages for that type,
+ *   and each message is an associative array with the following format:
+ *   - safe: Boolean indicating whether the message string has been marked as
+ *     safe. Non-safe strings will be escaped automatically.
+ *   - message: The message string.
+ *   So, the following is an example of the full return array structure:
+ *   @code
+ *     array(
+ *       'status' => array(
+ *         array(
+ *           'safe' => TRUE,
+ *           'message' => 'A <em>safe</em> markup string.',
+ *         ),
+ *         array(
+ *           'safe' => FALSE,
+ *           'message' => "$arbitrary_user_input to escape.",
+ *         ),
+ *       ),
+ *     );
+ *   @endcode
+ *   If there are no messages set, the function returns NULL.
  *
  * @see drupal_get_messages()
  * @see theme_status_messages()
@@ -914,7 +924,10 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
     }
 
     if ($repeat || !in_array($message, $_SESSION['messages'][$type])) {
-      $_SESSION['messages'][$type][] = $message;
+      $_SESSION['messages'][$type][] = array(
+        'safe' => SafeMarkup::isSafe($message),
+        'message' => $message,
+      );
     }
 
     // Mark this page as being uncacheable.
@@ -941,17 +954,25 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
  *   intact. Defaults to TRUE.
  *
  * @return array
- *   A multidimensional array with keys corresponding to the set message types.
- *   The indexed array values of each contain the set messages for that type.
- *   The messages returned are limited to the type specified in the $type
- *   parameter. If there are no messages of the specified type, an empty array
- *   is returned.
+ *   An associative, nested array of messages grouped by message type, with
+ *   the top-level keys as the message type. The messages returned are
+ *   limited to the type specified in the $type parameter, if any. If there
+ *   are no messages of the specified type, an empty array is returned. See
+ *   drupal_set_message() for the array structure of individual messages.
  *
  * @see drupal_set_message()
  * @see theme_status_messages()
  */
 function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
   if ($messages = drupal_set_message()) {
+    foreach ($messages as $message_type => $message_typed_messages) {
+      foreach ($message_typed_messages as $key => $message) {
+        if ($message['safe']) {
+          $message['message'] = SafeMarkup::set($message['message']);
+        }
+        $messages[$message_type][$key] = $message['message'];
+      }
+    }
     if ($type) {
       if ($clear_queue) {
         unset($_SESSION['messages'][$type]);
@@ -983,7 +1004,7 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
  * @param $phase
  *   A constant telling which phase to bootstrap to. Possible values:
  *   - DRUPAL_BOOTSTRAP_CONFIGURATION: Initializes configuration.
- *   - DRUPAL_BOOTSTRAP_KERNEL: Initalizes a kernel.
+ *   - DRUPAL_BOOTSTRAP_KERNEL: Initializes a kernel.
  *
  * @return int
  *   The most recently completed phase.
@@ -1003,7 +1024,8 @@ function drupal_bootstrap($phase = NULL) {
 
       switch ($current_phase) {
         case DRUPAL_BOOTSTRAP_CONFIGURATION:
-          $kernel = DrupalKernel::createFromRequest($request, drupal_classloader(), 'prod');
+          $classloader = require __DIR__ . '/../vendor/autoload.php';
+          $kernel = DrupalKernel::createFromRequest($request, $classloader, 'prod');
           break;
 
         case DRUPAL_BOOTSTRAP_KERNEL:
@@ -1378,50 +1400,6 @@ function _current_path($path = NULL) {
 }
 
 /**
- * Initializes and returns the class loader.
- *
- * The class loader is responsible for lazy-loading all PSR-0 compatible
- * classes, interfaces, and traits (PHP 5.4 and later). It's only dependency
- * is DRUPAL_ROOT. Otherwise it may be called as early as possible.
- *
- * @param $class_loader
- *   The name of class loader to use. This can be used to change the class
- *   loader class when calling drupal_classloader() from settings.php. It is
- *   ignored otherwise.
- *
- * @return \Composer\Autoload\ClassLoader
- *   A ClassLoader class instance (or extension thereof).
- */
-function drupal_classloader($class_loader = NULL) {
-  // By default, use the ClassLoader which is best for development, as it does
-  // not break when code is moved on the file system. However, as it is slow,
-  // allow to use the APC class loader in production.
-  static $loader;
-
-  if (!isset($loader)) {
-
-    // Retrieve the Composer ClassLoader for loading classes.
-    $loader = include __DIR__ . '/../vendor/autoload.php';
-
-    // Register the class loader.
-    // When configured to use APC, the ApcClassLoader is registered instead.
-    // Note that ApcClassLoader decorates ClassLoader and only provides the
-    // findFile() method, but none of the others. The actual registry is still
-    // in ClassLoader.
-    if (!isset($class_loader)) {
-      $class_loader = Settings::get('class_loader', 'default');
-    }
-    if ($class_loader === 'apc') {
-      require_once __DIR__ . '/../vendor/symfony/class-loader/Symfony/Component/ClassLoader/ApcClassLoader.php';
-      $apc_loader = new ApcClassLoader('drupal.' . Settings::getHashSalt(), $loader);
-      $loader->unregister();
-      $apc_loader->register();
-    }
-  }
-  return $loader;
-}
-
-/**
  * Registers an additional namespace.
  *
  * @param string $name
@@ -1430,7 +1408,7 @@ function drupal_classloader($class_loader = NULL) {
  *   The relative path to the Drupal component in the filesystem.
  */
 function drupal_classloader_register($name, $path) {
-  $loader = drupal_classloader();
+  $loader = \Drupal::service('class_loader');
   $loader->addPsr4('Drupal\\' . $name . '\\', DRUPAL_ROOT . '/' . $path . '/src');
 }
 
@@ -1509,7 +1487,7 @@ function drupal_classloader_register($name, $path) {
  * static $foo = &drupal_static(__FUNCTION__);
  * @endcode
  * However, the above line of code does not work, because PHP only allows static
- * variables to be initializied by literal values, and does not allow static
+ * variables to be initialized by literal values, and does not allow static
  * variables to be assigned to references.
  * - http://php.net/manual/language.variables.scope.php#language.variables.scope.static
  * - http://php.net/manual/language.variables.scope.php#language.variables.scope.references
@@ -1518,13 +1496,13 @@ function drupal_classloader_register($name, $path) {
  *
  * Example:
  * @code
- * function user_access($string, $account = NULL) {
+ * function example_default_format_type() {
  *   // Use the advanced drupal_static() pattern, since this is called very often.
  *   static $drupal_static_fast;
  *   if (!isset($drupal_static_fast)) {
- *     $drupal_static_fast['perm'] = &drupal_static(__FUNCTION__);
+ *     $drupal_static_fast['format_type'] = &drupal_static(__FUNCTION__);
  *   }
- *   $perm = &$drupal_static_fast['perm'];
+ *   $format_type = &$drupal_static_fast['format_type'];
  *   ...
  * }
  * @endcode
@@ -1537,11 +1515,9 @@ function drupal_classloader_register($name, $path) {
  * @param $default_value
  *   Optional default value.
  * @param $reset
- *   TRUE to reset a specific named variable, or all variables if $name is NULL.
- *   Resetting every variable should only be used, for example, for running
- *   unit tests with a clean environment. Should be used only though via
- *   function drupal_static_reset() and the return value should not be used in
- *   this case.
+ *   TRUE to reset one or all variables(s). This parameter is only used
+ *   internally and should not be passed in; use drupal_static_reset() instead.
+ *   (This function's return value should not be used when TRUE is passed in.)
  *
  * @return
  *   Returns a variable by reference.
@@ -1586,6 +1562,8 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
  *
  * @param $name
  *   Name of the static variable to reset. Omit to reset all variables.
+ *   Resetting all variables should only be used, for example, for running
+ *   unit tests with a clean environment.
  */
 function drupal_static_reset($name = NULL) {
   drupal_static($name, NULL, TRUE);

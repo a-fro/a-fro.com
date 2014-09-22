@@ -23,7 +23,7 @@ class ForumIndexTest extends WebTestBase {
    */
   public static $modules = array('taxonomy', 'comment', 'forum');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a test user.
@@ -39,10 +39,10 @@ class ForumIndexTest extends WebTestBase {
     $tid = 1;
 
     // Create a test node.
-    $title = $this->randomName(20);
+    $title = $this->randomMachineName(20);
     $edit = array(
       'title[0][value]' => $title,
-      'body[0][value]' => $this->randomName(200),
+      'body[0][value]' => $this->randomMachineName(200),
     );
 
     // Create the forum topic, preselecting the forum ID via a URL parameter.

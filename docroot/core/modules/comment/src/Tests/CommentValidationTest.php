@@ -27,7 +27,7 @@ class CommentValidationTest extends EntityUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
@@ -46,7 +46,7 @@ class CommentValidationTest extends EntityUnitTestBase {
     ))->save();
 
     // Add comment field to content.
-    $this->entityManager->getStorage('field_config')->create(array(
+    $this->entityManager->getStorage('field_storage_config')->create(array(
       'entity_type' => 'node',
       'name' => 'comment',
       'type' => 'comment',
@@ -79,7 +79,7 @@ class CommentValidationTest extends EntityUnitTestBase {
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
-      'comment_body' => $this->randomName(),
+      'comment_body' => $this->randomMachineName(),
     ));
 
     $violations = $comment->validate();
@@ -112,7 +112,7 @@ class CommentValidationTest extends EntityUnitTestBase {
     $this->assertEqual($violations[0]->getMessage(), t('This value is not a valid email address.'));
 
     $comment->set('mail', NULL);
-    $comment->set('homepage', 'http://example.com/' . $this->randomName(237));
+    $comment->set('homepage', 'http://example.com/' . $this->randomMachineName(237));
     $this->assertLengthViolation($comment, 'homepage', 255);
 
     $comment->set('homepage', 'invalid');

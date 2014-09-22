@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\style;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
@@ -17,7 +18,7 @@ use Drupal\views\ViewExecutable;
  * @{
  * Plugins that control how the collection of results is rendered in a view.
  *
- * Style plugins control a view is displayed. For the most part, they are
+ * Style plugins control how a view is displayed. For the most part, they are
  * object wrappers around theme templates. Examples of styles include HTML
  * lists, tables, full or teaser content views, etc.
  *
@@ -28,7 +29,7 @@ use Drupal\views\ViewExecutable;
  * information.
  *
  * Style plugins extend \Drupal\views\Plugin\views\style\StylePluginBase. They
- * must be annotated with \Drupal\views\Plugin\Annotation\ViewsStyle
+ * must be annotated with \Drupal\views\Annotation\ViewsStyle
  * annotation, and they must be in namespace directory Plugin\views\style.
  *
  * @ingroup views_plugins
@@ -102,6 +103,13 @@ abstract class StylePluginBase extends PluginBase {
    * @see StylePluginBase::renderGroupingSets()
    */
   protected $groupingTheme = 'views_view_grouping';
+
+  /**
+   * Should field labels be enabled by default.
+   *
+   * @var bool
+   */
+  protected $defaultFieldLabels = FALSE;
 
   /**
    * Overrides \Drupal\views\Plugin\views\PluginBase::init().
@@ -189,6 +197,15 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
+   * Return TRUE if this style enables field labels by default.
+   *
+   * @return bool
+   */
+  public function defaultFieldLabels() {
+    return $this->defaultFieldLabels;
+  }
+
+  /**
    * Return the token replaced row class for the specified row.
    */
   public function getRowClass($row_index) {
@@ -244,7 +261,7 @@ abstract class StylePluginBase extends PluginBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     // Only fields-based views can handle grouping.  Style plugins can also exclude
     // themselves from being groupable by setting their "usesGrouping" property
@@ -335,13 +352,14 @@ abstract class StylePluginBase extends PluginBase {
     }
   }
 
-  public function validateOptionsForm(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Don't run validation on style plugins without the grouping setting.
-    if (isset($form_state['values']['style_options']['grouping'])) {
+    if ($form_state->hasValue(array('style_options', 'grouping'))) {
       // Don't save grouping if no field is specified.
-      foreach ($form_state['values']['style_options']['grouping'] as $index => $grouping) {
+      $groupings = $form_state->getValue(array('style_options', 'grouping'));
+      foreach ($groupings as $index => $grouping) {
         if (empty($grouping['field'])) {
-          unset($form_state['values']['style_options']['grouping'][$index]);
+          $form_state->unsetValue(array('style_options', 'grouping', $index));
         }
       }
     }
@@ -352,12 +370,12 @@ abstract class StylePluginBase extends PluginBase {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param string $type
    *    The display type, either block or page.
    */
-  public function wizardForm(&$form, &$form_state, $type) {
+  public function wizardForm(&$form, FormStateInterface $form_state, $type) {
   }
 
   /**
@@ -365,8 +383,8 @@ abstract class StylePluginBase extends PluginBase {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param \Drupal\views\Plugin\views\wizard\WizardInterface $wizard
    *   The current used wizard.
    * @param array $display_options
@@ -375,7 +393,7 @@ abstract class StylePluginBase extends PluginBase {
    * @param string $display_type
    *   The display type, either block or page.
    */
-  public function wizardSubmit(&$form, &$form_state, WizardInterface $wizard, &$display_options, $display_type) {
+  public function wizardSubmit(&$form, FormStateInterface $form_state, WizardInterface $wizard, &$display_options, $display_type) {
   }
 
   /**
@@ -474,9 +492,7 @@ abstract class StylePluginBase extends PluginBase {
         if ($this->usesRowPlugin()) {
           foreach ($set['rows'] as $index => $row) {
             $this->view->row_index = $index;
-            $render = $this->view->rowPlugin->render($row);
-            // Row render arrays cannot be contained by style render arrays.
-            $set['rows'][$index] = drupal_render($render);
+            $set['rows'][$index] = $this->view->rowPlugin->render($row);
           }
         }
 

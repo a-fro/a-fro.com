@@ -11,7 +11,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests functionality of drupal_rebuild_form().
+ * Tests functionality of \Drupal\Core\Form\FormBuilderInterface::rebuildForm().
  *
  * @group Form
  * @todo Add tests for other aspects of form rebuilding.
@@ -25,7 +25,7 @@ class RebuildTest extends WebTestBase {
    */
   public static $modules = array('node', 'form_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
@@ -65,19 +65,17 @@ class RebuildTest extends WebTestBase {
   function testPreserveFormActionAfterAJAX() {
     // Create a multi-valued field for 'page' nodes to use for Ajax testing.
     $field_name = 'field_ajax_test';
-    $field = array(
+    entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'node',
       'type' => 'text',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    );
-    entity_create('field_config', $field)->save();
-    $instance = array(
+    ))->save();
+    entity_create('field_instance_config', array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => 'page',
-    );
-    entity_create('field_instance_config', $instance)->save();
+    ))->save();
     entity_get_form_display('node', 'page', 'default')
       ->setComponent($field_name, array('type' => 'text_textfield'))
       ->save();

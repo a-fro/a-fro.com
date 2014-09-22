@@ -6,8 +6,9 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Render\Element;
 
 /**
@@ -19,7 +20,7 @@ use Drupal\Core\Render\Element;
  * entity storage classes; see the
  * @link entity_api Entity API topic @endlink for more information. Most
  * entities use or extend the default classes:
- * \Drupal\Core\Entity\ContentEntityDatabaseStorage for content entities, and
+ * \Drupal\Core\Entity\Sql\SqlContentEntityStorage for content entities, and
  * \Drupal\Core\Config\Entity\ConfigEntityStorage for configuration entities.
  * For these entities, there is a set of hooks that is invoked for each
  * CRUD operation, which module developers can implement to affect these
@@ -132,7 +133,7 @@ use Drupal\Core\Render\Element;
  *
  * Some specific entity types invoke hooks during preSave() or postSave()
  * operations. Examples:
- * - Field configuration preSave(): hook_field_config_update_forbid()
+ * - Field configuration preSave(): hook_field_storage_config_update_forbid()
  * - Node postSave(): hook_node_access_records() and
  *   hook_node_access_records_alter()
  * - Config entities that are acting as entity bundles, in postSave():
@@ -236,6 +237,274 @@ use Drupal\Core\Render\Element;
  */
 
 /**
+ * @defgroup entity_api Entity API
+ * @{
+ * Describes how to define and manipulate content and configuration entities.
+ *
+ * Entities, in Drupal, are objects that are used for persistent storage of
+ * content and configuration information. See the
+ * @link info_types Information types topic @endlink for an overview of the
+ * different types of information, and the
+ * @link config_api Configuration API topic @endlink for more about the
+ * configuration API.
+ *
+ * Each entity is an instance of a particular "entity type". Some content entity
+ * types have sub-types, which are known as "bundles", while for other entity
+ * types, there is only a single bundle. For example, the Node content entity
+ * type, which is used for the main content pages in Drupal, has bundles that
+ * are known as "content types", while the User content type, which is used for
+ * user accounts, has only one bundle.
+ *
+ * The sections below have more information about entities and the Entity API;
+ * for more detailed information, see https://drupal.org/developing/api/entity
+ *
+ * @section define Defining an entity type
+ * Entity types are defined by modules, using Drupal's Plugin API (see the
+ * @link plugin_api Plugin API topic @endlink for more information about plugins
+ * in general). Here are the steps to follow to define a new entity type:
+ * - Choose a unique machine name, or ID, for your entity type. This normally
+ *   starts with (or is the same as) your module's machine name. It should be
+ *   as short as possible, and may not exceed 32 characters.
+ * - Define an interface for your entity's get/set methods, extending either
+ *   \Drupal\Core\Config\Entity\ConfigEntityInterface or
+ *   \Drupal\Core\Entity\ContentEntityInterface.
+ * - Define a class for your entity, implementing your interface and extending
+ *   either \Drupal\Core\Config\Entity\ConfigEntityBase or
+ *   \Drupal\Core\Entity\ContentEntityBase, with annotation for
+ *   \@ConfigEntityType or \@ContentEntityType in its documentation block.
+ * - The 'id' annotation gives the entity type ID, and the 'label' annotation
+ *   gives the human-readable name of the entity type. If you are defining a
+ *   content entity type that uses bundles, the 'bundle_label' annotation gives
+ *   the human-readable name to use for a bundle of this entity type (for
+ *   example, "Content type" for the Node entity).
+ * - The annotation will refer to several controller classes, which you will
+ *   also need to define:
+ *   - list_builder: Define a class that extends
+ *     \Drupal\Core\Config\Entity\ConfigEntityListBuilder (for configuration
+ *     entities) or \Drupal\Core\Entity\EntityListBuilder (for content
+ *     entities), to provide an administrative overview for your entities.
+ *   - add and edit forms, or default form: Define a class (or two) that
+ *     extend(s) \Drupal\Core\Entity\EntityForm to provide add and edit forms
+ *     for your entities. For content entities, base class
+ *     \Drupal\Core\Entity\ContentEntityForm is a better starting point.
+ *   - delete form: Define a class that extends
+ *     \Drupal\Core\Entity\EntityConfirmFormBase to provide a delete
+ *     confirmation form for your entities.
+ *   - view_builder: For content entities and config entities that need to be
+ *     viewed, define a class that implements
+ *     \Drupal\Core\Entity\EntityViewBuilderInterface (usually extending
+ *     \Drupal\Core\Entity\EntityViewBuilder), to display a single entity.
+ *   - translation: For translatable content entities (if the 'translatable'
+ *     annotation has value TRUE), define a class that extends
+ *     \Drupal\content_translation\ContentTranslationHandler, to translate
+ *     the content. Configuration translation is handled automatically by the
+ *     Configuration Translation module, without the need of a controller class.
+ *   - access: If your configuration entity has complex permissions, you might
+ *     need an access control handling, implementing
+ *     \Drupal\Core\Entity\EntityAccessControlHandlerInterface, but most entities
+ *     can just use the 'admin_permission' annotation instead. Note that if you
+ *     are creating your own access control handler, you should override the
+ *     checkAccess() and checkCreateAccess() methods, not access().
+ *   - storage: A class implementing
+ *     \Drupal\Core\Entity\EntityStorageInterface. If not specified, content
+ *     entities will use \Drupal\Core\Entity\Sql\SqlContentEntityStorage, and
+ *     config entities will use \Drupal\Core\Config\Entity\ConfigEntityStorage.
+ *     You can extend one of these classes to provide custom behavior.
+ *   - views_data: A class implementing \Drupal\views\EntityViewsDataInterface
+ *     to provide views data for the entity type. You can autogenerate most of
+ *     the views data by extending \Drupal\views\EntityViewsData.
+ * - For content entities, the annotation will refer to a number of database
+ *   tables and their fields. These annotation properties, such as 'base_table',
+ *   'data_table', 'entity_keys', etc., are documented on
+ *   \Drupal\Core\Entity\EntityType. Your module will also need to set up its
+ *   database tables using hook_schema().
+ * - For content entities that are displayed on their own pages, the annotation
+ *   will refer to a 'uri_callback' function, which takes an object of the
+ *   entity interface you have defined as its parameter, and returns routing
+ *   information for the entity page; see node_uri() for an example. You will
+ *   also need to add a corresponding route to your module's routing.yml file;
+ *   see the entity.node.canonical route in node.routing.yml for an example, and see
+ *   @ref sec_routes below for some notes.
+ * - Define routing and links for the various URLs associated with the entity.
+ *   These go into the 'links' annotation, with the link type as the key, and
+ *   the route machine name (defined in your module's routing.yml file) as the
+ *   value; see @ref sec_routes below for some routing notes. Typical link
+ *   types are:
+ *   - canonical: Default link, either to view (if entities are viewed on their
+ *     own pages) or edit the entity.
+ *   - delete-form: Confirmation form to delete the entity.
+ *   - edit-form: Editing form.
+ *   - Other link types specific to your entity type can also be defined.
+ * - If your content entity is fieldable, provide 'field_ui_base_route'
+ *   annotation, giving the name of the route that the Manage Fields, Manage
+ *   Display, and Manage Form Display pages from the Field UI module will be
+ *   attached to. This is usually the bundle settings edit page, or an entity
+ *   type settings page if there are no bundles.
+ * - If your content entity has bundles, you will also need to define a second
+ *   plugin to handle the bundles. This plugin is itself a configuration entity
+ *   type, so follow the steps here to define it. The machine name ('id'
+ *   annotation) of this configuration entity class goes into the
+ *   'bundle_entity_type' annotation on the entity type class. For example, for
+ *   the Node entity, the bundle class is \Drupal\node\Entity\NodeType, whose
+ *   machine name is 'node_type'. This is the annotation value for
+ *   'bundle_entity_type' on the \Drupal\node\Entity\Node class. Also, the
+ *   bundle config entity type annotation must have a 'bundle_of' entry,
+ *   giving the machine name of the entity type it is acting as a bundle for.
+ * - Additional annotations can be seen on entity class examples such as
+ *   \Drupal\node\Entity\Node (content) and \Drupal\user\Entity\Role
+ *   (configuration). These annotations are documented on
+ *   \Drupal\Core\Entity\EntityType.
+ *
+ * @section sec_routes Entity routes
+ * Entity routes, like other routes, are defined in *.routing.yml files; see
+ * the @link menu Menu and routing @endlink topic for more information. Here
+ * is a typical entry, for the block configure form:
+ * @code
+ * entity.block.edit_form:
+ *   path: '/admin/structure/block/manage/{block}'
+ *   defaults:
+ *     _entity_form: 'block.default'
+ *     _title: 'Configure block'
+ *   requirements:
+ *     _entity_access: 'block.update'
+ * @endcode
+ * Some notes:
+ * - path: The {block} in the path is a placeholder, which (for an entity) must
+ *   always take the form of {machine_name_of_entity_type}. In the URL, the
+ *   placeholder value will be the ID of an entity item. When the route is used,
+ *   the entity system will load the corresponding entity item and pass it in as
+ *   an object to the controller for the route.
+ * - defaults: For entity form routes, use _entity_form rather than the generic
+ *   _content or _form. The value is composed of the entity type machine name
+ *   and a form controller type from the entity annotation (see @ref define
+ *   above more more on controllers and annotation). So, in this example,
+ *   block.default refers to the 'default' form controller on the block entity
+ *   type, whose annotation contains:
+ *   @code
+ *   handlers = {
+ *     "form" = {
+ *       "default" = "Drupal\block\BlockForm",
+ *   @endcode
+ *
+ * @section bundle Defining a content entity bundle
+ * For entity types that use bundles, such as Node (bundles are content types)
+ * and Taxonomy (bundles are vocabularies), modules and install profiles can
+ * define bundles by supplying default configuration in their config/install
+ * directories. (See the @link config_api Configuration API topic @endlink for
+ * general information about configuration.)
+ *
+ * There are several good examples of this in Drupal Core:
+ * - The Forum module defines a content type in node.type.forum.yml and a
+ *   vocabulary in taxonomy.vocabulary.forums.yml
+ * - The Book module defines a content type in node.type.book.yml
+ * - The Standard install profile defines Page and Article content types in
+ *   node.type.page.yml and node.type.article.yml, a Tags vocabulary in
+ *   taxonomy.vocabulary.tags.yml, and a Node comment type in
+ *   comment.type.comment.yml. This profile's configuration is especially
+ *   instructive, because it also adds several fields to the Article type, and
+ *   it sets up view and form display modes for the node types.
+ *
+ * @section load_query Loading, querying, and rendering entities
+ * To load entities, use the entity storage manager, which is an object
+ * implementing \Drupal\Core\Entity\EntityStorageInterface that you can
+ * retrieve with:
+ * @code
+ * $storage = \Drupal::entityManager()->getStorage('your_entity_type');
+ * // Or if you have a $container variable:
+ * $storage = $container->get('entity.manager')->getStorage('your_entity_type');
+ * @endcode
+ * Here, 'your_entity_type' is the machine name of your entity type ('id'
+ * annotation on the entity class), and note that you should use dependency
+ * injection to retrieve this object if possible. See the
+ * @link container Services and Dependency Injection topic @endlink for more
+ * about how to properly retrieve services.
+ *
+ * To query to find entities to load, use an entity query, which is a object
+ * implementing \Drupal\Core\Entity\Query\QueryInterface that you can retrieve
+ * with:
+ * @code
+ * // Simple query:
+ * $query = \Drupal::entityQuery('your_entity_type');
+ * // Or, if you have a $container variable:
+ * $query_service = $container->get('entity.query');
+ * $query = $query_service->get('your_entity_type');
+ * @endcode
+ * If you need aggregation, there is an aggregate query avaialable, which
+ * implements \Drupal\Core\Entity\Query\QueryAggregateInterface:
+ * @code
+ * $query \Drupal::entityQueryAggregate('your_entity_type');
+ * // Or:
+ * $query = $query_service->getAggregate('your_entity_type');
+ * @endcode
+ * Also, you should use dependency injection to get this object if
+ * possible; the service you need is entity.query, and its methods getQuery()
+ * or getAggregateQuery() will get the query object.
+ *
+ * In either case, you can then add conditions to your query, using methods
+ * like condition(), exists(), etc. on $query; add sorting, pager, and range
+ * if needed, and execute the query to return a list of entity IDs that match
+ * the query.
+ *
+ * Here is an example, using the core File entity:
+ * @code
+ * $fids = Drupal::entityQuery('file')
+ *   ->condition('status', FILE_STATUS_PERMANENT, '<>')
+ *   ->condition('changed', REQUEST_TIME - $age, '<')
+ *   ->range(0, 100)
+ *   ->execute();
+ * $files = $storage->loadMultiple($fids);
+ * @endcode
+ *
+ * The normal way of viewing entities is by using a route, as described in the
+ * sections above. If for some reason you need to render an entity in code in a
+ * particular view mode, you can use an entity view builder, which is an object
+ * implementing \Drupal\Core\Entity\EntityViewBuilderInterface that you can
+ * retrieve with:
+ * @code
+ * $view_builder = \Drupal::entityManager()->getViewBuilder('your_entity_type');
+ * // Or if you have a $container variable:
+ * $view_builder = $container->get('entity.manager')->getViewBuilder('your_entity_type');
+ * @endcode
+ * Then, to build and render the entity:
+ * @code
+ * // You can omit the language ID if the default language is being used.
+ * $build = $view_builder->view($entity, 'view_mode_name', $language->id);
+ * // $build is a render array.
+ * $rendered = drupal_render($build);
+ * @endcode
+ *
+ * @section sec_access Access checking on entities
+ * Entity types define their access permission scheme in their annotation.
+ * Access permissions can be quite complex, so you should not assume any
+ * particular permission scheme. Instead, once you have an entity object
+ * loaded, you can check for permission for a particular operation (such as
+ * 'view') at the entity or field level by calling:
+ * @code
+ * $entity->access($operation);
+ * $entity->nameOfField->access($operation);
+ * @endcode
+ * The interface related to access checking in entities and fields is
+ * \Drupal\Core\Access\AccessibleInterface.
+ *
+ * The default entity access control handler invokes two hooks while checking
+ * access on a single entity: hook_entity_access() is invoked first, and
+ * then hook_ENTITY_TYPE_access() (where ENTITY_TYPE is the machine name
+ * of the entity type). If no module returns a TRUE or FALSE value from
+ * either of these hooks, then the entity's default access checking takes
+ * place. For create operations (creating a new entity), the hooks that
+ * are invoked are hook_entity_create_access() and
+ * hook_ENTITY_TYPE_create_access() instead.
+ *
+ * The Node entity type has a complex system for determining access, which
+ * developers can interact with. This is described in the
+ * @link node_access Node access topic. @endlink
+ *
+ * @see i18n
+ * @see entity_crud
+ * @}
+ */
+
+/**
  * @addtogroup hooks
  * @{
  */
@@ -252,18 +521,18 @@ use Drupal\Core\Render\Element;
  * @param string $langcode
  *    The code of the language $entity is accessed in.
  *
- * @return bool|null
- *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
- *   deny access.
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *    The access result.
  *
- * @see \Drupal\Core\Entity\EntityAccessController
+ * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_entity_create_access()
  * @see hook_ENTITY_TYPE_access()
  *
  * @ingroup entity_api
  */
 function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account, $langcode) {
-  return NULL;
+  // No opinion.
+  return AccessResult::create();
 }
 
 /**
@@ -278,18 +547,18 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  * @param string $langcode
  *    The code of the language $entity is accessed in.
  *
- * @return bool|null
- *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
- *   deny access.
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *    The access result.
  *
- * @see \Drupal\Core\Entity\EntityAccessController
+ * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_ENTITY_TYPE_create_access()
  * @see hook_entity_access()
  *
  * @ingroup entity_api
  */
 function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account, $langcode) {
-  return NULL;
+  // No opinion.
+  return AccessResult::create();
 }
 
 /**
@@ -297,21 +566,25 @@ function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $o
  *
  * @param \Drupal\Core\Session\AccountInterface $account
  *    The account trying to access the entity.
- * @param string $langcode
- *    The code of the language $entity is accessed in.
+ * @param array $context
+ *    An associative array of additional context values. By default it contains
+ *    language:
+ *    - langcode - the current language code.
+ * @param string $entity_bundle
+ *    The entity bundle name.
  *
- * @return bool|null
- *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
- *   deny access.
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *    The access result.
  *
- * @see \Drupal\Core\Entity\EntityAccessController
+ * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_entity_access()
  * @see hook_ENTITY_TYPE_create_access()
  *
  * @ingroup entity_api
  */
-function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $account, $langcode) {
-  return NULL;
+function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle) {
+  // No opinion.
+  return AccessResult::create();
 }
 
 /**
@@ -319,21 +592,25 @@ function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $accoun
  *
  * @param \Drupal\Core\Session\AccountInterface $account
  *    The account trying to access the entity.
- * @param string $langcode
- *    The code of the language $entity is accessed in.
+ * @param array $context
+ *    An associative array of additional context values. By default it contains
+ *    language:
+ *    - langcode - the current language code.
+ * @param string $entity_bundle
+ *    The entity bundle name.
  *
- * @return bool|null
- *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
- *   deny access.
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *    The access result.
  *
- * @see \Drupal\Core\Entity\EntityAccessController
+ * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_ENTITY_TYPE_access()
  * @see hook_entity_create_access()
  *
  * @ingroup entity_api
  */
-function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $account, $langcode) {
-  return NULL;
+function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle) {
+  // No opinion.
+  return AccessResult::create();
 }
 
 /**
@@ -537,7 +814,10 @@ function hook_ENTITY_TYPE_create(\Drupal\Core\Entity\EntityInterface $entity) {
  * This is a generic load hook called for all entity types loaded via the
  * entity API.
  *
- * @param array $entities
+ * hook_entity_storage_load() should be used to load additional data for
+ * content entities.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface[] $entities
  *   The entities keyed by entity ID.
  * @param string $entity_type_id
  *   The type of entities being loaded (i.e. node, user, comment).
@@ -545,7 +825,7 @@ function hook_ENTITY_TYPE_create(\Drupal\Core\Entity\EntityInterface $entity) {
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_load()
  */
-function hook_entity_load($entities, $entity_type_id) {
+function hook_entity_load(array $entities, $entity_type_id) {
   foreach ($entities as $entity) {
     $entity->foo = mymodule_add_something($entity);
   }
@@ -563,6 +843,40 @@ function hook_entity_load($entities, $entity_type_id) {
 function hook_ENTITY_TYPE_load($entities) {
   foreach ($entities as $entity) {
     $entity->foo = mymodule_add_something($entity);
+  }
+}
+
+/**
+ * Act on content entities when loaded from the storage.
+ *
+ * The results of this hook will be cached.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface[] $entities
+ *   The entities keyed by entity ID.
+ * @param string $entity_type
+ *   The type of entities being loaded (i.e. node, user, comment).
+ *
+ * @see hook_entity_load()
+ */
+function hook_entity_storage_load(array $entities, $entity_type) {
+  foreach ($entities as $entity) {
+    $entity->foo = mymodule_add_something_uncached($entity);
+  }
+}
+
+/**
+ * Act on content entities of a given type when loaded from the storage.
+ *
+ * The results of this hook will be cached if the entity type supports it.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface[] $entities
+ *   The entities keyed by entity ID.
+ *
+ * @see hook_entity_storage_load()
+ */
+function hook_ENTITY_TYPE_storage_load(array $entities) {
+  foreach ($entities as $entity) {
+    $entity->foo = mymodule_add_something_uncached($entity);
   }
 }
 
@@ -1241,18 +1555,18 @@ function hook_entity_display_build_alter(&$build, $context) {
  *   The entity that is about to be shown on the form.
  * @param $operation
  *   The current operation.
- * @param array $form_state
- *   An associative array containing the current state of the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
  *
  * @see \Drupal\Core\Entity\EntityForm::prepareEntity()
  * @see hook_ENTITY_TYPE_prepare_form()
  *
  * @ingroup entity_crud
  */
-function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, array &$form_state) {
+function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Form\FormStateInterface $form_state) {
   if ($operation == 'edit') {
     $entity->label->value = 'Altered label';
-    $form_state['mymodule']['label_altered'] = TRUE;
+    $form_state->set('label_altered', TRUE);
   }
 }
 
@@ -1267,18 +1581,18 @@ function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $
  *   The entity that is about to be shown on the form.
  * @param $operation
  *   The current operation.
- * @param array $form_state
- *   An associative array containing the current state of the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
  *
  * @see \Drupal\Core\Entity\EntityForm::prepareEntity()
  * @see hook_entity_prepare_form()
  *
  * @ingroup entity_crud
  */
-function hook_ENTITY_TYPE_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, array &$form_state) {
+function hook_ENTITY_TYPE_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Form\FormStateInterface $form_state) {
   if ($operation == 'edit') {
     $entity->label->value = 'Altered label';
-    $form_state['mymodule']['label_altered'] = TRUE;
+    $form_state->set('label_altered', TRUE);
   }
 }
 
@@ -1323,7 +1637,7 @@ function hook_entity_form_display_alter(\Drupal\Core\Entity\Display\EntityFormDi
 function hook_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
   if ($entity_type->id() == 'node') {
     $fields = array();
-    $fields['mymodule_text'] = FieldDefinition::create('string')
+    $fields['mymodule_text'] = BaseFieldDefinition::create('string')
       ->setLabel(t('The text'))
       ->setDescription(t('A text property added by mymodule.'))
       ->setComputed(TRUE)
@@ -1381,7 +1695,7 @@ function hook_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $
   // Add a property only to nodes of the 'article' bundle.
   if ($entity_type->id() == 'node' && $bundle == 'article') {
     $fields = array();
-    $fields['mymodule_text_more'] = FieldDefinition::create('string')
+    $fields['mymodule_text_more'] = BaseFieldDefinition::create('string')
         ->setLabel(t('More text'))
         ->setComputed(TRUE)
         ->setClass('\Drupal\mymodule\EntityComputedMoreText');
@@ -1428,15 +1742,15 @@ function hook_entity_field_storage_info(\Drupal\Core\Entity\EntityTypeInterface 
   if ($entity_type->isFieldable()) {
     // Query by filtering on the ID as this is more efficient than filtering
     // on the entity_type property directly.
-    $ids = \Drupal::entityQuery('field_config')
+    $ids = \Drupal::entityQuery('field_storage_config')
       ->condition('id', $entity_type->id() . '.', 'STARTS_WITH')
       ->execute();
 
     // Fetch all fields and key them by field name.
-    $field_configs = entity_load_multiple('field_config', $ids);
+    $field_storages = entity_load_multiple('field_storage_config', $ids);
     $result = array();
-    foreach ($field_configs as $field_config) {
-      $result[$field_config->getName()] = $field_config;
+    foreach ($field_storages as $field_storage) {
+      $result[$field_storage->getName()] = $field_storage;
     }
     return $result;
   }
@@ -1501,7 +1815,7 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
  * Control access to fields.
  *
  * This hook is invoked from
- * \Drupal\Core\Entity\EntityAccessController::fieldAccess() to let modules
+ * \Drupal\Core\Entity\EntityAccessControlHandler::fieldAccess() to let modules
  * grant or deny operations on fields.
  *
  * @param string $operation
@@ -1515,13 +1829,12 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
  *   (optional) The entity field object on which the operation is to be
  *   performed.
  *
- * @return bool|null
- *   TRUE if access should be allowed, FALSE if access should be denied and NULL
- *   if the implementation has no opinion.
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *   The access result.
  */
 function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Session\AccountInterface $account, \Drupal\Core\Field\FieldItemListInterface $items = NULL) {
   if ($field_definition->getName() == 'field_of_interest' && $operation == 'edit') {
-    return $account->hasPermission('update field of interest');
+    return AccessResult::allowedIfHasPermission($account, 'update field of interest');
   }
 }
 
@@ -1531,10 +1844,10 @@ function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinition
  * Use this hook to override access grants from another module. Note that the
  * original default access flag is masked under the ':default' key.
  *
- * @param array $grants
+ * @param \Drupal\Core\Access\AccessResultInterface[] $grants
  *   An array of grants gathered by hook_entity_field_access(). The array is
  *   keyed by the module that defines the field's access control; the values are
- *   grant responses for each module (Boolean or NULL).
+ *   grant responses for each module (\Drupal\Core\Access\AccessResult).
  * @param array $context
  *   Context array on the performed operation with the following keys:
  *   - operation: The operation to be performed (string).
@@ -1548,13 +1861,14 @@ function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinition
 function hook_entity_field_access_alter(array &$grants, array $context) {
   /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
   $field_definition = $context['field_definition'];
-  if ($field_definition->getName() == 'field_of_interest' && $grants['node'] === FALSE) {
-    // Override node module's restriction to no opinion. We don't want to
-    // provide our own access hook, we only want to take out node module's part
-    // in the access handling of this field. We also don't want to switch node
-    // module's grant to TRUE, because the grants of other modules should still
-    // decide on their own if this field is accessible or not.
-    $grants['node'] = NULL;
+  if ($field_definition->getName() == 'field_of_interest' && $grants['node']->isForbidden()) {
+    // Override node module's restriction to no opinion (neither allowed nor
+    // forbidden). We don't want to provide our own access hook, we only want to
+    // take out node module's part in the access handling of this field. We also
+    // don't want to switch node module's grant to
+    // AccessResultInterface::isAllowed() , because the grants of other modules
+    // should still decide on their own if this field is accessible or not
+    $grants['node']->resetAccess();
   }
 }
 

@@ -22,14 +22,14 @@ class MigrateCommentTypeTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_comment_type');
 
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6SystemSite.php',
+      $this->getDumpDirectory() . '/Drupal6CommentVariable.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);
@@ -42,5 +42,8 @@ class MigrateCommentTypeTest extends MigrateDrupalTestBase {
   public function testCommentType() {
     $comment_type = entity_load('comment_type', 'comment');
     $this->assertEqual('node', $comment_type->getTargetEntityTypeId());
+    $comment_type = entity_load('comment_type', 'comment_no_subject');
+    $this->assertEqual('node', $comment_type->getTargetEntityTypeId());
   }
+
 }

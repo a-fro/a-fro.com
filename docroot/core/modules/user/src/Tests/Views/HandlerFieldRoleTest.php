@@ -26,13 +26,13 @@ class HandlerFieldRoleTest extends UserTestBase {
 
   public function testRole() {
     // Create a couple of roles for the view.
-    $rolename_a = 'a' . $this->randomName(8);
+    $rolename_a = 'a' . $this->randomMachineName(8);
     $this->drupalCreateRole(array('access content'), $rolename_a, $rolename_a, 9);
 
-    $rolename_b = 'b' . $this->randomName(8);
+    $rolename_b = 'b' . $this->randomMachineName(8);
     $this->drupalCreateRole(array('access content'), $rolename_b, $rolename_b, 8);
 
-    $rolename_not_assigned = $this->randomName(8);
+    $rolename_not_assigned = $this->randomMachineName(8);
     $this->drupalCreateRole(array('access content'), $rolename_not_assigned, $rolename_not_assigned);
 
     // Add roles to user 1.
@@ -43,7 +43,6 @@ class HandlerFieldRoleTest extends UserTestBase {
 
     $view = Views::getView('test_views_handler_field_role');
     $this->executeView($view);
-    $view->row_index = 0;
     // The role field is populated during preRender.
     $view->field['rid']->preRender($view->result);
     $render = $view->field['rid']->advancedRender($view->result[0]);

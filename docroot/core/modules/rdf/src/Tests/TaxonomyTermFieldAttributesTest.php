@@ -38,7 +38,7 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
    */
   protected $vocabulary;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('bypass node access', 'administer taxonomy'));
@@ -149,7 +149,7 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
    * @todo Move this to TaxonomyTestBase, like the other field modules.
    */
   protected function createTaxonomyTermReferenceField($field_name, $vocabulary) {
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',

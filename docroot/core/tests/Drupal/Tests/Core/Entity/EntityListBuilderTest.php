@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Entity;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
@@ -88,10 +89,10 @@ class EntityListBuilderTest extends UnitTestCase {
    * @covers \Drupal\Core\Entity\EntityListBuilder::getOperations
    */
   public function testGetOperations() {
-    $operation_name = $this->randomName();
+    $operation_name = $this->randomMachineName();
     $operations = array(
       $operation_name => array(
-        'title' => $this->randomName(),
+        'title' => $this->randomMachineName(),
       ),
     );
     $this->moduleHandler->expects($this->once())
@@ -106,7 +107,7 @@ class EntityListBuilderTest extends UnitTestCase {
 
     $this->role->expects($this->any())
       ->method('access')
-      ->will($this->returnValue(TRUE));
+      ->will($this->returnValue(AccessResult::allowed()));
     $this->role->expects($this->any())
       ->method('hasLinkTemplate')
       ->will($this->returnValue(TRUE));

@@ -33,13 +33,13 @@ class FileItemTest extends FieldUnitTestBase {
    */
   protected $file;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('file');
     $this->installSchema('file', array('file_usage'));
 
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => 'file_test',
       'entity_type' => 'entity_test',
       'type' => 'file',
@@ -50,7 +50,7 @@ class FileItemTest extends FieldUnitTestBase {
       'field_name' => 'file_test',
       'bundle' => 'entity_test',
     ))->save();
-    file_put_contents('public://example.txt', $this->randomName());
+    file_put_contents('public://example.txt', $this->randomMachineName());
     $this->file = entity_create('file', array(
       'uri' => 'public://example.txt',
     ));
@@ -65,8 +65,8 @@ class FileItemTest extends FieldUnitTestBase {
     $entity = entity_create('entity_test');
     $entity->file_test->target_id = $this->file->id();
     $entity->file_test->display = 1;
-    $entity->file_test->description = $description = $this->randomName();
-    $entity->name->value = $this->randomName();
+    $entity->file_test->description = $description = $this->randomMachineName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
 
     $entity = entity_load('entity_test', $entity->id());
@@ -81,7 +81,7 @@ class FileItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->file_test->entity->uuid(), $this->file->uuid());
 
     // Make sure the computed files reflects updates to the file.
-    file_put_contents('public://example-2.txt', $this->randomName());
+    file_put_contents('public://example-2.txt', $this->randomMachineName());
     $file2 = entity_create('file', array(
       'uri' => 'public://example-2.txt',
     ));
@@ -95,6 +95,11 @@ class FileItemTest extends FieldUnitTestBase {
     // a non-existing entity.
     $file2->delete();
     $entity->delete();
+
+    // Test the generateSampleValue() method.
+    $entity = entity_create('entity_test');
+    $entity->file_test->generateSampleItems();
+    $this->entityValidateAndSave($entity);
   }
 
 }

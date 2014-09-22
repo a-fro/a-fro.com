@@ -10,25 +10,24 @@ namespace Drupal\Core\Entity;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\Render\Element;
-use Drupal\entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Base class for entity view controllers.
+ * Base class for entity view builders.
  *
  * @ingroup entity_api
  */
-class EntityViewBuilder extends EntityControllerBase implements EntityControllerInterface, EntityViewBuilderInterface {
+class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterface, EntityViewBuilderInterface {
 
   /**
-   * The type of entities for which this controller is instantiated.
+   * The type of entities for which this view builder is instantiated.
    *
    * @var string
    */
@@ -275,7 +274,7 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
         //   taken care of in EntityViewDisplay::buildMultiple().
         foreach ($display->getComponents() as $name => $options) {
           if (isset($build_list[$key][$name])) {
-            $build_list[$key]['#weight'] = $options['weight'];
+            $build_list[$key][$name]['#weight'] = $options['weight'];
           }
         }
 
@@ -394,7 +393,8 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
     if (is_string($display_options)) {
       $view_mode = $display_options;
       $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
-      foreach ($entity as $name => $items) {
+      // Hide all fields except the current one.
+      foreach (array_keys($entity->getFieldDefinitions()) as $name) {
         if ($name != $field_name) {
           $display->removeComponent($name);
         }

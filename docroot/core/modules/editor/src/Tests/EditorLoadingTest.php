@@ -23,7 +23,7 @@ class EditorLoadingTest extends WebTestBase {
    */
   public static $modules = array('filter', 'editor', 'editor_test', 'node');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Add text formats.
@@ -135,7 +135,7 @@ class EditorLoadingTest extends WebTestBase {
     $this->drupalCreateNode(array(
       'type' => 'article',
       'body' => array(
-        array('value' => $this->randomName(32), 'format' => 'full_html')
+        array('value' => $this->randomMachineName(32), 'format' => 'full_html')
       ),
     ));
 

@@ -5,9 +5,7 @@
  * Functions to handle paths in Drupal.
  */
 
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
-use Drupal\Core\Routing\RequestHelper;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
@@ -60,8 +58,8 @@ function current_path() {
   // @todo Remove the check for whether the request service exists and the
   // fallback code below, once the path alias logic has been figured out in
   // http://drupal.org/node/1269742.
-  if (\Drupal::getContainer()->isScopeActive('request')) {
-    $path = \Drupal::request()->attributes->get('_system_path');
+  if ($request = \Drupal::request()) {
+    $path = $request->attributes->get('_system_path');
     if ($path !== NULL) {
       return $path;
     }
@@ -97,47 +95,4 @@ function path_is_admin($path) {
   catch (ParamNotConvertedException $e) {
     return FALSE;
   }
-}
-
-/**
- * Checks a path exists and the current user has access to it.
- *
- * @param string $path
- *   The path to check.
- *
- * @return bool
- *   TRUE if it is a valid path AND the current user has access permission,
- *   FALSE otherwise.
- */
-function drupal_valid_path($path) {
-  // External URLs and the front page are always valid.
-  if ($path == '<front>' || UrlHelper::isExternal($path)) {
-    return TRUE;
-  }
-
-  // Check the routing system.
-  $collection = \Drupal::service('router.route_provider')->getRoutesByPattern('/' . $path);
-  if ($collection->count() == 0) {
-    return FALSE;
-  }
-
-  $request = RequestHelper::duplicate(\Drupal::request(), '/' . $path);
-  $request->attributes->set('_system_path', $path);
-
-  // We indicate that a menu administrator is running the menu access check.
-  $request->attributes->set('_menu_admin', TRUE);
-
-  // Attempt to match this path to provide a fully built request to the
-  // access checker.
-  try {
-    $request->attributes->add(\Drupal::service('router')->matchRequest($request));
-  }
-  catch (ParamNotConvertedException $e) {
-    return FALSE;
-  }
-
-  // Consult the accsss manager.
-  $routes = $collection->all();
-  $route = reset($routes);
-  return \Drupal::service('access_manager')->check($route, $request, \Drupal::currentUser());
 }

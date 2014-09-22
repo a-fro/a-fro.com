@@ -42,7 +42,7 @@ class PrivateKeyTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->key = Crypt::randomBytesBase64(55);
 
@@ -74,7 +74,7 @@ class PrivateKeyTest extends UnitTestCase {
    * Tests PrivateKey::setPrivateKey().
    */
   public function testSet() {
-    $random_name = $this->randomName();
+    $random_name = $this->randomMachineName();
 
     $this->state->expects($this->once())
       ->method('set')

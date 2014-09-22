@@ -8,10 +8,11 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
- * Defines a common interface for comment entity controller classes.
+ * Defines an interface for comment entity storage classes.
  */
 interface CommentStorageInterface extends EntityStorageInterface {
 
@@ -61,8 +62,8 @@ interface CommentStorageInterface extends EntityStorageInterface {
    * @param \Drupal\comment\CommentInterface $comment
    *   The comment to use as a reference point.
    * @param int $comment_mode
-   *   Comment mode (CommentManagerInterface::COMMENT_MODE_FLAT or
-   *   CommentManagerInterface::COMMENT_MODE_THREADED).
+   *   The comment display mode: CommentManagerInterface::COMMENT_MODE_FLAT or
+   *   CommentManagerInterface::COMMENT_MODE_THREADED.
    * @param int $divisor
    *   Defaults to 1, which returns the display ordinal for a comment. If the
    *   number of comments per page is provided, the returned value will be the
@@ -77,7 +78,7 @@ interface CommentStorageInterface extends EntityStorageInterface {
   /**
    * Gets the comment ids of the passed comment entities' children.
    *
-   * @param array $comments
+   * @param \Drupal\comment\CommentInterface[] $comments
    *   An array of comment entities keyed by their ids.
    * @return array
    *   The entity ids of the passed comment entities' children as an array.
@@ -85,22 +86,26 @@ interface CommentStorageInterface extends EntityStorageInterface {
   public function getChildCids(array $comments);
 
   /**
-   * Updates the comment statistics for a given node.
+   * Retrieves comments for a thread, sorted in an order suitable for display.
    *
-   * The {comment_entity_statistics} table has the following fields:
-   * - last_comment_timestamp: The timestamp of the last comment for the entity,
-   *   or the entity created timestamp if no comments exist for the entity.
-   * - last_comment_name: The name of the anonymous poster for the last comment.
-   * - last_comment_uid: The user ID of the poster for the last comment for
-   *   this entity, or the entity author's user ID if no comments exist for the
-   *   entity.
-   * - comment_count: The total number of approved/published comments on this
-   *   entity.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity whose comment(s) needs rendering.
+   * @param string $field_name
+   *   The field_name whose comment(s) needs rendering.
+   * @param int $mode
+   *   The comment display mode: CommentManagerInterface::COMMENT_MODE_FLAT or
+   *   CommentManagerInterface::COMMENT_MODE_THREADED.
+   * @param int $comments_per_page
+   *   (optional) The amount of comments to display per page.
+   *   Defaults to 0, which means show all comments.
+   * @param int $pager_id
+   *   (optional) Pager id to use in case of multiple pagers on the one page.
+   *   Defaults to 0; is only used when $comments_per_page is greater than zero.
    *
-   * @param \Drupal\comment\CommentInterface $comment
-   *   The comment being saved.
+   * @return array
+   *   Ordered array of comment objects, keyed by comment id.
    */
-  public function updateEntityStatistics(CommentInterface $comment);
+  public function loadThread(EntityInterface $entity, $field_name, $mode, $comments_per_page = 0, $pager_id = 0);
 
   /**
    * Returns the number of unapproved comments.

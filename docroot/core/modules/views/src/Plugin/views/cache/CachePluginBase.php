@@ -14,10 +14,9 @@ use Drupal\Core\Database\Query\Select;
 /**
  * @defgroup views_cache_plugins Views cache plugins
  * @{
- * Plugins to handle the storage and loading of Views caches.
+ * Plugins to handle Views caches.
  *
- * Cache plugins control the storage and loading of caches in Views, for
- * both result and render caching.
+ * Cache plugins control how caching is done in Views.
  *
  * Cache plugins extend \Drupal\views\Plugin\views\cache\CachePluginBase.
  * They must be annotated with \Drupal\views\Annotation\ViewsCache
@@ -143,8 +142,8 @@ abstract class CachePluginBase extends PluginBase {
         \Drupal::cache($this->resultsBin)->set($this->generateResultsKey(), $data, $this->cacheSetExpire($type), $this->getCacheTags());
         break;
       case 'output':
-        $this->storage['output'] = $this->view->display_handler->output;
-        $this->gatherHeaders();
+        $this->gatherHeaders($this->view->display_handler->output);
+        $this->storage['output'] = drupal_render($this->view->display_handler->output, TRUE);
         \Drupal::cache($this->outputBin)->set($this->generateOutputKey(), $this->storage, $this->cacheSetExpire($type), $this->getCacheTags());
         break;
     }
@@ -178,8 +177,13 @@ abstract class CachePluginBase extends PluginBase {
         if ($cache = \Drupal::cache($this->outputBin)->get($this->generateOutputKey())) {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->storage = $cache->data;
-            $this->view->display_handler->output = $cache->data['output'];
+
             $this->restoreHeaders();
+            $this->view->display_handler->output = array(
+              '#attached' => &$this->view->element['#attached'],
+              '#markup' => $cache->data['output'],
+            );
+
             return TRUE;
           }
         }
@@ -234,9 +238,12 @@ abstract class CachePluginBase extends PluginBase {
   }
 
   /**
-   * Gather the JS/CSS from the render array, the html head from the band data.
+   * Gather the JS/CSS from the render array and the html head from band data.
+   *
+   * @param array $render_array
+   *   The view render array to collect data from.
    */
-  protected function gatherHeaders() {
+  protected function gatherHeaders(array $render_array = []) {
     // Simple replacement for head
     if (isset($this->storage['head'])) {
       $this->storage['head'] = str_replace($this->storage['head'], '', drupal_add_html_head());
@@ -245,9 +252,8 @@ abstract class CachePluginBase extends PluginBase {
       $this->storage['head'] = '';
     }
 
-    $attached = drupal_render_collect_attached($this->storage['output']);
-    $this->storage['css'] = $attached['css'];
-    $this->storage['js'] = $attached['js'];
+    $this->storage['css'] = $render_array['#attached']['css'];
+    $this->storage['js'] = $render_array['#attached']['js'];
   }
 
   /**
@@ -328,7 +334,7 @@ abstract class CachePluginBase extends PluginBase {
         'result' => $this->view->result,
         'roles' => $user->getRoles(),
         'super-user' => $user->id() == 1, // special caching for super user.
-        'theme' => $GLOBALS['theme'],
+        'theme' => \Drupal::theme()->getActiveTheme()->getName(),
         'langcode' => \Drupal::languageManager()->getCurrentLanguage()->id,
         'base_url' => $GLOBALS['base_url'],
       );

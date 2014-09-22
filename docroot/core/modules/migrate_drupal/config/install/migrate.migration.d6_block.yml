@@ -1,5 +1,7 @@
 id: d6_block
 label: Drupal 6 blocks
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_block
 process:
@@ -82,6 +84,6 @@ process:
 destination:
   plugin: entity:block
 migration_dependencies:
-  optional:
+  required:
     - d6_menu
     - d6_custom_block

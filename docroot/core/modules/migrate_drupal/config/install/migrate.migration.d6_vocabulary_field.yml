@@ -1,5 +1,7 @@
 id: d6_vocabulary_field
 label: Drupal 6 vocabulary field configuration
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_taxonomy_vocabulary
   constants:
@@ -18,7 +20,7 @@ process:
   'settings/allowed_values/0/parent': 'constants/parent'
   cardinality: 'constants/cardinality'
 destination:
-  plugin: entity:field_config
+  plugin: entity:field_storage_config
 migration_dependencies:
   required:
     - d6_taxonomy_vocabulary

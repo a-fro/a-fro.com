@@ -7,7 +7,7 @@
 
 namespace Drupal\standard\Tests;
 
-use Drupal\comment\Entity\Comment;
+use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -16,6 +16,8 @@ use Drupal\simpletest\WebTestBase;
  * @group standard
  */
 class StandardTest extends WebTestBase {
+
+  use SchemaCheckTestTrait;
 
   protected $profile = 'standard';
 
@@ -79,13 +81,25 @@ class StandardTest extends WebTestBase {
     $this->drupalLogin($admin);
     $this->drupalGet('node/1');
     $this->drupalPostForm(NULL, array(
-      'subject' => 'Barfoo',
+      'subject[0][value]' => 'Barfoo',
       'comment_body[0][value]' => 'Then she picked out two somebodies, Sally and me',
     ), t('Save'));
     // Fetch the feed.
     $this->drupalGet('rss.xml');
     $this->assertText('Foobar');
     $this->assertNoText('Then she picked out two somebodies, Sally and me');
+
+    // Now we have all configuration imported, test all of them for schema
+    // conformance. Ensures all imported default configuration is valid when
+    // standard profile modules are enabled.
+    $names = $this->container->get('config.storage')->listAll();
+    $factory = $this->container->get('config.factory');
+    /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
+    $typed_config = $this->container->get('config.typed');
+    foreach ($names as $name) {
+      $config = $factory->get($name);
+      $this->assertConfigSchema($typed_config, $name, $config->get());
+    }
   }
 
 }

@@ -9,7 +9,7 @@ namespace Drupal\comment\Tests;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\node\Entity\Node;
 
@@ -41,7 +41,7 @@ class CommentTypeTest extends CommentTestBase {
   /**
    * Sets the test up.
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser($this->permissions);
   }
@@ -76,6 +76,17 @@ class CommentTypeTest extends CommentTestBase {
     // Check that the comment type was created in site default language.
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
     $this->assertEqual($comment_type->language()->getId(), $default_langcode);
+
+    // Edit the comment-type and ensure that we cannot change the entity-type.
+    $this->drupalGet('admin/structure/comment/manage/foo');
+    $this->assertNoField('target_entity_type_id', 'Entity type file not present');
+    $this->assertText(t('Target entity type'));
+    // Save the form and ensure the entity-type value is preserved even though
+    // the field isn't present.
+    $this->drupalPostForm(NULL, array(), t('Save'));
+    \Drupal::entityManager()->getStorage('comment_type')->resetCache(array('foo'));
+    $comment_type = CommentType::load('foo');
+    $this->assertEqual($comment_type->getTargetEntityTypeId(), 'node');
   }
 
   /**
@@ -116,7 +127,7 @@ class CommentTypeTest extends CommentTestBase {
     $type = $this->createCommentType('foo');
     $this->drupalCreateContentType(array('type' => 'page'));
     \Drupal::service('comment.manager')->addDefaultField('node', 'page', 'foo', CommentItemInterface::OPEN, 'foo');
-    $field = FieldConfig::loadByName('node', 'foo');
+    $field_storage = FieldStorageConfig::loadByName('node', 'foo');
 
     $this->drupalLogin($this->adminUser);
 
@@ -153,7 +164,7 @@ class CommentTypeTest extends CommentTestBase {
 
     // Delete the comment and the field.
     $comment->delete();
-    $field->delete();
+    $field_storage->delete();
     // Attempt to delete the comment type, which should now be allowed.
     $this->drupalGet('admin/structure/comment/manage/' . $type->id() . '/delete');
     $this->assertRaw(

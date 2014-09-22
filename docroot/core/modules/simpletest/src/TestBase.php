@@ -23,13 +23,14 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Base class for Drupal tests.
  *
  * Do not extend this class directly; use either
- * \Drupal\simpletest\WebTestBase or \Drupal\simpletest\UnitTestBase.
+ * \Drupal\simpletest\WebTestBase or \Drupal\simpletest\KernelTestBase.
  */
 abstract class TestBase {
   /**
@@ -724,10 +725,10 @@ abstract class TestBase {
   }
 
   /**
-   * Logs verbose message in a text file.
+   * Logs a verbose message in a text file.
    *
-   * The a link to the vebose message will be placed in the test results via
-   * as a passing assertion with the text '[verbose message]'.
+   * The link to the verbose message will be placed in the test results as a
+   * passing assertion with the text '[verbose message]'.
    *
    * @param $message
    *   The verbose message to be stored.
@@ -1057,7 +1058,6 @@ abstract class TestBase {
 
     // Unregister all custom stream wrappers of the parent site.
     // Availability of Drupal stream wrappers varies by test base class:
-    // - UnitTestBase operates in a completely empty environment.
     // - KernelTestBase supports and maintains stream wrappers in a custom
     //   way.
     // - WebTestBase re-initializes Drupal stream wrappers after installation.
@@ -1071,40 +1071,14 @@ abstract class TestBase {
     // Reset statics.
     drupal_static_reset();
 
-    // Reset and create a new service container.
-    $this->container = new ContainerBuilder();
-
-    // @todo Remove this once this class has no calls to t() and format_plural()
-    $this->container->setParameter('language.default_values', Language::$defaultValues);
-    $this->container->register('language.default', 'Drupal\Core\Language\LanguageDefault')
-      ->addArgument('%language.default_values%');
-    $this->container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
-      ->addArgument(new Reference('language.default'));
-    $this->container->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
-      ->addArgument(new Reference('language_manager'));
-
-    // Register info parser.
-    $this->container->register('info_parser', 'Drupal\Core\Extension\InfoParser');
-
-    $request = Request::create('/');
-    $this->container->set('request', $request);
-
-    // Run all tests as a anonymous user by default, web tests will replace that
-    // during the test set up.
-    $this->container->set('current_user', new AnonymousUserSession());
-
-    \Drupal::setContainer($this->container);
+    // Ensure there is no service container.
+    $this->container = NULL;
+    \Drupal::setContainer(NULL);
 
     // Unset globals.
     unset($GLOBALS['config_directories']);
     unset($GLOBALS['config']);
     unset($GLOBALS['conf']);
-    unset($GLOBALS['theme_key']);
-    unset($GLOBALS['theme']);
-    unset($GLOBALS['theme_info']);
-    unset($GLOBALS['base_theme_info']);
-    unset($GLOBALS['theme_engine']);
-    unset($GLOBALS['theme_path']);
 
     // Log fatal errors.
     ini_set('log_errors', 1);
@@ -1161,7 +1135,7 @@ abstract class TestBase {
     // which means they may need to access its filesystem and database.
     drupal_static_reset();
 
-    if ($this->container->has('state') && $state = $this->container->get('state')) {
+    if ($this->container && $this->container->has('state') && $state = $this->container->get('state')) {
       $captured_emails = $state->get('system.test_mail_collector') ?: array();
       $emailCount = count($captured_emails);
       if ($emailCount) {
@@ -1205,14 +1179,6 @@ abstract class TestBase {
     // this second reset is guaranteed to reset everything to nothing.
     drupal_static_reset();
 
-    // Reset global theme variables.
-    unset($GLOBALS['theme_key']);
-    unset($GLOBALS['theme']);
-    unset($GLOBALS['theme_info']);
-    unset($GLOBALS['base_theme_info']);
-    unset($GLOBALS['theme_engine']);
-    unset($GLOBALS['theme_path']);
-
     // Restore original in-memory configuration.
     $GLOBALS['config'] = $this->originalConfig;
     $GLOBALS['conf'] = $this->originalConf;
@@ -1236,9 +1202,6 @@ abstract class TestBase {
     // Restore original shutdown callbacks.
     $callbacks = &drupal_register_shutdown_function();
     $callbacks = $this->originalShutdownCallbacks;
-
-    // Restore original user session.
-    $this->container->set('current_user', $this->originalUser);
   }
 
   /**
@@ -1324,7 +1287,7 @@ abstract class TestBase {
    *
    * Do not use this method when special characters are not possible (e.g., in
    * machine or file names that have already been validated); instead, use
-   * \Drupal\simpletest\TestBase::randomName().
+   * \Drupal\simpletest\TestBase::randomMachineName().
    *
    * @param int $length
    *   Length of random string to generate.
@@ -1385,7 +1348,7 @@ abstract class TestBase {
    *
    * @see \Drupal\Component\Utility\Random::name()
    */
-  public function randomName($length = 8) {
+  public function randomMachineName($length = 8) {
     return $this->getRandomGenerator()->name($length, TRUE);
   }
 

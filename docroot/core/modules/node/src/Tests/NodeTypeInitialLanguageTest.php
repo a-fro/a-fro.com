@@ -21,7 +21,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
    */
   public static $modules = array('language', 'field_ui');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types', 'administer node fields', 'administer node form display', 'administer node display', 'administer languages', 'administer site configuration'));
@@ -95,8 +95,8 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
   function testLanguageFieldVisibility() {
     // Creates a node to test Language field visibility feature.
     $edit = array(
-      'title[0][value]' => $this->randomName(8),
-      'body[0][value]' => $this->randomName(16),
+      'title[0][value]' => $this->randomMachineName(8),
+      'body[0][value]' => $this->randomMachineName(16),
     );
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);

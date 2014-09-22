@@ -19,7 +19,7 @@ use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
@@ -114,25 +114,8 @@ class CommentManager implements CommentManagerInterface {
       return array();
     }
 
-    $map = $this->getAllFields();
+    $map = $this->entityManager->getFieldMapByFieldType('comment');
     return isset($map[$entity_type_id]) ? $map[$entity_type_id] : array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getAllFields() {
-    $map = $this->entityManager->getFieldMap();
-    // Build a list of comment fields only.
-    $comment_fields = array();
-    foreach ($map as $entity_type => $data) {
-      foreach ($data as $field_name => $field_info) {
-        if ($field_info['type'] == 'comment') {
-          $comment_fields[$entity_type][$field_name] = $field_info;
-        }
-      }
-    }
-    return $comment_fields;
   }
 
   /**
@@ -158,9 +141,9 @@ class CommentManager implements CommentManagerInterface {
       ))->save();
     }
     // Make sure the field doesn't already exist.
-    if (!FieldConfig::loadByName($entity_type, $field_name)) {
+    if (!FieldStorageConfig::loadByName($entity_type, $field_name)) {
       // Add a default comment field for existing node comments.
-      $field = $this->entityManager->getStorage('field_config')->create(array(
+      $field_storage = $this->entityManager->getStorage('field_storage_config')->create(array(
         'entity_type' => $entity_type,
         'name' => $field_name,
         'type' => 'comment',
@@ -170,12 +153,12 @@ class CommentManager implements CommentManagerInterface {
         ),
       ));
       // Create the field.
-      $field->save();
+      $field_storage->save();
     }
     // Make sure the instance doesn't already exist.
     if (!array_key_exists($field_name, $this->entityManager->getFieldDefinitions($entity_type, $bundle))) {
       $instance = $this->entityManager->getStorage('field_instance_config')->create(array(
-        'label' => 'Comment settings',
+        'label' => 'Comments',
         'description' => '',
         'field_name' => $field_name,
         'entity_type' => $entity_type,
@@ -212,7 +195,7 @@ class CommentManager implements CommentManagerInterface {
       // Set default to display comment list.
       entity_get_display($entity_type, $bundle, 'default')
         ->setComponent($field_name, array(
-          'label' => 'hidden',
+          'label' => 'above',
           'type' => 'comment_default',
           'weight' => 20,
         ))
@@ -235,14 +218,14 @@ class CommentManager implements CommentManagerInterface {
    */
   public function addBodyField($comment_type_id) {
     // Create the field if needed.
-    $field = FieldConfig::loadByName('comment', 'comment_body');
-    if (!$field) {
-      $field = $this->entityManager->getStorage('field_config')->create(array(
+    $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
+    if (!$field_storage) {
+      $field_storage = $this->entityManager->getStorage('field_storage_config')->create(array(
         'name' => 'comment_body',
         'type' => 'text_long',
         'entity_type' => 'comment',
       ));
-      $field->save();
+      $field_storage->save();
     }
     if (!FieldInstanceConfig::loadByName('comment', $comment_type_id, 'comment_body')) {
       // Attaches the body field by default.
@@ -251,7 +234,6 @@ class CommentManager implements CommentManagerInterface {
         'label' => 'Comment',
         'entity_type' => 'comment',
         'bundle' => $comment_type_id,
-        'settings' => array('text_processing' => 1),
         'required' => TRUE,
       ));
       $field_instance->save();
@@ -290,7 +272,7 @@ class CommentManager implements CommentManagerInterface {
     if ($this->authenticatedCanPostComments) {
       // We cannot use drupal_get_destination() because these links
       // sometimes appear on /node and taxonomy listing pages.
-      if ($entity->get($field_name)->getFieldDefinition()->getSetting('form_location') == COMMENT_FORM_SEPARATE_PAGE) {
+      if ($entity->get($field_name)->getFieldDefinition()->getSetting('form_location') == CommentItemInterface::FORM_SEPARATE_PAGE) {
         $destination = array('destination' => 'comment/reply/' . $entity->getEntityTypeId() . '/' . $entity->id() . '/' . $field_name . '#comment-form');
       }
       else {

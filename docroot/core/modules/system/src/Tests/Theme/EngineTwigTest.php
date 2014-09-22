@@ -23,9 +23,9 @@ class EngineTwigTest extends WebTestBase {
    */
   public static $modules = array('theme_test', 'twig_theme_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
-    theme_enable(array('test_theme'));
+    \Drupal::service('theme_handler')->install(array('test_theme'));
   }
 
   /**
@@ -38,6 +38,28 @@ class EngineTwigTest extends WebTestBase {
     $this->drupalGet('twig-theme-test/php-variables');
     foreach (_test_theme_twig_php_values() as $type => $value) {
       $this->assertRaw('<li>' . $type . ': ' . $value['expected'] . '</li>');
+    }
+  }
+
+  /**
+   * Tests the url and url_generate Twig functions.
+   */
+  public function testTwigUrlGenerator() {
+    $this->drupalGet('twig-theme-test/url-generator');
+    // Find the absolute URL of the current site.
+    $url_generator = $this->container->get('url_generator');
+    $expected = array(
+      'path (as route) not absolute: ' . $url_generator->generateFromRoute('user.register'),
+      'url (as route) absolute: ' . $url_generator->generateFromRoute('user.register', array(), array('absolute' => TRUE)),
+      'path (as route) not absolute with fragment: ' . $url_generator->generateFromRoute('user.register', array(), array('fragment' => 'bottom')),
+      'url (as route) absolute despite option: ' . $url_generator->generateFromRoute('user.register', array(), array('absolute' => TRUE)),
+      'url (as route) absolute with fragment: ' . $url_generator->generateFromRoute('user.register', array(), array('absolute' => TRUE, 'fragment' => 'bottom')),
+    );
+    // Make sure we got something.
+    $content = $this->drupalGetContent();
+    $this->assertFalse(empty($content), 'Page content is not empty');
+    foreach ($expected as $string) {
+      $this->assertRaw('<div>' . $string . '</div>');
     }
   }
 

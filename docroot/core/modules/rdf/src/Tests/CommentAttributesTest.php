@@ -25,7 +25,7 @@ class CommentAttributesTest extends CommentTestBase {
    */
   public static $modules = array('views', 'node', 'comment', 'rdf');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Enables anonymous user comments.
@@ -72,12 +72,12 @@ class CommentAttributesTest extends CommentTestBase {
       'created' => array(
         'properties' => array('dc:date', 'dc:created'),
         'datatype' => 'xsd:dateTime',
-        'datatype_callback' => array('callable' => 'date_iso8601'),
+        'datatype_callback' => array('callable' => 'Drupal\rdf\CommonDataConverter::dateIso8601Value'),
       ),
       'changed' => array(
         'properties' => array('dc:modified'),
         'datatype' => 'xsd:dateTime',
-        'datatype_callback' => array('callable' => 'date_iso8601'),
+        'datatype_callback' => array('callable' => 'Drupal\rdf\CommonDataConverter::dateIso8601Value'),
       ),
       'comment_body' => array(
         'properties' => array('content:encoded'),
@@ -155,7 +155,7 @@ class CommentAttributesTest extends CommentTestBase {
 
     // Posts comment #2 as anonymous user.
     $anonymous_user = array();
-    $anonymous_user['name'] = $this->randomName();
+    $anonymous_user['name'] = $this->randomMachineName();
     $anonymous_user['mail'] = 'tester@simpletest.org';
     $anonymous_user['homepage'] = 'http://example.org/';
     $comment2 = $this->saveComment($this->node->id(), 0, $anonymous_user);
@@ -331,8 +331,8 @@ class CommentAttributesTest extends CommentTestBase {
       'field_name' => 'comment',
       'uid' => $uid,
       'pid' => $pid,
-      'subject' => $this->randomName(),
-      'comment_body' => $this->randomName(),
+      'subject' => $this->randomMachineName(),
+      'comment_body' => $this->randomMachineName(),
       'status' => 1,
     );
     if ($contact) {

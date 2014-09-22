@@ -6,7 +6,6 @@
  */
 
 namespace Drupal\field\Tests\Views;
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 
 /**
  * Tests the Field Views data.
@@ -15,12 +14,7 @@ use Drupal\Core\Entity\ContentEntityDatabaseStorage;
  */
 class ApiDataTest extends FieldTestBase {
 
-  /**
-   * Stores the fields for this test case.
-   */
-  var $fields;
-
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $field_names = $this->setUpFields(1);
@@ -36,7 +30,7 @@ class ApiDataTest extends FieldTestBase {
     // Now create some example nodes/users for the view result.
     for ($i = 0; $i < 5; $i++) {
       $edit = array(
-        $field_names[0] => array((array('value' => $this->randomName()))),
+        $field_names[0] => array((array('value' => $this->randomMachineName()))),
       );
       $nodes[] = $this->drupalCreateNode($edit);
     }
@@ -55,9 +49,11 @@ class ApiDataTest extends FieldTestBase {
 
     // Check the table and the joins of the first field.
     // Attached to node only.
-    $field = $this->fields[0];
-    $current_table = ContentEntityDatabaseStorage::_fieldTableName($field);
-    $revision_table = ContentEntityDatabaseStorage::_fieldRevisionTableName($field);
+    $field_storage = $this->fieldStorages[0];
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+    $table_mapping = \Drupal::entityManager()->getStorage('node')->getTableMapping();
+    $current_table = $table_mapping->getDedicatedDataTableName($field_storage);
+    $revision_table = $table_mapping->getDedicatedRevisionTableName($field_storage);
     $data[$current_table] = $views_data->get($current_table);
     $data[$revision_table] = $views_data->get($revision_table);
 
@@ -68,18 +64,22 @@ class ApiDataTest extends FieldTestBase {
     $this->assertTrue(isset($data[$revision_table]['table']['join']['node_revision']));
 
     $expected_join = array(
+      'left_table' => 'node_field_data',
       'left_field' => 'nid',
       'field' => 'entity_id',
       'extra' => array(
         array('field' => 'deleted', 'value' => 0, 'numeric' => TRUE),
+        array('left_field' => 'langcode', 'field' => 'langcode'),
       ),
     );
     $this->assertEqual($expected_join, $data[$current_table]['table']['join']['node']);
     $expected_join = array(
+      'left_table' => 'node_field_revision',
       'left_field' => 'vid',
       'field' => 'revision_id',
       'extra' => array(
         array('field' => 'deleted', 'value' => 0, 'numeric' => TRUE),
+        array('left_field' => 'langcode', 'field' => 'langcode'),
       ),
     );
     $this->assertEqual($expected_join, $data[$revision_table]['table']['join']['node_revision']);

@@ -1,5 +1,7 @@
 id: d6_view_modes
 label: Drupal 6 view modes
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_view_mode
   constants:
@@ -35,4 +37,4 @@ process:
   status: 'constants/status'
 
 destination:
-  plugin: entity:view_mode
+  plugin: entity:entity_view_mode

@@ -48,7 +48,7 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
    */
   public static $modules = array('entity', 'entity_reference', 'options', 'text', 'filter');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_rev');
@@ -62,11 +62,11 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
     ))->save();
 
     // Create the entity to be referenced.
-    $this->target_entity = entity_create($this->entityType, array('name' => $this->randomName()));
+    $this->target_entity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
     $this->target_entity->save();
 
     // Create the entity that will have the entity reference field.
-    $this->entity = entity_create($this->entityType, array('name' => $this->randomName()));
+    $this->entity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
     $this->entity->save();
     $this->entity->{$this->fieldName}->entity = $this->target_entity;
     $this->entity->{$this->fieldName}->access = TRUE;

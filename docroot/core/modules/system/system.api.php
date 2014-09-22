@@ -193,14 +193,16 @@ function callback_queue_worker($queue_item_data) {
  * specify their default values. The values returned by this hook will be
  * merged with the elements returned by form constructor implementations and so
  * can return defaults for any Form APIs keys in addition to those explicitly
- * documented by \Drupal\Core\Render\ElementInfoInterface::getInfo().
+ * documented by \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
  *
  * @return array
  *   An associative array with structure identical to that of the return value
- *   of \Drupal\Core\Render\ElementInfoInterface::getInfo().
+ *   of \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
+ *
+ * @deprecated Use an annotated class instead, see
+ *   \Drupal\Core\Render\Element\ElementInterface.
  *
  * @see hook_element_info_alter()
- * @see system_element_info()
  */
 function hook_element_info() {
   $types['filter_format'] = array(
@@ -217,7 +219,7 @@ function hook_element_info() {
  *
  * @param array $types
  *   An associative array with structure identical to that of the return value
- *   of \Drupal\Core\Render\ElementInfoInterface::getInfo().
+ *   of \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
  *
  * @see hook_element_info()
  */
@@ -372,7 +374,7 @@ function hook_ajax_render_alter(array &$data) {
  *   Nested array of renderable elements that make up the page.
  *
  * @see hook_page_alter()
- * @see drupal_render_page()
+ * @see DefaultHtmlFragmentRenderer::render()
  */
 function hook_page_build(&$page) {
   $path = drupal_get_path('module', 'foo');
@@ -397,13 +399,13 @@ function hook_page_build(&$page) {
 }
 
 /**
- * Alter links for menus.
+ * Alters all the menu links discovered by the menu link plugin manager.
  *
  * @param array $links
  *   The link definitions to be altered.
  *
  * @return array
- *   An array of default menu links. Each link has a key that is the machine
+ *   An array of discovered menu links. Each link has a key that is the machine
  *   name, which must be unique. By default, use the route name as the
  *   machine name. In cases where multiple links use the same route name, such
  *   as two links to the same page in different menus, or two links using the
@@ -411,9 +413,10 @@ function hook_page_build(&$page) {
  *   patten is the route name followed by a dot and a unique suffix. For
  *   example, an additional logout link might have a machine name of
  *   user.logout.navigation, and default links provided to edit the article and
- *   page content types could use machine names node.type_edit.article and
- *   node.type_edit.page. Since the machine name may be arbitrary, you should
- *   never write code that assumes it is identical to the route name.
+ *   page content types could use machine names
+ *   entity.node_type.edit_form.article and entity.node_type.edit_form.page.
+ *   Since the machine name may be arbitrary, you should never write code that
+ *   assumes it is identical to the route name.
  *
  *   The value corresponding to each machine name key is an associative array
  *   that may contain the following key-value pairs:
@@ -440,7 +443,7 @@ function hook_page_build(&$page) {
  *
  * @ingroup menu
  */
-function hook_menu_link_defaults_alter(&$links) {
+function hook_menu_links_discovered_alter(&$links) {
   // Change the weight and title of the user.logout link.
   $links['user.logout']['weight'] = -10;
   $links['user.logout']['title'] = 'Logout';
@@ -656,7 +659,7 @@ function hook_contextual_links_plugins_alter(array &$contextual_links) {
  *   Nested array of renderable elements that make up the page.
  *
  * @see hook_page_build()
- * @see drupal_render_page()
+ * @see DefaultHtmlFragmentRenderer::render()
  */
 function hook_page_alter(&$page) {
   // Add help text to the user login block.
@@ -671,7 +674,7 @@ function hook_page_alter(&$page) {
  *
  * One popular use of this hook is to add form elements to the node form. When
  * altering a node form, the node entity can be retrieved by invoking
- * $form_state['controller']->getEntity().
+ * $form_state->getFormObject()->getEntity().
  *
  * In addition to hook_form_alter(), which is called for all forms, there are
  * two more specific form hooks available. The first,
@@ -692,9 +695,9 @@ function hook_page_alter(&$page) {
  * @param $form
  *   Nested array of form elements that comprise the form.
  * @param $form_state
- *   A keyed array containing the current state of the form. The arguments
- *   that \Drupal::formBuilder()->getForm() was originally called with are
- *   available in the array $form_state['build_info']['args'].
+ *   The current state of the form. The arguments that
+ *   \Drupal::formBuilder()->getForm() was originally called with are available
+ *   in the array $form_state->getBuildInfo()['args'].
  * @param $form_id
  *   String representing the name of the form itself. Typically this is the
  *   name of the function that generated the form.
@@ -703,7 +706,7 @@ function hook_page_alter(&$page) {
  * @see hook_form_FORM_ID_alter()
  * @see forms_api_reference.html
  */
-function hook_form_alter(&$form, &$form_state, $form_id) {
+function hook_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
   if (isset($form['type']) && $form['type']['#value'] . '_node_settings' == $form_id) {
     $upload_enabled_types = \Drupal::config('mymodule.settings')->get('upload_enabled_types');
     $form['workflow']['upload_' . $form['type']['#value']] = array(
@@ -731,9 +734,9 @@ function hook_form_alter(&$form, &$form_state, $form_id) {
  * @param $form
  *   Nested array of form elements that comprise the form.
  * @param $form_state
- *   A keyed array containing the current state of the form. The arguments
- *   that \Drupal::formBuilder()->getForm() was originally called with are
- *   available in the array $form_state['build_info']['args'].
+ *   The current state of the form. The arguments that
+ *   \Drupal::formBuilder()->getForm() was originally called with are available
+ *   in the array $form_state->getBuildInfo()['args'].
  * @param $form_id
  *   String representing the name of the form itself. Typically this is the
  *   name of the function that generated the form.
@@ -743,7 +746,7 @@ function hook_form_alter(&$form, &$form_state, $form_id) {
  * @see \Drupal\Core\Form\FormBuilderInterface::prepareForm()
  * @see forms_api_reference.html
  */
-function hook_form_FORM_ID_alter(&$form, &$form_state, $form_id) {
+function hook_form_FORM_ID_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
   // Modification for the form with the given form ID goes here. For example, if
   // FORM_ID is "user_register_form" this code would run only on the user
   // registration form.
@@ -770,7 +773,7 @@ function hook_form_FORM_ID_alter(&$form, &$form_state, $form_id) {
  *
  * To identify the base form ID for a particular form (or to determine whether
  * one exists) check the $form_state. The base form ID is stored under
- * $form_state['build_info']['base_form_id'].
+ * $form_state->getBuildInfo()['base_form_id'].
  *
  * Form alter hooks are called in the following order: hook_form_alter(),
  * hook_form_BASE_FORM_ID_alter(), hook_form_FORM_ID_alter(). See
@@ -779,7 +782,7 @@ function hook_form_FORM_ID_alter(&$form, &$form_state, $form_id) {
  * @param $form
  *   Nested array of form elements that comprise the form.
  * @param $form_state
- *   A keyed array containing the current state of the form.
+ *   The current state of the form.
  * @param $form_id
  *   String representing the name of the form itself. Typically this is the
  *   name of the function that generated the form.
@@ -788,7 +791,7 @@ function hook_form_FORM_ID_alter(&$form, &$form_state, $form_id) {
  * @see hook_form_FORM_ID_alter()
  * @see \Drupal\Core\Form\FormBuilderInterface::prepareForm()
  */
-function hook_form_BASE_FORM_ID_alter(&$form, &$form_state, $form_id) {
+function hook_form_BASE_FORM_ID_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
   // Modification for the form with the given BASE_FORM_ID goes here. For
   // example, if BASE_FORM_ID is "node_form", this code would run on every
   // node form, regardless of node type.
@@ -976,6 +979,8 @@ function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $
  *     is specific to the permission you are defining.
  *
  * @ingroup user_api
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use $module.permissions.yml files.
  */
 function hook_permission() {
   return array(
@@ -1393,6 +1398,29 @@ function hook_module_preuninstall($module) {
 }
 
 /**
+ * Perform necessary actions when themes are installed.
+ *
+ * @param array $themes
+ *   An array of theme names which are installed.
+ */
+function hook_themes_installed(array $themes) {
+  // Add some state entries depending on the theme.
+  foreach ($themes as $theme) {
+    \Drupal::state()->set('example.' . $theme, 'some-value');
+  }
+}
+
+/**
+ * Perform necessary actions when themes are uninstalled.
+ */
+function hook_themes_uninstalled(array $themes) {
+  // Remove some state entries depending on the theme.
+  foreach ($themes as $theme) {
+    \Drupal::state()->delete('example.' . $theme);
+  }
+}
+
+/**
  * Perform necessary actions after modules are uninstalled.
  *
  * This function differs from hook_uninstall() in that it gives all other
@@ -1499,9 +1527,10 @@ function hook_stream_wrappers_alter(&$wrappers) {
 /**
  * Control access to private file downloads and specify HTTP headers.
  *
- * This hook allows modules enforce permissions on file downloads when the
- * private file download method is selected. Modules can also provide headers
- * to specify information like the file's name or MIME type.
+ * This hook allows modules to enforce permissions on file downloads whenever
+ * Drupal is handling file download, as opposed to the web server bypassing
+ * Drupal and returning the file from a public directory. Modules can also
+ * provide headers to specify information like the file's name or MIME type.
  *
  * @param $uri
  *   The URI of the file.
@@ -1665,7 +1694,7 @@ function hook_requirements($phase) {
     $cron_last = \Drupal::state()->get('system.cron_last');
 
     if (is_numeric($cron_last)) {
-      $requirements['cron']['value'] = t('Last run !time ago', array('!time' => format_interval(REQUEST_TIME - $cron_last)));
+      $requirements['cron']['value'] = t('Last run !time ago', array('!time' => \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $cron_last)));
     }
     else {
       $requirements['cron'] = array(
@@ -2303,16 +2332,17 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
 /**
  * Alter MIME type mappings used to determine MIME type from a file extension.
  *
- * This hook is run when file_mimetype_mapping() is called. It is used to
- * allow modules to add to or modify the default mapping from
- * file_default_mimetype_mapping().
+ * Invoked by \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::guess(). It
+ * is used to allow modules to add to or modify the default mapping from
+ * \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::$defaultMapping.
  *
  * @param $mapping
  *   An array of mimetypes correlated to the extensions that relate to them.
  *   The array has 'mimetypes' and 'extensions' elements, each of which is an
  *   array.
  *
- * @see file_default_mimetype_mapping()
+ * @see \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::guess()
+ * @see \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::$defaultMapping
  */
 function hook_file_mimetype_mapping_alter(&$mapping) {
   // Add new MIME type 'drupal/info'.
@@ -2830,45 +2860,38 @@ function hook_link_alter(&$variables) {
  */
 function hook_config_import_steps_alter(&$sync_steps, \Drupal\Core\Config\ConfigImporter $config_importer) {
   $deletes = $config_importer->getUnprocessedConfiguration('delete');
-  if (isset($deletes['field.field.node.body'])) {
+  if (isset($deletes['field.storage.node.body'])) {
     $sync_steps[] = '_additional_configuration_step';
   }
 }
 
 /**
- * @} End of "addtogroup hooks".
+ * Alter config typed data definitions.
+ *
+ * For example you can alter the typed data types representing each
+ * configuration schema type to change default labels or form element renderers
+ * used for configuration translation.
+ *
+ * It is strongly advised not to use this hook to add new data types or to
+ * change the structure of existing ones. Keep in mind that there are tools
+ * that may use the configuration schema for static analysis of configuration
+ * files, like the string extractor for the localization system. Such systems
+ * won't work with dynamically defined configuration schemas.
+ *
+ * For adding new data types use configuration schema YAML files instead.
+ *
+ * @param $definitions
+ *   Associative array of configuration type definitions keyed by schema type
+ *   names. The elements are themselves array with information about the type.
  */
+function hook_config_schema_info_alter(&$definitions) {
+  // Enhance the text and date type definitions with classes to generate proper
+  // form elements in ConfigTranslationFormBase. Other translatable types will
+  // appear as a one line textfield.
+  $definitions['text']['form_element_class'] = '\Drupal\config_translation\FormElement\Textarea';
+  $definitions['date_format']['form_element_class'] = '\Drupal\config_translation\FormElement\DateFormat';
+}
 
 /**
- * @defgroup annotation Annotations
- * @{
- * Annotations for class discovery and metadata description.
- *
- * The Drupal plugin system has a set of reusable components that developers
- * can use, override, and extend in their modules. Most of the plugins use
- * annotations, which let classes register themselves as plugins and describe
- * their metadata. (Annotations can also be used for other purposes, though
- * at the moment, Drupal only uses them for the plugin system.)
- *
- * To annotate a class as a plugin, add code similar to the following to the
- * end of the documentation block immediately preceding the class declaration:
- * @code
- * * @ContentEntityType(
- * *   id = "comment",
- * *   label = @Translation("Comment"),
- * *   ...
- * *   base_table = "comment"
- * * )
- * @endcode
- *
- * Note that you must use double quotes; single quotes will not work in
- * annotations.
- *
- * The available annotation classes are listed in this topic, and can be
- * identified when you are looking at the Drupal source code by having
- * "@ Annotation" in their documentation blocks (without the space after @). To
- * find examples of annotation for a particular annotation class, such as
- * EntityType, look for class files that have an @ annotation section using the
- * annotation class.
- * @}
+ * @} End of "addtogroup hooks".
  */

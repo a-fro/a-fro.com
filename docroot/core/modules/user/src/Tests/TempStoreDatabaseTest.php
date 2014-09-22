@@ -8,7 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\Component\Serialization\PhpSerialize;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\user\TempStoreFactory;
 use Drupal\Core\Lock\DatabaseLockBackend;
 use Drupal\Core\Database\Database;
@@ -19,7 +19,14 @@ use Drupal\Core\Database\Database;
  * @group user
  * @see \Drupal\Core\TempStore\TempStore.
  */
-class TempStoreDatabaseTest extends UnitTestBase {
+class TempStoreDatabaseTest extends KernelTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system', 'user');
 
   /**
    * A key/value store factory.
@@ -54,10 +61,7 @@ class TempStoreDatabaseTest extends UnitTestBase {
 
     // Install system tables to test the key/value storage without installing a
     // full Drupal environment.
-    module_load_install('system');
-    $schema = system_schema();
-    db_create_table('semaphore', $schema['semaphore']);
-    db_create_table('key_value_expire', $schema['key_value_expire']);
+    $this->installSchema('system', array('semaphore', 'key_value_expire'));
 
     // Create several objects for testing.
     for ($i = 0; $i <= 3; $i++) {
@@ -66,19 +70,13 @@ class TempStoreDatabaseTest extends UnitTestBase {
 
   }
 
-  protected function tearDown() {
-    db_drop_table('key_value_expire');
-    db_drop_table('semaphore');
-    parent::tearDown();
-  }
-
   /**
    * Tests the UserTempStore API.
    */
   public function testUserTempStore() {
     // Create a key/value collection.
     $factory = new TempStoreFactory(new PhpSerialize(), Database::getConnection(), new DatabaseLockBackend(Database::getConnection()));
-    $collection = $this->randomName();
+    $collection = $this->randomMachineName();
 
     // Create two mock users.
     for ($i = 0; $i <= 1; $i++) {
@@ -91,7 +89,7 @@ class TempStoreDatabaseTest extends UnitTestBase {
       $stores[$i] = $factory->get($collection, $users[$i]);
     }
 
-    $key = $this->randomName();
+    $key = $this->randomMachineName();
     // Test that setIfNotExists() succeeds only the first time.
     for ($i = 0; $i <= 1; $i++) {
       // setIfNotExists() should be TRUE the first time (when $i is 0) and

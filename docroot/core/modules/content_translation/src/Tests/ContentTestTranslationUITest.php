@@ -24,7 +24,7 @@ class ContentTestTranslationUITest extends ContentTranslationUITest {
   /**
    * Overrides \Drupal\simpletest\WebTestBase::setUp().
    */
-  function setUp() {
+  protected function setUp() {
     // Use the entity_test_mul as this has multilingual property support.
     $this->entityTypeId = 'entity_test_mul';
     parent::setUp();
@@ -43,7 +43,7 @@ class ContentTestTranslationUITest extends ContentTranslationUITest {
   protected function getNewEntityValues($langcode) {
     $user = $this->drupalCreateUser();
     return array(
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       'user_id' => $user->id(),
     ) + parent::getNewEntityValues($langcode);
   }

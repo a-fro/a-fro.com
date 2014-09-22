@@ -15,7 +15,7 @@ use Zend\Feed\Reader\Reader;
  * @group aggregator
  */
 class FeedParserTest extends AggregatorTestBase {
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Do not delete old aggregator items during these tests, since our sample
     // feeds have hardcoded dates in them (which may be expired when this test
@@ -81,7 +81,7 @@ class FeedParserTest extends AggregatorTestBase {
   function testRedirectFeed() {
     // Simulate a typo in the URL to force a curl exception.
     $invalid_url = url('aggregator/redirect', array('absolute' => TRUE));
-    $feed = entity_create('aggregator_feed', array('url' => $invalid_url, 'title' => $this->randomName()));
+    $feed = entity_create('aggregator_feed', array('url' => $invalid_url, 'title' => $this->randomMachineName()));
     $feed->save();
     $feed->refreshItems();
 
@@ -95,7 +95,7 @@ class FeedParserTest extends AggregatorTestBase {
   function testInvalidFeed() {
     // Simulate a typo in the URL to force a curl exception.
     $invalid_url = 'http:/www.drupal.org';
-    $feed = entity_create('aggregator_feed', array('url' => $invalid_url, 'title' => $this->randomName()));
+    $feed = entity_create('aggregator_feed', array('url' => $invalid_url, 'title' => $this->randomMachineName()));
     $feed->save();
 
     // Update the feed. Use the UI to be able to check the message easily.

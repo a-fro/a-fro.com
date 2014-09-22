@@ -22,7 +22,7 @@ class MigrateCommentVariableInstanceTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Add some id mappings for the dependant migrations.
     $id_mappings = array(
@@ -33,14 +33,20 @@ class MigrateCommentVariableInstanceTest extends MigrateDrupalTestBase {
         array(array('page'), array('page')),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
 
     foreach (array('page', 'story') as $type) {
       entity_create('node_type', array('type' => $type))->save();
     }
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'entity_type' => 'node',
         'name' => 'comment',
+        'type' => 'comment',
+        'translatable' => '0',
+    ))->save();
+    entity_create('field_storage_config', array(
+      'entity_type' => 'node',
+        'name' => 'comment_no_subject',
         'type' => 'comment',
         'translatable' => '0',
     ))->save();
@@ -60,13 +66,21 @@ class MigrateCommentVariableInstanceTest extends MigrateDrupalTestBase {
   public function testCommentFieldInstance() {
     $node = entity_create('node', array('type' => 'page'));
     $this->assertEqual($node->comment->status, 0);
-    $node = entity_create('node', array('type' => 'story'));
-    $this->assertEqual($node->comment->status, 2);
+    $this->assertEqual($node->comment->getFieldDefinition()->getName(), 'comment');
     $settings = $node->comment->getFieldDefinition()->getSettings();
+    $this->assertEqual($settings['default_mode'], 4);
+    $this->assertEqual($settings['per_page'], 50);
+    $this->assertEqual($settings['anonymous'], 0);
+    $this->assertEqual($settings['form_location'], 0);
+    $this->assertEqual($settings['preview'], 1);
+
+    $node = entity_create('node', array('type' => 'story'));
+    $this->assertEqual($node->comment_no_subject->status, 2);
+    $this->assertEqual($node->comment_no_subject->getFieldDefinition()->getName(), 'comment_no_subject');
+    $settings = $node->comment_no_subject->getFieldDefinition()->getSettings();
     $this->assertEqual($settings['default_mode'], 2);
     $this->assertEqual($settings['per_page'], 70);
     $this->assertEqual($settings['anonymous'], 1);
-    $this->assertEqual($settings['subject'], 0);
     $this->assertEqual($settings['form_location'], 0);
     $this->assertEqual($settings['preview'], 0);
   }

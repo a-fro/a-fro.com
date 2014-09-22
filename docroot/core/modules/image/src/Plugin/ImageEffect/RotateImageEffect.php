@@ -7,8 +7,9 @@
 
 namespace Drupal\image\Plugin\ImageEffect;
 
+use Drupal\Component\Utility\Color;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Image\ImageInterface;
-use Drupal\Core\Utility\Color;
 use Drupal\image\ConfigurableImageEffectBase;
 
 /**
@@ -46,7 +47,7 @@ class RotateImageEffect extends ConfigurableImageEffectBase {
     }
 
     if (!$image->rotate($this->configuration['degrees'], $this->configuration['bgcolor'])) {
-      watchdog('image', 'Image rotate failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()), WATCHDOG_ERROR);
+      $this->logger->error('Image rotate failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()));
       return FALSE;
     }
     return TRUE;
@@ -97,13 +98,13 @@ class RotateImageEffect extends ConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['degrees'] = array(
       '#type' => 'number',
       '#default_value' => $this->configuration['degrees'],
       '#title' => t('Rotation angle'),
       '#description' => t('The number of degrees the image should be rotated. Positive numbers are clockwise, negative are counter-clockwise.'),
-      '#field_suffix' => '&deg;',
+      '#field_suffix' => '°',
       '#required' => TRUE,
     );
     $form['bgcolor'] = array(
@@ -126,21 +127,21 @@ class RotateImageEffect extends ConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, array &$form_state) {
-    if (!Color::validateHex($form_state['values']['bgcolor'])) {
-      form_set_error('bgcolor', $form_state, $this->t('Background color must be a hexadecimal color value.'));
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    if (!$form_state->isValueEmpty('bgcolor') && !Color::validateHex($form_state->getValue('bgcolor'))) {
+      $form_state->setErrorByName('bgcolor', $this->t('Background color must be a hexadecimal color value.'));
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
 
-    $this->configuration['degrees'] = $form_state['values']['degrees'];
-    $this->configuration['bgcolor'] = $form_state['values']['bgcolor'];
-    $this->configuration['random'] = $form_state['values']['random'];
+    $this->configuration['degrees'] = $form_state->getValue('degrees');
+    $this->configuration['bgcolor'] = $form_state->getValue('bgcolor');
+    $this->configuration['random'] = $form_state->getValue('random');
   }
 
 }

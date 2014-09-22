@@ -25,7 +25,7 @@ class UserCancelTest extends WebTestBase {
    */
   public static $modules = array('node', 'comment');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
@@ -78,7 +78,7 @@ class UserCancelTest extends WebTestBase {
     );
     // We cannot use $account->save() here, because this would result in the
     // password being hashed again.
-    db_update('users')
+    db_update('users_field_data')
       ->fields($account)
       ->condition('uid', 1)
       ->execute();
@@ -199,8 +199,8 @@ class UserCancelTest extends WebTestBase {
     $node = $this->drupalCreateNode($settings);
 
     // Add a comment to the page.
-    $comment_subject = $this->randomName(8);
-    $comment_body = $this->randomName(8);
+    $comment_subject = $this->randomMachineName(8);
+    $comment_body = $this->randomMachineName(8);
     $comment = entity_create('comment', array(
       'subject' => $comment_subject,
       'comment_body' => $comment_body,
@@ -314,13 +314,13 @@ class UserCancelTest extends WebTestBase {
 
     // Create comment.
     $edit = array();
-    $edit['subject'] = $this->randomName(8);
-    $edit['comment_body[0][value]'] = $this->randomName(16);
+    $edit['subject[0][value]'] = $this->randomMachineName(8);
+    $edit['comment_body[0][value]'] = $this->randomMachineName(16);
 
     $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit, t('Preview'));
     $this->drupalPostForm(NULL, array(), t('Save'));
     $this->assertText(t('Your comment has been posted.'));
-    $comments = entity_load_multiple_by_properties('comment', array('subject' => $edit['subject']));
+    $comments = entity_load_multiple_by_properties('comment', array('subject' => $edit['subject[0][value]']));
     $comment = reset($comments);
     $this->assertTrue($comment->id(), 'Comment found.');
 
@@ -441,8 +441,8 @@ class UserCancelTest extends WebTestBase {
     $this->drupalPostForm('admin/people', $edit, t('Apply'));
     $this->assertText(t('Are you sure you want to cancel these user accounts?'), 'Confirmation form to cancel accounts displayed.');
     $this->assertText(t('When cancelling these accounts'), 'Allows to select account cancellation method.');
-    $this->assertText(t('Require email confirmation to cancel account.'), 'Allows to send confirmation mail.');
-    $this->assertText(t('Notify user when account is canceled.'), 'Allows to send notification mail.');
+    $this->assertText(t('Require email confirmation to cancel account'), 'Allows to send confirmation mail.');
+    $this->assertText(t('Notify user when account is canceled'), 'Allows to send notification mail.');
 
     // Confirm deletion.
     $this->drupalPostForm(NULL, NULL, t('Cancel accounts'));

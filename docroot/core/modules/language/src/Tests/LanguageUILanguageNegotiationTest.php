@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Tests;
 
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationBrowser;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
@@ -59,11 +60,8 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
    */
   public static $modules = array('locale', 'language_test', 'block', 'user');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
-
-    $this->request = Request::createFromGlobals();
-    $this->container->set('request', $this->request);
 
     $admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages', 'administer blocks'));
     $this->drupalLogin($admin_user);
@@ -91,15 +89,10 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // is for some reason not found when doing translate search. This might
     // be some bug.
     $default_language = \Drupal::languageManager()->getDefaultLanguage();
-    $language = new Language(array(
-      'id' => $langcode_browser_fallback,
-      'default' => TRUE,
-    ));
-    language_save($language);
-    $language = new Language(array(
-      'id' => $langcode,
-    ));
-    language_save($language);
+    $language = ConfigurableLanguage::createFromLangcode($langcode_browser_fallback);
+    $language->set('default', TRUE);
+    $language->save();
+    ConfigurableLanguage::createFromLangcode($langcode)->save();
 
     // We will look for this string in the admin/config screen to see if the
     // corresponding translated string is shown.
@@ -111,7 +104,9 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Now the t()'ed string is in db so switch the language back to default.
     // This will rebuild the container so we need to rebuild the container in
     // the test environment.
-    language_save($default_language);
+    $default_language = ConfigurableLanguage::load($default_language->getId());
+    $default_language->set('default', TRUE);
+    $default_language->save();
     \Drupal::config('language.negotiation')->set('url.prefixes.en', '')->save();
     $this->rebuildContainer();
 
@@ -352,10 +347,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
   function testUrlLanguageFallback() {
     // Add the Italian language.
     $langcode_browser_fallback = 'it';
-    $language = new Language(array(
-      'id' => $langcode_browser_fallback,
-    ));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode($langcode_browser_fallback)->save();
     $languages = $this->container->get('language_manager')->getLanguages();
 
     // Enable the path prefix for the default language: this way any unprefixed
@@ -403,11 +395,8 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
    */
   function testLanguageDomain() {
     // Add the Italian language.
-    $langcode = 'it';
-    $language = new Language(array(
-      'id' => $langcode,
-    ));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode('it')->save();
+
     $languages = $this->container->get('language_manager')->getLanguages();
 
     // Enable browser and URL language detection.
@@ -432,7 +421,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Base path gives problems on the testbot, so $correct_link is hard-coded.
     // @see UrlAlterFunctionalTest::assertUrlOutboundAlter (path.test).
     $italian_url = url('admin', array('language' => $languages['it'], 'script' => ''));
-    $url_scheme = $this->request->isSecure() ? 'https://' : 'http://';
+    $url_scheme = \Drupal::request()->isSecure() ? 'https://' : 'http://';
     $correct_link = $url_scheme . $link;
     $this->assertEqual($italian_url, $correct_link, format_string('The url() function returns the right URL (@url) in accordance with the chosen language', array('@url' => $italian_url)));
 
@@ -446,9 +435,9 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->settingsSet('mixed_mode_sessions', FALSE);
 
     // Test HTTPS via current URL scheme.
-    $generator = $this->container->get('url_generator');
     $request = Request::create('', 'GET', array(), array(), array(), array('HTTPS' => 'on'));
-    $generator->setRequest($request);
+    $this->container->get('request_stack')->push($request);
+    $generator = $this->container->get('url_generator');
     $italian_url = url('admin', array('language' => $languages['it'], 'script' => ''));
     $correct_link = 'https://' . $link;
     $this->assertTrue($italian_url == $correct_link, format_string('The url() function returns the right URL (via current URL scheme) (@url) in accordance with the chosen language', array('@url' => $italian_url)));

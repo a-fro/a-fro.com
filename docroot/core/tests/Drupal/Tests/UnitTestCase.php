@@ -47,7 +47,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
    *
    * @see \Drupal\Component\Utility\Random::name()
    */
-  public function randomName($length = 8) {
+  public function randomMachineName($length = 8) {
     return $this->getRandomGenerator()->name($length, TRUE);
   }
 
@@ -157,7 +157,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
    *   The mocked block.
    */
   protected function getBlockMockWithMachineName($machine_name) {
-    $plugin = $this->getMockBuilder('Drupal\block\BlockBase')
+    $plugin = $this->getMockBuilder('Drupal\Core\Block\BlockBase')
       ->disableOriginalConstructor()
       ->getMock();
     $plugin->expects($this->any())

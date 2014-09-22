@@ -13,7 +13,7 @@ namespace Drupal\file\Tests;
  * @group file
  */
 class SpaceUsedTest extends FileManagedUnitTestBase {
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create records for a couple of users with different sizes.
@@ -43,7 +43,7 @@ class SpaceUsedTest extends FileManagedUnitTestBase {
    *   The file entity.
    */
   protected function createFileWithSize($uri, $size, $uid, $status = FILE_STATUS_PERMANENT) {
-    file_put_contents($uri, $this->randomName($size));
+    file_put_contents($uri, $this->randomMachineName($size));
     $file = entity_create('file', array(
       'uri' => $uri,
       'uid' => $uid,

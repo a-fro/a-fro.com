@@ -5,6 +5,7 @@
  * Enables semantically enriched output for Drupal sites in the form of RDFa.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
@@ -216,7 +217,7 @@ function rdf_entity_prepare_view($entity_type, array $entities, array $displays)
       $field_mapping = $mapping->getPreparedFieldMapping($name);
       if ($field_mapping) {
         foreach ($entity->get($name) as $item) {
-          $item->_attributes += rdf_rdfa_attributes($field_mapping, $item->getValue());
+          $item->_attributes += rdf_rdfa_attributes($field_mapping, $item->toArray());
         }
       }
     }
@@ -224,16 +225,16 @@ function rdf_entity_prepare_view($entity_type, array $entities, array $displays)
 }
 
 /**
- * Implements hook_ENTITY_TYPE_load() for comment entities.
+ * Implements hook_ENTITY_TYPE_storage_load() for comment entities.
  */
-function rdf_comment_load($comments) {
+function rdf_comment_storage_load($comments) {
   foreach ($comments as $comment) {
     // Pages with many comments can show poor performance. This information
     // isn't needed until rdf_preprocess_comment() is called, but set it here
     // to optimize performance for websites that implement an entity cache.
     $created_mapping = rdf_get_mapping('comment', $comment->bundle())
       ->getPreparedFieldMapping('created');
-    $comment->rdf_data['date'] = rdf_rdfa_attributes($created_mapping, $comment->getCreatedTime());
+    $comment->rdf_data['date'] = rdf_rdfa_attributes($created_mapping, $comment->get('created')->first()->toArray());
     $entity = $comment->getCommentedEntity();
     $comment->rdf_data['entity_uri'] = $entity->url();
     if ($comment->hasParentComment()) {
@@ -304,7 +305,7 @@ function rdf_preprocess_node(&$variables) {
   // Adds RDFa markup for the date.
   $created_mapping = $mapping->getPreparedFieldMapping('created');
   if (!empty($created_mapping) && $variables['display_submitted']) {
-    $date_attributes = rdf_rdfa_attributes($created_mapping, $variables['node']->getCreatedTime());
+    $date_attributes = rdf_rdfa_attributes($created_mapping, $variables['node']->get('created')->first()->toArray());
     $rdf_metadata = array(
       '#theme' => 'rdf_metadata',
       '#metadata' => array($date_attributes),
@@ -444,8 +445,8 @@ function rdf_preprocess_comment(&$variables) {
     $author_attributes = array('rel' => $author_mapping['properties']);
     // Wraps the author variable and the submitted variable which are both
     // available in comment.html.twig.
-    $variables['author'] = '<span ' . new Attribute($author_attributes) . '>' . $variables['author'] . '</span>';
-    $variables['submitted'] = '<span ' . new Attribute($author_attributes) . '>' . $variables['submitted'] . '</span>';
+    $variables['author'] = SafeMarkup::set('<span ' . new Attribute($author_attributes) . '>' . $variables['author'] . '</span>');
+    $variables['submitted'] = SafeMarkup::set('<span ' . new Attribute($author_attributes) . '>' . $variables['submitted'] . '</span>');
   }
   // Adds RDFa markup for the date of the comment.
   $created_mapping = $mapping->getPreparedFieldMapping('created');
@@ -461,8 +462,8 @@ function rdf_preprocess_comment(&$variables) {
     $created_metadata_markup = drupal_render($rdf_metadata);
     // Appends the markup to the created variable and the submitted variable
     // which are both available in comment.html.twig.
-    $variables['created'] .= $created_metadata_markup;
-    $variables['submitted'] .= $created_metadata_markup;
+    $variables['created'] = SafeMarkup::set(SafeMarkup::escape($variables['created']) . $created_metadata_markup);
+    $variables['submitted'] = SafeMarkup::set($variables['submitted'] . $created_metadata_markup);
   }
   $title_mapping = $mapping->getPreparedFieldMapping('subject');
   if (!empty($title_mapping)) {
@@ -566,14 +567,11 @@ function rdf_preprocess_image(&$variables) {
  */
 function template_preprocess_rdf_metadata(&$variables) {
   foreach ($variables['metadata'] as $key => $attributes) {
-    // Add a class so that developers viewing the HTML source can see why there
-    // are empty <span> tags in the document. The class can also be used to set
-    // a CSS display:none rule in a theme where empty spans affect display.
-    $attributes['class'][] = 'rdf-meta';
-    // The XHTML+RDFa doctype allows either <span></span> or <span /> syntax to
-    // be used, but for maximum browser compatibility, W3C recommends the
-    // former when serving pages using the text/html media type, see
-    // http://www.w3.org/TR/xhtml1/#C_3.
-    $variables['metadata'][$key] = new Attribute($attributes);
+    if (!is_null($attributes)) {
+      $variables['metadata'][$key] = new Attribute($attributes);
+    }
+    else {
+      $variables['metadata'][$key] = new Attribute();
+    }
   }
 }

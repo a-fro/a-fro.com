@@ -176,7 +176,7 @@ class ValidationTest extends WebTestBase {
 
     // Invalid password.
     $edit = array(
-      'password' => $this->randomName(),
+      'password' => $this->randomMachineName(),
     );
     $this->drupalPostForm('form-test/pattern', $edit, 'Submit');
     $this->assertNoRaw($textfield_error);
@@ -197,11 +197,10 @@ class ValidationTest extends WebTestBase {
   /**
    * Tests #required with custom validation errors.
    *
-   * @see form_test_validate_required_form()
+   * @see \Drupal\form_test\Form\FormTestValidateRequiredForm
    */
   function testCustomRequiredError() {
-    $form = $form_state = array();
-    $form = form_test_validate_required_form($form, $form_state);
+    $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestValidateRequiredForm');
 
     // Verify that a custom #required error can be set.
     $edit = array();

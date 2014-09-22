@@ -68,6 +68,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'd6_comment',
     'd6_comment_entity_display',
     'd6_comment_entity_form_display',
+    'd6_comment_entity_form_display_subject',
     'd6_comment_field',
     'd6_comment_field_instance',
     'd6_contact_category',
@@ -140,7 +141,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $config = \Drupal::config('system.theme');
     $config->set('default', 'bartik');
@@ -232,6 +233,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
       __NAMESPACE__ . '\MigrateCommentTest',
       __NAMESPACE__ . '\MigrateCommentVariableEntityDisplayTest',
       __NAMESPACE__ . '\MigrateCommentVariableEntityFormDisplayTest',
+      __NAMESPACE__ . '\MigrateCommentVariableEntityFormDisplaySubjectTest',
       __NAMESPACE__ . '\MigrateCommentVariableFieldTest',
       __NAMESPACE__ . '\MigrateCommentVariableInstanceTest',
       __NAMESPACE__ . '\MigrateContactCategoryTest',

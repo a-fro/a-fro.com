@@ -11,7 +11,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\entity\EntityDisplayModeBase
+ * @coversDefaultClass \Drupal\Core\Entity\EntityDisplayModeBase
  * @group Config
  */
 class EntityDisplayModeBaseUnitTest extends UnitTestCase {
@@ -19,7 +19,7 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
   /**
    * The entity under test.
    *
-   * @var \Drupal\entity\EntityDisplayModeBase|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityDisplayModeBase|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entity;
 
@@ -54,8 +54,8 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
-    $this->entityType = $this->randomName();
+  protected function setUp() {
+    $this->entityType = $this->randomMachineName();
 
     $this->entityInfo = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $this->entityInfo->expects($this->any())
@@ -77,7 +77,7 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
    * @covers ::calculateDependencies
    */
   public function testCalculateDependencies() {
-    $target_entity_type_id = $this->randomName(16);
+    $target_entity_type_id = $this->randomMachineName(16);
 
     $target_entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $target_entity_type->expects($this->any())
@@ -94,7 +94,7 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
       ->with($this->entityType)
       ->will($this->returnValue($this->entityInfo));
 
-    $this->entity = $this->getMockBuilder('\Drupal\entity\EntityDisplayModeBase')
+    $this->entity = $this->getMockBuilder('\Drupal\Core\Entity\EntityDisplayModeBase')
       ->setConstructorArgs(array($values, $this->entityType))
       ->setMethods(array('getFilterFormat'))
       ->getMock();

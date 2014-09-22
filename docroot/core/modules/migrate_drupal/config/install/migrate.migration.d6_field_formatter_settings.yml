@@ -1,5 +1,7 @@
 id: d6_field_formatter_settings
 label: Drupal 6 field formatter configuration
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_field_instance_per_view_mode
   constants:
@@ -47,6 +49,7 @@ process:
           text:
             default: text_default
             trimmed: text_trimmed
+            plain: string
           number_integer:
             default: number_integer
             us_0: number_integer

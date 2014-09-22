@@ -9,6 +9,7 @@ namespace Drupal\image\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginBagsInterface;
 use Drupal\Core\Routing\RequestHelper;
@@ -26,7 +27,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  * @ConfigEntityType(
  *   id = "image_style",
  *   label = @Translation("Image style"),
- *   controllers = {
+ *   handlers = {
  *     "form" = {
  *       "add" = "Drupal\image\Form\ImageStyleAddForm",
  *       "edit" = "Drupal\image\Form\ImageStyleEditForm",
@@ -42,13 +43,15 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *     "label" = "label"
  *   },
  *   links = {
- *     "flush-form" = "image.style_flush",
- *     "edit-form" = "image.style_edit",
- *     "delete-form" = "image.style_delete"
+ *     "flush-form" = "entity.image_style.flush_form",
+ *     "edit-form" = "entity.image_style.edit_form",
+ *     "delete-form" = "entity.image_style.delete_form"
  *   }
  * )
  */
 class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, EntityWithPluginBagsInterface {
+
+  use ThirdPartySettingsTrait;
 
   /**
    * The name of the image style to use as replacement upon delete.
@@ -272,7 +275,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
 
     // Build the destination folder tree if it doesn't already exist.
     if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
-      watchdog('image', 'Failed to create style directory: %directory', array('%directory' => $directory), WATCHDOG_ERROR);
+      \Drupal::logger('image')->error('Failed to create style directory: %directory', array('%directory' => $directory));
       return FALSE;
     }
 
@@ -287,7 +290,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
 
     if (!$image->save($derivative_uri)) {
       if (file_exists($derivative_uri)) {
-        watchdog('image', 'Cached image file %destination already exists. There may be an issue with your rewrite configuration.', array('%destination' => $derivative_uri), WATCHDOG_ERROR);
+        \Drupal::logger('image')->error('Cached image file %destination already exists. There may be an issue with your rewrite configuration.', array('%destination' => $derivative_uri));
       }
       return FALSE;
     }

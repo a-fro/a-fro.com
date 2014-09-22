@@ -101,7 +101,7 @@ class StandardProfileTest extends WebTestBase {
    */
   protected $commenterUri;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->base_uri = url('<front>', array('absolute' => TRUE));
@@ -124,8 +124,8 @@ class StandardProfileTest extends WebTestBase {
 
     // Create term.
     $this->term = entity_create('taxonomy_term', array(
-      'name' => $this->randomName(),
-      'description' => $this->randomName(),
+      'name' => $this->randomMachineName(),
+      'description' => $this->randomMachineName(),
       'vid' => 'tags',
     ));
     $this->term->save();
@@ -273,7 +273,7 @@ class StandardProfileTest extends WebTestBase {
     // true for testing.
     // @todo Clean-up standard profile defaults.
     $node_type = entity_load('node_type', 'page');
-    $node_type->settings['node']['submitted'] = TRUE;
+    $node_type->setDisplaySubmitted(TRUE);
     $node_type->save();
 
     // Feed the HTML into the parser.
@@ -501,8 +501,8 @@ class StandardProfileTest extends WebTestBase {
       'field_name' => 'comment',
       'uid' => $uid,
       'pid' => $pid,
-      'subject' => $this->randomName(),
-      'comment_body' => $this->randomName(),
+      'subject' => $this->randomMachineName(),
+      'comment_body' => $this->randomMachineName(),
       'status' => 1,
     );
     if ($contact) {

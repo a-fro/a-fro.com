@@ -21,7 +21,7 @@ class NodeAdminTest extends NodeTestBase {
    */
   public static $modules = array('views');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Remove the "view own unpublished content" permission which is set
@@ -44,7 +44,7 @@ class NodeAdminTest extends NodeTestBase {
     $changed = REQUEST_TIME;
     foreach (array('dd', 'aa', 'DD', 'bb', 'cc', 'CC', 'AA', 'BB') as $prefix) {
       $changed += 1000;
-      $node = $this->drupalCreateNode(array('title' => $prefix . $this->randomName(6)));
+      $node = $this->drupalCreateNode(array('title' => $prefix . $this->randomMachineName(6)));
       db_update('node_field_data')
         ->fields(array('changed' => $changed))
         ->condition('nid', $node->id())

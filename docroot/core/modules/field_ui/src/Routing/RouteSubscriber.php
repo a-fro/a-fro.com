@@ -41,9 +41,9 @@ class RouteSubscriber extends RouteSubscriberBase {
   protected function alterRoutes(RouteCollection $collection) {
     foreach ($this->manager->getDefinitions() as $entity_type_id => $entity_type) {
       $defaults = array();
-      if ($entity_type->isFieldable() && $entity_type->hasLinkTemplate('admin-form')) {
+      if ($entity_type->isFieldable() && $route_name = $entity_type->get('field_ui_base_route')) {
         // Try to get the route from the current collection.
-        if (!$entity_route = $collection->get($entity_type->getLinkTemplate('admin-form'))) {
+        if (!$entity_route = $collection->get($route_name)) {
           continue;
         }
         $path = $entity_route->getPath();
@@ -67,12 +67,12 @@ class RouteSubscriber extends RouteSubscriberBase {
         $collection->add("field_ui.instance_edit_$entity_type_id", $route);
 
         $route = new Route(
-          "$path/fields/{field_instance_config}/field",
-          array('_form' => '\Drupal\field_ui\Form\FieldEditForm'),
+          "$path/fields/{field_instance_config}/storage",
+          array('_form' => '\Drupal\field_ui\Form\FieldStorageEditForm'),
           array('_entity_access' => 'field_instance_config.update'),
           $options
         );
-        $collection->add("field_ui.field_edit_$entity_type_id", $route);
+        $collection->add("field_ui.storage_edit_$entity_type_id", $route);
 
         $route = new Route(
           "$path/fields/{field_instance_config}/delete",

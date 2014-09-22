@@ -23,7 +23,7 @@ class UserAttributesTest extends WebTestBase {
    */
   public static $modules = array('rdf', 'node');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     rdf_get_mapping('user', 'user')
       ->setBundleMapping(array(
@@ -48,12 +48,14 @@ class UserAttributesTest extends WebTestBase {
     $user1 = $this->drupalCreateUser(array('access user profiles'));
 
     $authors = array(
-      $this->drupalCreateUser(array(), $this->randomName(30)),
-      $this->drupalCreateUser(array(), $this->randomName(20)),
-      $this->drupalCreateUser(array(), $this->randomName(5))
+      $this->drupalCreateUser(array(), $this->randomMachineName(30)),
+      $this->drupalCreateUser(array(), $this->randomMachineName(20)),
+      $this->drupalCreateUser(array(), $this->randomMachineName(5))
     );
 
     $this->drupalLogin($user1);
+
+    $this->drupalCreateContentType(array('type' => 'article'));
 
     foreach($authors as $author) {
       $account_uri = url('user/' . $author->id(), array('absolute' => TRUE));

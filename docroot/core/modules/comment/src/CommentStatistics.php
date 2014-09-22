@@ -68,8 +68,9 @@ class CommentStatistics implements CommentStatisticsInterface {
   /**
    * {@inheritdoc}
    */
-  public function read($entities, $entity_type) {
-    $stats = $this->database->select('comment_entity_statistics', 'ces')
+  public function read($entities, $entity_type, $accurate = TRUE) {
+    $options = $accurate ? array() : array('target' => 'replica');
+    $stats =  $this->database->select('comment_entity_statistics', 'ces', $options)
       ->fields('ces')
       ->condition('ces.entity_id', array_keys($entities))
       ->condition('ces.entity_type', $entity_type)
@@ -251,6 +252,10 @@ class CommentStatistics implements CommentStatisticsInterface {
         ->condition('field_name', $comment->getFieldName())
         ->execute();
     }
+
+    // Reset the cache of the commented entity so that when the entity is loaded
+    // the next time, the statistics will be loaded again.
+    $this->entityManager->getStorage($comment->getCommentedEntityTypeId())->resetCache(array($comment->getCommentedEntityId()));
   }
 
 }

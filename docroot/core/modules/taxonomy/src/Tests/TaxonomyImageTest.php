@@ -28,7 +28,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
    */
   public static $modules = array('image');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Remove access content permission from registered users.
@@ -38,7 +38,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
     // Add a field instance to the vocabulary.
     $entity_type = 'taxonomy_term';
     $name = 'field_test';
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => $name,
       'entity_type' => $entity_type,
       'type' => 'image',
@@ -73,7 +73,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
     // Create a term and upload the image.
     $files = $this->drupalGetTestFiles('image');
     $image = array_pop($files);
-    $edit['name[0][value]'] = $this->randomName();
+    $edit['name[0][value]'] = $this->randomMachineName();
     $edit['files[field_test_0]'] = drupal_realpath($image->uri);
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id()  . '/add', $edit, t('Save'));
     $terms = entity_load_multiple_by_properties('taxonomy_term', array('name' => $edit['name[0][value]']));

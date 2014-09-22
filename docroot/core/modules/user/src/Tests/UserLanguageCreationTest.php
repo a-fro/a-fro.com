@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -35,8 +35,7 @@ class UserLanguageCreationTest extends WebTestBase {
 
     // Add predefined language.
     $langcode = 'fr';
-    $language = new Language(array('id' => $langcode));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode($langcode)->save();
 
     // Set language negotiation.
     $edit = array(
@@ -52,10 +51,10 @@ class UserLanguageCreationTest extends WebTestBase {
 
     // Create a user with the admin/people/create form and check if the correct
     // language is set.
-    $username = $this->randomName(10);
+    $username = $this->randomMachineName(10);
     $edit = array(
       'name' => $username,
-      'mail' => $this->randomName(4) . '@example.com',
+      'mail' => $this->randomMachineName(4) . '@example.com',
       'pass[pass1]' => $username,
       'pass[pass2]' => $username,
     );
@@ -72,10 +71,10 @@ class UserLanguageCreationTest extends WebTestBase {
     $this->drupalGet($langcode . '/user/register');
     $this->assertNoFieldByName('language[fr]', 'Language selector is not accessible.');
 
-    $username = $this->randomName(10);
+    $username = $this->randomMachineName(10);
     $edit = array(
       'name' => $username,
-      'mail' => $this->randomName(4) . '@example.com',
+      'mail' => $this->randomMachineName(4) . '@example.com',
     );
 
     $this->drupalPostForm($langcode . '/user/register', $edit, t('Create new account'));
@@ -93,7 +92,7 @@ class UserLanguageCreationTest extends WebTestBase {
     $this->assertOptionSelected("edit-preferred-langcode", $langcode, 'Language selector is accessible and correct language is selected.');
 
     // Set pass_raw so we can login the new user.
-    $user->pass_raw = $this->randomName(10);
+    $user->pass_raw = $this->randomMachineName(10);
     $edit = array(
       'pass[pass1]' => $user->pass_raw,
       'pass[pass2]' => $user->pass_raw,

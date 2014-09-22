@@ -45,7 +45,7 @@ class FilterEntityBundleTest extends ViewTestBase {
    */
   protected $entities = array();
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'test_bundle'));
@@ -57,7 +57,7 @@ class FilterEntityBundleTest extends ViewTestBase {
 
     foreach ($this->entityBundles as $key => $info) {
       for ($i = 0; $i < 5; $i++) {
-        $entity = entity_create('node', array('label' => $this->randomName(), 'uid' => 1, 'type' => $key));
+        $entity = entity_create('node', array('label' => $this->randomMachineName(), 'uid' => 1, 'type' => $key));
         $entity->save();
         $this->entities[$key][$entity->id()] = $entity;
         $this->entities['count']++;

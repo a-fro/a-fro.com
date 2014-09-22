@@ -23,7 +23,7 @@ class LinkFieldUITest extends WebTestBase {
    */
   public static $modules = array('node', 'link', 'field_ui');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->web_user = $this->drupalCreateUser(array('administer content types', 'administer node fields', 'administer node display'));
@@ -39,7 +39,7 @@ class LinkFieldUITest extends WebTestBase {
     $type_path = 'admin/structure/types/manage/' . $type->type;
 
     // Add a link field to the newly-created type.
-    $label = $this->randomName();
+    $label = $this->randomMachineName();
     $field_name = drupal_strtolower($label);
     $edit = array(
       'fields[_add_new_field][label]' => $label,

@@ -24,7 +24,7 @@ class FilterAPITest extends EntityUnitTestBase {
 
   public static $modules = array('system', 'filter', 'filter_test', 'user');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installConfig(array('system', 'filter'));
@@ -247,12 +247,12 @@ class FilterAPITest extends EntityUnitTestBase {
     $expected_cache_tags = array(
       // The cache tag set by the processed_text element itself.
       'filter_format' => array(
-        'element_test' => 'element_test',
+        'element_test',
       ),
       // The cache tags set by the filter_test_cache_tags filter.
       'foo' => array(
-        'bar' => 'bar',
-        'baz' => 'baz',
+        'bar',
+        'baz',
       ),
     );
     $this->assertEqual($expected_cache_tags, $build['#cache']['tags'], 'Expected cache tags present.');
@@ -326,6 +326,50 @@ class FilterAPITest extends EntityUnitTestBase {
       'plain_text' => 'Plain text',
     );
     $this->assertEqual($allowed_options, $expected_allowed_options);
+  }
+
+  /**
+   * Tests that FilterFormat::preSave() only saves customized plugins.
+   */
+  public function testFilterFormatPreSave() {
+    /** @var \Drupal\filter\FilterFormatInterface $crazy_format */
+    $crazy_format = entity_create('filter_format', array(
+      'format' => 'crazy',
+      'name' => 'Crazy',
+      'weight' => 1,
+      'filters' => array(
+        'filter_html_escape' => array(
+          'weight' => 10,
+          'status' => 1,
+        ),
+        'filter_html' => array(
+          'weight' => -10,
+          'status' => 1,
+          'settings' => array(
+            'allowed_html' => '<p>',
+          ),
+        ),
+      )
+    ));
+    $crazy_format->save();
+    // Use config to directly load the configuration and check that only enabled
+    // or customized plugins are saved to configuration.
+    $filters = \Drupal::config('filter.format.crazy')->get('filters');
+    $this->assertEqual(array('filter_html_escape', 'filter_html'), array_keys($filters));
+
+    // Disable a plugin to ensure that disabled plugins with custom settings are
+    // stored in configuration.
+    $crazy_format->setFilterConfig('filter_html_escape', array('status' => FALSE));
+    $crazy_format->save();
+    $filters = \Drupal::config('filter.format.crazy')->get('filters');
+    $this->assertEqual(array('filter_html_escape', 'filter_html'), array_keys($filters));
+
+    // Set the settings as per default to ensure that disable plugins in this
+    // state are not stored in configuration.
+    $crazy_format->setFilterConfig('filter_html_escape', array('weight' => -10));
+    $crazy_format->save();
+    $filters = \Drupal::config('filter.format.crazy')->get('filters');
+    $this->assertEqual(array('filter_html'), array_keys($filters));
   }
 
   /**

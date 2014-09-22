@@ -17,9 +17,9 @@ use Drupal\user\RoleInterface;
  * @ConfigEntityType(
  *   id = "user_role",
  *   label = @Translation("Role"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\user\RoleStorage",
- *     "access" = "Drupal\user\RoleAccessController",
+ *     "access" = "Drupal\user\RoleAccessControlHandler",
  *     "list_builder" = "Drupal\user\RoleListBuilder",
  *     "form" = {
  *       "default" = "Drupal\user\RoleForm",
@@ -28,15 +28,16 @@ use Drupal\user\RoleInterface;
  *   },
  *   admin_permission = "administer permissions",
  *   config_prefix = "role",
+ *   static_cache = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "weight" = "weight",
  *     "label" = "label"
  *   },
  *   links = {
- *     "delete-form" = "user.role_delete",
- *     "edit-form" = "user.role_edit",
- *     "edit-permissions-form" = "user.admin_permission"
+ *     "delete-form" = "entity.user_role.delete_form",
+ *     "edit-form" = "entity.user_role.edit_form",
+ *     "edit-permissions-form" = "entity.user_role.edit_permissions_form"
  *   }
  * )
  */

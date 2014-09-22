@@ -36,18 +36,18 @@ class UserEntityReferenceTest extends EntityUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->role1 = entity_create('user_role', array(
-      'id' => strtolower($this->randomName(8)),
-      'label' => $this->randomName(8),
+      'id' => strtolower($this->randomMachineName(8)),
+      'label' => $this->randomMachineName(8),
     ));
     $this->role1->save();
 
     $this->role2 = entity_create('user_role', array(
-      'id' => strtolower($this->randomName(8)),
-      'label' => $this->randomName(8),
+      'id' => strtolower($this->randomMachineName(8)),
+      'label' => $this->randomMachineName(8),
     ));
     $this->role2->save();
 

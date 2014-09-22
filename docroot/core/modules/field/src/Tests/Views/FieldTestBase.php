@@ -39,7 +39,7 @@ abstract class FieldTestBase extends ViewTestBase {
    *
    * @var array
    */
-  public $fields;
+  public $fieldStorages;
 
   /**
    * Stores the instances of the fields. They have
@@ -61,30 +61,27 @@ abstract class FieldTestBase extends ViewTestBase {
     ViewTestData::createTestViews(get_class($this), array('field_test_views'));
   }
 
-  function setUpFields($amount = 3) {
+  function setUpFields($amount = 3, $type = 'string') {
     // Create three fields.
     $field_names = array();
     for ($i = 0; $i < $amount; $i++) {
       $field_names[$i] = 'field_name_' . $i;
-      $field = array(
+      $this->fieldStorages[$i] = entity_create('field_storage_config', array(
         'name' => $field_names[$i],
         'entity_type' => 'node',
-        'type' => 'text',
-      );
-
-      $this->fields[$i] = $field = entity_create('field_config', $field);
-      $field->save();
+        'type' => $type,
+      ));
+      $this->fieldStorages[$i]->save();
     }
     return $field_names;
   }
 
   function setUpInstances($bundle = 'page') {
-    foreach ($this->fields as $key => $field) {
-      $instance = array(
-        'field' => $field,
-        'bundle' => 'page',
-      );
-      $this->instances[$key] = entity_create('field_instance_config', $instance);
+    foreach ($this->fieldStorages as $key => $field_storage) {
+      $this->instances[$key] = entity_create('field_instance_config', array(
+        'field_storage' => $field_storage,
+        'bundle' => $bundle,
+      ));
       $this->instances[$key]->save();
     }
   }

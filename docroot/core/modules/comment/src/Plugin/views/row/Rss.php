@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\row;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\row\RowPluginBase;
 
 /**
@@ -31,12 +32,11 @@ class Rss extends RowPluginBase {
     $options = parent::defineOptions();
 
     $options['view_mode'] = array('default' => 'default');
-    $options['links'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $form['view_mode'] = array(
@@ -44,11 +44,6 @@ class Rss extends RowPluginBase {
       '#title' => t('Display type'),
       '#options' => $this->options_form_summary_options(),
       '#default_value' => $this->options['view_mode'],
-    );
-    $form['links'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Display links'),
-      '#default_value' => $this->options['links'],
     );
   }
 
@@ -133,14 +128,8 @@ class Rss extends RowPluginBase {
       $this->view->style_plugin->namespaces = array_merge($this->view->style_plugin->namespaces, $comment->rss_namespaces);
     }
 
-    // Hide the links if desired.
-    if (!$this->options['links']) {
-      hide($build['links']);
-    }
-
     if ($view_mode != 'title') {
-      // We render comment contents and force links to be last.
-      $build['links']['#weight'] = 1000;
+      // We render comment contents.
       $item_text .= drupal_render($build);
     }
 

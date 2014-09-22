@@ -52,7 +52,11 @@ class ViewsHandlerManager extends DefaultPluginManager {
    */
   public function __construct($handler_type, \Traversable $namespaces, ViewsData $views_data, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     $plugin_definition_annotation_name = 'Drupal\views\Annotation\Views' . Container::camelize($handler_type);
-    parent::__construct("Plugin/views/$handler_type", $namespaces, $module_handler, $plugin_definition_annotation_name);
+    $plugin_interface = 'Drupal\views\Plugin\views\ViewsHandlerInterface';
+    if ($handler_type == 'join') {
+      $plugin_interface = 'Drupal\views\Plugin\views\join\JoinPluginInterface';
+    }
+    parent::__construct("Plugin/views/$handler_type", $namespaces, $module_handler, $plugin_interface, $plugin_definition_annotation_name);
 
     $this->setCacheBackend($cache_backend, "views:$handler_type", array('extension' => array(TRUE, 'views')));
 
@@ -70,20 +74,16 @@ class ViewsHandlerManager extends DefaultPluginManager {
    *   An associative array representing the handler to be retrieved:
    *   - table: The name of the table containing the handler.
    *   - field: The name of the field the handler represents.
-   *   - optional: (optional) Whether or not this handler is optional. If a
-   *     handler is missing and not optional, a debug message will be displayed.
-   *     Defaults to FALSE.
    * @param string|null $override
    *   (optional) Override the actual handler object with this plugin ID. Used for
    *   aggregation when the handler is redirected to the aggregation handler.
    *
-   * @return \Drupal\views\Plugin\views\HandlerBase
+   * @return \Drupal\views\Plugin\views\ViewsHandlerInterface
    *   An instance of a handler object. May be a broken handler instance.
    */
   public function getHandler($item, $override = NULL) {
     $table = $item['table'];
     $field = $item['field'];
-    $optional = !empty($item['optional']);
     // Get the plugin manager for this type.
     $data = $this->viewsData->get($table);
 
@@ -119,12 +119,8 @@ class ViewsHandlerManager extends DefaultPluginManager {
       }
     }
 
-    if (!$optional) {
-      // debug(t("Missing handler: @table @field @type", array('@table' => $table, '@field' => $field, '@type' => $this->handlerType)));
-    }
-
     // Finally, use the 'broken' handler.
-    return $this->createInstance('broken', array('optional' => $optional, 'original_configuration' => $item));
+    return $this->createInstance('broken', array('original_configuration' => $item));
   }
 
   /**

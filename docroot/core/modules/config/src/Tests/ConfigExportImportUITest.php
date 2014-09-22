@@ -63,27 +63,28 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->content_type = $this->drupalCreateContentType();
 
     // Create a field.
-    $this->field = entity_create('field_config', array(
-      'name' => drupal_strtolower($this->randomName()),
+    $this->fieldName = drupal_strtolower($this->randomMachineName());
+    $this->fieldStorage = entity_create('field_storage_config', array(
+      'name' => $this->fieldName,
       'entity_type' => 'node',
       'type' => 'text',
     ));
-    $this->field->save();
+    $this->fieldStorage->save();
     entity_create('field_instance_config', array(
-      'field' => $this->field,
+      'field_storage' => $this->fieldStorage,
       'bundle' => $this->content_type->type,
     ))->save();
     entity_get_form_display('node', $this->content_type->type, 'default')
-      ->setComponent($this->field->name, array(
+      ->setComponent($this->fieldName, array(
         'type' => 'text_textfield',
       ))
       ->save();
     entity_get_display('node', $this->content_type->type, 'full')
-      ->setComponent($this->field->name)
+      ->setComponent($this->fieldName)
       ->save();
 
     $this->drupalGet('node/add/' . $this->content_type->type);
-    $this->assertFieldByName("{$this->field->name}[0][value]", '', 'Widget is displayed');
+    $this->assertFieldByName("{$this->fieldName}[0][value]", '', 'Widget is displayed');
 
     // Export the configuration.
     $this->drupalPostForm('admin/config/development/configuration/full/export', array(), 'Export');
@@ -97,21 +98,21 @@ class ConfigExportImportUITest extends WebTestBase {
     // Delete the custom field.
     $field_instances = entity_load_multiple('field_instance_config');
     foreach ($field_instances as $field_instance) {
-      if ($field_instance->field_name == $this->field->name) {
+      if ($field_instance->field_name == $this->fieldName) {
         $field_instance->delete();
       }
     }
-    $fields = entity_load_multiple('field_config');
-    foreach ($fields as $field) {
-      if ($field->name == $this->field->name) {
-        $field->delete();
+    $field_storages = entity_load_multiple('field_storage_config');
+    foreach ($field_storages as $field_storage) {
+      if ($field_storage->name == $this->fieldName) {
+        $field_storage->delete();
       }
     }
     $this->drupalGet('node/add/' . $this->content_type->type);
-    $this->assertNoFieldByName("{$this->field->name}[0][value]", '', 'Widget is not displayed');
+    $this->assertNoFieldByName("{$this->fieldName}[0][value]", '', 'Widget is not displayed');
 
     // Import the configuration.
-    $filename = 'temporary://' . $this->randomName();
+    $filename = 'temporary://' . $this->randomMachineName();
     file_put_contents($filename, $this->tarball);
     $this->drupalPostForm('admin/config/development/configuration/full/import', array('files[import_tarball]' => $filename), 'Upload');
     $this->drupalPostForm(NULL, array(), 'Import all');
@@ -119,7 +120,13 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->assertEqual(\Drupal::config('system.site')->get('slogan'), $this->newSlogan);
 
     $this->drupalGet('node/add');
-    $this->assertFieldByName("{$this->field->name}[0][value]", '', 'Widget is displayed');
+    $this->assertFieldByName("{$this->fieldName}[0][value]", '', 'Widget is displayed');
+
+    \Drupal::config('system.site')
+      ->set('slogan', $this->originalSlogan)
+      ->save();
+    $this->drupalGet('admin/config/development/configuration');
+    $this->assertText('Your current configuration has changed. Changes to these configuration items will be lost on the next synchronization: system.site');
   }
 
   /**
@@ -139,7 +146,7 @@ class ConfigExportImportUITest extends WebTestBase {
     // Export the configuration.
     $this->drupalPostForm('admin/config/development/configuration/full/export', array(), 'Export');
     $this->tarball = $this->drupalGetContent();
-    $filename = file_directory_temp() .'/' . $this->randomName();
+    $filename = file_directory_temp() .'/' . $this->randomMachineName();
     file_put_contents($filename, $this->tarball);
 
     // Set up the active storage collections to test import.
@@ -186,7 +193,7 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->drupalPostForm('admin/config/development/configuration/full/import', array('files[import_tarball]' => $filename), 'Upload');
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText(t('There are no configuration changes.'));
+    $this->assertNoText(t('There are no configuration changes to import.'));
     $this->assertText(t('!collection configuration collection', array('!collection' => 'collection.test1')));
     $this->assertText(t('!collection configuration collection', array('!collection' => 'collection.test2')));
     $this->assertText('config_test.create');
@@ -203,7 +210,7 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->assertLinkByHref('admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_delete');
 
     $this->drupalPostForm(NULL, array(), 'Import all');
-    $this->assertText(t('There are no configuration changes.'));
+    $this->assertText(t('There are no configuration changes to import.'));
 
     // Test data in collections.
     $data = $test1_storage->read('config_test.create');

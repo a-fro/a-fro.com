@@ -33,7 +33,7 @@ class ConfigImportRecreateTest extends DrupalUnitTestBase {
    */
   public static $modules = array('system', 'entity', 'field', 'text', 'user', 'node');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('node');
@@ -59,7 +59,7 @@ class ConfigImportRecreateTest extends DrupalUnitTestBase {
   }
 
   public function testRecreateEntity() {
-    $type_name = Unicode::strtolower($this->randomName(16));
+    $type_name = Unicode::strtolower($this->randomMachineName(16));
     $content_type = entity_create('node_type', array(
       'type' => $type_name,
       'name' => 'Node type one',

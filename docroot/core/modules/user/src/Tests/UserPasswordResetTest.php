@@ -22,7 +22,7 @@ class UserPasswordResetTest extends WebTestBase {
    */
   protected $account;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a user.
@@ -37,7 +37,7 @@ class UserPasswordResetTest extends WebTestBase {
     // Set the last login time that is used to generate the one-time link so
     // that it is definitely over a second ago.
     $account->login = REQUEST_TIME - mt_rand(10, 100000);
-    db_update('users')
+    db_update('users_field_data')
       ->fields(array('login' => $account->getLastLoginTime()))
       ->condition('uid', $account->id())
       ->execute();
@@ -50,7 +50,7 @@ class UserPasswordResetTest extends WebTestBase {
     // Try to reset the password for an invalid account.
     $this->drupalGet('user/password');
 
-    $edit = array('name' => $this->randomName(32));
+    $edit = array('name' => $this->randomMachineName(32));
     $this->drupalPostForm(NULL, $edit, t('Email new password'));
 
     $this->assertText(t('Sorry, @name is not recognized as a username or an email address.', array('@name' => $edit['name'])), 'Validation error message shown when trying to request password for invalid account.');
@@ -106,6 +106,13 @@ class UserPasswordResetTest extends WebTestBase {
     $_uid = $this->account->id();
     $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account->getPassword(), $bogus_timestamp, $this->account->getLastLoginTime()));
     $this->assertText(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'), 'Expired password reset request rejected.');
+
+    // Create a user, block the account, and verify that a login link is denied.
+    $timestamp = REQUEST_TIME - 1;
+    $blocked_account = $this->drupalCreateUser()->block();
+    $blocked_account->save();
+    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account->getPassword(), $timestamp, $blocked_account->getLastLoginTime()));
+    $this->assertResponse(403);
   }
 
   /**
@@ -127,8 +134,8 @@ class UserPasswordResetTest extends WebTestBase {
   public function testUserResetPasswordTextboxFilled() {
     $this->drupalGet('user/login');
     $edit = array(
-      'name' => $this->randomName(),
-      'pass' => $this->randomName(),
+      'name' => $this->randomMachineName(),
+      'pass' => $this->randomMachineName(),
     );
     $this->drupalPostForm('user', $edit, t('Log in'));
     $this->assertRaw(t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>',

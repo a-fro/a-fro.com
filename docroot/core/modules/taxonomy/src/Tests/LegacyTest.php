@@ -24,7 +24,7 @@ class LegacyTest extends TaxonomyTestBase {
    */
   public static $modules = array('node', 'datetime');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a tags vocabulary for the 'article' content type.
@@ -35,7 +35,7 @@ class LegacyTest extends TaxonomyTestBase {
     $vocabulary->save();
     $field_name = 'field_' . $vocabulary->id();
 
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
@@ -73,11 +73,11 @@ class LegacyTest extends TaxonomyTestBase {
     // Posts an article with a taxonomy term and a date prior to 1970.
     $date = new DrupalDateTime('1969-01-01 00:00:00');
     $edit = array();
-    $edit['title[0][value]'] = $this->randomName();
-    $edit['created[date]'] = $date->format('Y-m-d');
-    $edit['created[time]'] = $date->format('H:i:s');
-    $edit['body[0][value]'] = $this->randomName();
-    $edit['field_tags'] = $this->randomName();
+    $edit['title[0][value]'] = $this->randomMachineName();
+    $edit['created[0][value][date]'] = $date->format('Y-m-d');
+    $edit['created[0][value][time]'] = $date->format('H:i:s');
+    $edit['body[0][value]'] = $this->randomMachineName();
+    $edit['field_tags'] = $this->randomMachineName();
     $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));
     // Checks that the node has been saved.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);

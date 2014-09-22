@@ -21,9 +21,9 @@ class VocabularyCrudTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('field_test');
+  public static $modules = array('field_test', 'taxonomy_crud');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $admin_user = $this->drupalCreateUser(array('create article content', 'administer taxonomy'));
@@ -43,8 +43,6 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     // Assert that there are no terms left.
     $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {taxonomy_term_data}')->fetchField(), 'There are no terms remaining.');
 
-    // Create a new vocabulary and add a few terms to it.
-    $vocabulary = $this->createVocabulary();
     $terms = array();
     for ($i = 0; $i < 5; $i++) {
       $terms[$i] = $this->createTerm($vocabulary);
@@ -75,8 +73,8 @@ class VocabularyCrudTest extends TaxonomyTestBase {
 
     // Change the name and description.
     $vocabulary = $original_vocabulary;
-    $vocabulary->name = $this->randomName();
-    $vocabulary->description = $this->randomName();
+    $vocabulary->name = $this->randomMachineName();
+    $vocabulary->description = $this->randomMachineName();
     $vocabulary->save();
 
     // Load the vocabulary.
@@ -110,6 +108,11 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     $vocabulary3->weight = 2;
     $vocabulary3->save();
 
+    // Check if third party settings exist.
+    $this->assertEqual('bar', $vocabulary1->getThirdPartySetting('taxonomy_crud', 'foo'), 'Third party settings were added to the vocabulary.');
+    $this->assertEqual('bar', $vocabulary2->getThirdPartySetting('taxonomy_crud', 'foo'), 'Third party settings were added to the vocabulary.');
+    $this->assertEqual('bar', $vocabulary3->getThirdPartySetting('taxonomy_crud', 'foo'), 'Third party settings were added to the vocabulary.');
+
     // Fetch the names for all vocabularies, confirm that they are keyed by
     // machine name.
     $names = taxonomy_vocabulary_get_names();
@@ -141,7 +144,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
    */
   function testTaxonomyVocabularyChangeMachineName() {
     // Add a field instance to the vocabulary.
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => 'field_test',
       'entity_type' => 'taxonomy_term',
       'type' => 'test_field',
@@ -154,7 +157,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
 
     // Change the machine name.
     $old_name = $this->vocabulary->id();
-    $new_name = drupal_strtolower($this->randomName());
+    $new_name = drupal_strtolower($this->randomMachineName());
     $this->vocabulary->vid = $new_name;
     $this->vocabulary->save();
 
@@ -173,24 +176,24 @@ class VocabularyCrudTest extends TaxonomyTestBase {
   function testUninstallReinstall() {
     // Fields and field instances attached to taxonomy term bundles should be
     // removed when the module is uninstalled.
-    $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
-    $this->field_definition = array(
-      'name' => $this->field_name,
+    $field_name = drupal_strtolower($this->randomMachineName() . '_field_name');
+    $storage_definition = array(
+      'name' => $field_name,
       'entity_type' => 'taxonomy_term',
       'type' => 'text',
       'cardinality' => 4
     );
-    entity_create('field_config', $this->field_definition)->save();
-    $this->instance_definition = array(
-      'field_name' => $this->field_name,
+    entity_create('field_storage_config', $storage_definition)->save();
+    $instance_definition = array(
+      'field_name' => $field_name,
       'entity_type' => 'taxonomy_term',
       'bundle' => $this->vocabulary->id(),
-      'label' => $this->randomName() . '_label',
+      'label' => $this->randomMachineName() . '_label',
     );
-    entity_create('field_instance_config', $this->instance_definition)->save();
+    entity_create('field_instance_config', $instance_definition)->save();
 
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
-    module_uninstall(array('taxonomy'));
+    $this->container->get('module_handler')->uninstall(array('taxonomy'));
     \Drupal::moduleHandler()->install(array('taxonomy'));
 
     // Now create a vocabulary with the same name. All field instances
@@ -199,7 +202,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     // an instance of this field on the same bundle name should be successful.
     $this->vocabulary->enforceIsNew();
     $this->vocabulary->save();
-    entity_create('field_config', $this->field_definition)->save();
-    entity_create('field_instance_config', $this->instance_definition)->save();
+    entity_create('field_storage_config', $storage_definition)->save();
+    entity_create('field_instance_config', $instance_definition)->save();
   }
 }

@@ -31,7 +31,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Field/FieldType', $namespaces, $module_handler, 'Drupal\Core\Field\Annotation\FieldType');
+    parent::__construct('Plugin/Field/FieldType', $namespaces, $module_handler, 'Drupal\Core\Field\FieldItemInterface', 'Drupal\Core\Field\Annotation\FieldType');
     $this->alterInfo('field_info');
     $this->setCacheBackend($cache_backend, 'field_types_plugins');
   }
@@ -78,6 +78,14 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
     return array_filter($definitions, function ($definition) {
       return empty($definition['no_ui']) && !empty($definition['default_formatter']) && !empty($definition['default_widget']);
     });
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function getPluginClass($type) {
+    $plugin_definition = $this->getDefinition($type, FALSE);
+    return $plugin_definition['class'];
   }
 
 }

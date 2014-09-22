@@ -50,7 +50,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Give anonymous users permission to view test entities, so that we can
@@ -68,7 +68,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     if ($this->entity->getEntityType()->isFieldable()) {
       // Add field, so we can modify the Field and FieldInstance entities to
       // verify that changes to those indeed clear cache tags.
-      entity_create('field_config', array(
+      entity_create('field_storage_config', array(
         'name' => 'configurable_field',
         'entity_type' => $this->entity->getEntityTypeId(),
         'type' => 'test_field',
@@ -140,6 +140,32 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
   }
 
   /**
+   * Selects the preferred view mode for the given entity type.
+   *
+   * Prefers 'full', picks the first one otherwise, and if none are available,
+   * chooses 'default'.
+   */
+  protected function selectViewMode($entity_type) {
+    $view_modes = \Drupal::entityManager()
+      ->getStorage('entity_view_mode')
+      ->loadByProperties(array('targetEntityType' => $entity_type));
+
+    if (empty($view_modes)) {
+      return 'default';
+    }
+    else {
+      // Prefer the "full" display mode.
+      if (isset($view_modes[$entity_type . '.full'])) {
+        return 'full';
+      }
+      else {
+        $view_modes = array_keys($view_modes);
+        return substr($view_modes[0], strlen($entity_type) + 1);
+      }
+    }
+  }
+
+  /**
    * Creates a referencing and a non-referencing entity for testing purposes.
    *
    * @param \Drupal\Core\Entity\EntityInterface $referenced_entity
@@ -158,7 +184,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
     // Add a field of the given type to the given entity type's "foo" bundle.
     $field_name = $referenced_entity->getEntityTypeId() . '_reference';
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => $entity_type,
       'type' => 'entity_reference',
@@ -182,13 +208,24 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
         ),
       ),
     ))->save();
-    $formatter = 'entity_reference_entity_view';
-    if (!$this->entity->getEntityType()->hasControllerClass('view_builder')) {
-      $formatter = 'entity_reference_label';
+    if (!$this->entity->getEntityType()->hasHandlerClass('view_builder')) {
+      entity_get_display($entity_type, $bundle, 'full')
+        ->setComponent($field_name, array(
+          'type' => 'entity_reference_label',
+        ))
+        ->save();
     }
-    entity_get_display($entity_type, $bundle, 'full')
-      ->setComponent($field_name, array('type' => $formatter))
-      ->save();
+    else {
+      $referenced_entity_view_mode = $this->selectViewMode($this->entity->getEntityTypeId());
+      entity_get_display($entity_type, $bundle, 'full')
+        ->setComponent($field_name, array(
+          'type' => 'entity_reference_entity_view',
+          'settings' => array(
+            'view_mode' => $referenced_entity_view_mode,
+          ),
+        ))
+        ->save();
+    }
 
     // Create an entity that does reference the entity being tested.
     $label_key = \Drupal::entityManager()->getDefinition($entity_type)->getKey('label');
@@ -233,7 +270,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $theme_cache_tags = array('theme:stark', 'theme_global_settings:1');
 
     $view_cache_tag = array();
-    if ($this->entity->getEntityType()->hasControllerClass('view_builder')) {
+    if ($this->entity->getEntityType()->hasHandlerClass('view_builder')) {
       $view_cache_tag = \Drupal::entityManager()->getViewBuilder($entity_type)
         ->getCacheTag();
     }
@@ -325,12 +362,13 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $this->verifyPageCache($non_referencing_entity_path, 'HIT');
 
 
-    if ($this->entity->getEntityType()->hasControllerClass('view_builder')) {
-      // Verify that after modifying the entity's "full" display, there is a cache
-      // miss for both the referencing entity, and the listing of referencing
+    if ($this->entity->getEntityType()->hasHandlerClass('view_builder')) {
+      // Verify that after modifying the entity's display, there is a cache miss
+      // for both the referencing entity, and the listing of referencing
       // entities, but not for the non-referencing entity.
-      $this->pass("Test modification of referenced entity's 'full' display.", 'Debug');
-      $entity_display = entity_get_display($entity_type, $this->entity->bundle(), 'full');
+      $referenced_entity_view_mode = $this->selectViewMode($this->entity->getEntityTypeId());
+      $this->pass("Test modification of referenced entity's '$referenced_entity_view_mode' display.", 'Debug');
+      $entity_display = entity_get_display($entity_type, $this->entity->bundle(), $referenced_entity_view_mode);
       $entity_display->save();
       $this->verifyPageCache($referencing_entity_path, 'MISS');
       $this->verifyPageCache($listing_path, 'MISS');
@@ -365,8 +403,8 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       // is a cache miss.
       $this->pass("Test modification of referenced entity's configurable field.", 'Debug');
       $field_name = $this->entity->getEntityTypeId() . '.configurable_field';
-      $field = entity_load('field_config', $field_name);
-      $field->save();
+      $field_storage = entity_load('field_storage_config', $field_name);
+      $field_storage->save();
       $this->verifyPageCache($referencing_entity_path, 'MISS');
       $this->verifyPageCache($listing_path, 'MISS');
       $this->verifyPageCache($non_referencing_entity_path, 'HIT');

@@ -38,7 +38,7 @@ class MigrateUserTest extends MigrateDrupalTestBase {
   protected function setUp() {
     parent::setUp();
     // Create the user profile field and instance.
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'entity_type' => 'user',
       'name' => 'user_picture',
       'type' => 'image',
@@ -115,7 +115,7 @@ class MigrateUserTest extends MigrateDrupalTestBase {
       ),
     );
 
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
 
     // Migrate users.
     $migration = entity_load('migration', 'd6_user');

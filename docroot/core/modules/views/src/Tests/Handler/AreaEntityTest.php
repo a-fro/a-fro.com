@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Views;
 
@@ -74,7 +75,7 @@ class AreaEntityTest extends ViewTestBase {
 
     $entities = array();
     for ($i = 0; $i < 3; $i++) {
-      $random_label = $this->randomName();
+      $random_label = $this->randomMachineName();
       $data = array('bundle' => 'entity_test', 'name' => $random_label);
       $entity_test = $this->container->get('entity.manager')->getStorage('entity_test')->create($data);
       $entity_test->save();
@@ -95,9 +96,9 @@ class AreaEntityTest extends ViewTestBase {
     $this->assertTrue(strpos(trim((string) $result[0]), 'full') !== FALSE, 'The rendered entity appeared in the right view mode.');
 
     // Mark entity_test test view_mode as customizable.
-    $view_mode = \Drupal::entityManager()->getStorage('view_mode')->load('entity_test.test');
-    $view_mode->enable();
-    $view_mode->save();
+    $entity_view_mode = \Drupal::entityManager()->getStorage('entity_view_mode')->load('entity_test.test');
+    $entity_view_mode->enable();
+    $entity_view_mode->save();
 
     // Change the view mode of the area handler.
     $view = Views::getView('test_entity_area');
@@ -121,8 +122,8 @@ class AreaEntityTest extends ViewTestBase {
 
     // Test the available view mode options.
     $form = array();
-    $form_state = array();
-    $form_state['type'] = 'header';
+    $form_state = (new FormState())
+      ->set('type', 'header');
     $view->display_handler->getHandler('header', 'entity_entity_test')->buildOptionsForm($form, $form_state);
     $this->assertTrue(isset($form['view_mode']['#options']['test']), 'Ensure that the test view mode is available.');
     $this->assertTrue(isset($form['view_mode']['#options']['default']), 'Ensure that the default view mode is available.');

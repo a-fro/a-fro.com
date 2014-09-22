@@ -29,7 +29,7 @@ class UserEntityCallbacksTest extends WebTestBase {
    */
   protected $account;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->account = $this->drupalCreateUser();
@@ -43,7 +43,7 @@ class UserEntityCallbacksTest extends WebTestBase {
     $this->assertEqual($this->account->label(), $this->account->getUsername(), 'The username should be used as label');
 
     // Setup a random anonymous name to be sure the name is used.
-    $name = $this->randomName();
+    $name = $this->randomMachineName();
     \Drupal::config('user.settings')->set('anonymous', $name)->save();
     $this->assertEqual($this->anonymous->label(), $name, 'The variable anonymous should be used for name of uid 0');
   }

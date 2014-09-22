@@ -8,7 +8,7 @@
 namespace Drupal\config_translation\Tests;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -39,7 +39,7 @@ class ConfigTranslationOverviewTest extends WebTestBase {
    */
   protected $localeStorage;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $permissions = array(
       'translate configuration',
@@ -55,8 +55,7 @@ class ConfigTranslationOverviewTest extends WebTestBase {
 
     // Add languages.
     foreach ($this->langcodes as $langcode) {
-      $language = new Language(array('id' => $langcode));
-      language_save($language);
+      ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
     $this->localeStorage = $this->container->get('locale.storage');
   }
@@ -77,7 +76,7 @@ class ConfigTranslationOverviewTest extends WebTestBase {
 
     foreach ($labels as $label) {
       $test_entity = entity_create('config_test', array(
-        'id' => $this->randomName(),
+        'id' => $this->randomMachineName(),
         'label' => $label,
       ));
       $test_entity->save();
@@ -106,7 +105,7 @@ class ConfigTranslationOverviewTest extends WebTestBase {
   public function testHiddenEntities() {
     // Hidden languages are only available to translate through the
     // configuration translation listings.
-    $this->drupalGet('admin/config/regional/config-translation/language_entity');
+    $this->drupalGet('admin/config/regional/config-translation/configurable_language');
     $this->assertText('Not applicable');
     $this->assertLinkByHref('admin/config/regional/language/edit/zxx/translate');
     $this->assertText('Not specified');

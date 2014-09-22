@@ -26,11 +26,11 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
   public static $modules = array('filter');
 
   /**
-   * Field entity.
+   * Field storage entity.
    *
-   * @var \Drupal\field\Entity\FieldConfig.
+   * @var \Drupal\field\Entity\FieldStorageConfig.
    */
-  protected $field;
+  protected $fieldStorage;
 
   /**
    * Field instance.
@@ -40,7 +40,7 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
   protected $instance;
 
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_rev');
@@ -62,28 +62,18 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
 
     // Create an entity with a summary and no text format.
     $entity = entity_create($entity_type);
-    $entity->summary_field->value = $value = $this->randomName();
-    $entity->summary_field->summary = $summary = $this->randomName();
+    $entity->summary_field->value = $value = $this->randomMachineName();
+    $entity->summary_field->summary = $summary = $this->randomMachineName();
     $entity->summary_field->format = NULL;
-    $entity->name->value = $this->randomName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
 
     $entity = entity_load($entity_type, $entity->id());
     $this->assertTrue($entity->summary_field instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->summary_field[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->summary_field->value, $value);
-    $this->assertEqual($entity->summary_field->processed, $value);
     $this->assertEqual($entity->summary_field->summary, $summary);
-    $this->assertEqual($entity->summary_field->summary_processed, $summary);
     $this->assertNull($entity->summary_field->format);
-
-    // Enable text processing.
-    $this->instance->settings['text_processing'] = 1;
-    $this->instance->save();
-
-    // Re-load the entity.
-    $entity = entity_load($entity_type, $entity->id(), TRUE);
-
     // Even if no format is given, if text processing is enabled, the default
     // format is used.
     $this->assertEqual($entity->summary_field->processed, "<p>$value</p>\n");
@@ -93,6 +83,11 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
     $entity->summary_field->format = 'no_filters';
     $this->assertEqual($entity->summary_field->processed, $value);
     $this->assertEqual($entity->summary_field->summary_processed, $summary);
+
+    // Test the generateSampleValue() method.
+    $entity = entity_create($entity_type);
+    $entity->summary_field->generateSampleItems();
+    $this->entityValidateAndSave($entity);
   }
 
   /**
@@ -103,7 +98,7 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
    */
   protected function createField($entity_type) {
     // Create a field .
-    $this->field = entity_create('field_config', array(
+    $this->fieldStorage = entity_create('field_storage_config', array(
       'name' => 'summary_field',
       'entity_type' => $entity_type,
       'type' => 'text_with_summary',
@@ -111,13 +106,10 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
         'max_length' => 10,
       )
     ));
-    $this->field->save();
+    $this->fieldStorage->save();
     $this->instance = entity_create('field_instance_config', array(
-      'field' => $this->field,
+      'field_storage' => $this->fieldStorage,
       'bundle' => $entity_type,
-      'settings' => array(
-        'text_processing' => 0,
-      )
     ));
     $this->instance->save();
   }

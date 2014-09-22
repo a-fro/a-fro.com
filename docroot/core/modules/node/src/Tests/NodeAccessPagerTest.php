@@ -24,7 +24,7 @@ class NodeAccessPagerTest extends WebTestBase {
    */
   public static $modules = array('node_access_test', 'comment', 'forum');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     node_access_rebuild();
@@ -46,9 +46,9 @@ class NodeAccessPagerTest extends WebTestBase {
         'entity_id' => $node->id(),
         'entity_type' => 'node',
         'field_name' => 'comment',
-        'subject' => $this->randomName(),
+        'subject' => $this->randomMachineName(),
         'comment_body' => array(
-          array('value' => $this->randomName()),
+          array('value' => $this->randomMachineName()),
         ),
         'status' => CommentInterface::PUBLISHED,
       ));

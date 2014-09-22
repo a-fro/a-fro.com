@@ -8,6 +8,7 @@
 namespace Drupal\content_translation\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Language\Language;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\simpletest\WebTestBase;
@@ -26,7 +27,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
    */
   public static $modules = array('language', 'content_translation', 'node', 'comment', 'field_ui', 'entity_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Set up two content types to test field instances shared between different
@@ -36,7 +37,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $this->container->get('comment.manager')->addDefaultField('node', 'article', 'comment_article', CommentItemInterface::OPEN, 'comment_article');
     $this->container->get('comment.manager')->addDefaultField('node', 'page', 'comment_page');
 
-    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer languages', 'administer content translation', 'administer content types', 'administer node fields', 'administer comment fields', 'administer comments', 'administer comment types'));
+    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer languages', 'administer content translation', 'administer content types', 'administer node fields', 'administer comment fields', 'administer comments', 'administer comment types', 'administer account settings'));
     $this->drupalLogin($admin_user);
   }
 
@@ -44,7 +45,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
    * Tests that the settings UI works as expected.
    */
   function testSettingsUI() {
-    // Check for the content_translation_menu_link_defaults_alter() changes.
+    // Check for the content_translation_menu_links_discovered_alter() changes.
     $this->drupalGet('admin/config');
     $this->assertLink('Content language and translation');
     $this->assertText('Configure language and translation support for content.');
@@ -113,10 +114,6 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $definition = $this->entityManager()->getFieldDefinitions('comment', 'comment')['subject'];
     $this->assertFalse($definition->isTranslatable(), 'Page comment subject is not translatable.');
 
-    $settings = content_translation_get_config('comment', 'comment_article', 'fields');
-    $this->assertFalse(isset($settings['comment_body']), 'Configurable fields are not saved to content_translation.settings.');
-    $this->assertTrue(isset($settings['subject']), 'Base fields are saved to content_translation.settings.');
-
     // Test that translation can be enabled for base fields.
     $edit = array(
       'entity_types[entity_test_mul]' => TRUE,
@@ -125,10 +122,10 @@ class ContentTranslationSettingsTest extends WebTestBase {
       'settings[entity_test_mul][entity_test_mul][fields][user_id]' => FALSE,
     );
     $this->assertSettings('entity_test_mul', 'entity_test_mul', TRUE, $edit);
-    $settings = content_translation_get_config('entity_test_mul', 'entity_test_mul', 'fields');
-    $this->assertTrue($settings['name'] && !$settings['user_id'], 'Base fields are saved to content_translation.settings.');
+    $field_override = BaseFieldOverride::loadByName('entity_test_mul', 'entity_test_mul', 'name');
+    $this->assertTrue($field_override->isTranslatable(), 'Base fields can be overridden with a base field bundle override entity.');
     $definitions = $this->entityManager()->getFieldDefinitions('entity_test_mul', 'entity_test_mul');
-    $this->assertTrue($definitions['name']->isTranslatable() && !$definitions['user_id']->isTranslatable(), 'Bundle field definitions were correctly altered.');
+    $this->assertTrue($definitions['name']->isTranslatable() && !$definitions['user_id']->isTranslatable(), 'Base field bundle overrides were correctly altered.');
 
     // Test that language settings are correctly stored.
     $language_configuration = language_get_default_configuration('comment', 'comment_article');
@@ -184,6 +181,23 @@ class ContentTranslationSettingsTest extends WebTestBase {
   }
 
   /**
+   * Tests the language settings checkbox on account settings page.
+   */
+  function testAccountLanguageSettingsUI() {
+    // Make sure the checkbox is available and not checked by default.
+    $this->drupalGet('admin/config/people/accounts');
+    $this->assertField('language[content_translation]');
+    $this->assertNoFieldChecked('edit-language-content-translation');
+
+    $edit = array(
+      'language[content_translation]' => TRUE,
+    );
+    $this->drupalPostForm('admin/config/people/accounts', $edit, t('Save configuration'));
+    $this->drupalGet('admin/config/people/accounts');
+    $this->assertFieldChecked('edit-language-content-translation');
+  }
+
+  /**
    * Asserts that translatability has the expected value for the given bundle.
    *
    * @param string $entity_type
@@ -218,7 +232,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
       'entity_type' => 'node',
       'type' => 'text',
     );
-    entity_create('field_config', $field)->save();
+    entity_create('field_storage_config', $field)->save();
     $instance = array(
       'field_name' => 'article_text',
       'entity_type' => 'node',

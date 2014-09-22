@@ -30,7 +30,7 @@ class UninstallTest extends WebTestBase {
   function testUserPermsUninstalled() {
     // Uninstalls the module_test module, so hook_modules_uninstalled()
     // is executed.
-    module_uninstall(array('module_test'));
+    $this->container->get('module_handler')->uninstall(array('module_test'));
 
     // Are the perms defined by module_test removed?
     $this->assertFalse(user_roles(FALSE, 'module_test perm'), 'Permissions were all removed.');
@@ -49,7 +49,7 @@ class UninstallTest extends WebTestBase {
     $edit = array();
     $edit['uninstall[module_test]'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
-    $this->assertNoText(\Drupal::translation()->translate('Configuration deletions'), 'No configuration deletions listed on the module install confirmation page.');
+    $this->assertNoText(\Drupal::translation()->translate('Affected configuration'), 'No configuration deletions listed on the module install confirmation page.');
     $this->drupalPostForm(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
 
@@ -59,7 +59,7 @@ class UninstallTest extends WebTestBase {
     $edit = array();
     $edit['uninstall[node]'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
-    $this->assertText(\Drupal::translation()->translate('Configuration deletions'), 'Configuration deletions listed on the module install confirmation page.');
+    $this->assertText(\Drupal::translation()->translate('Affected configuration'), 'Configuration deletions listed on the module install confirmation page.');
 
     $entity_types = array();
     foreach ($node_dependencies as $entity) {
@@ -76,5 +76,6 @@ class UninstallTest extends WebTestBase {
     }
     $this->drupalPostForm(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
+    $this->assertNoRaw('&lt;label', 'The page does not have double escaped HTML tags.');
   }
 }

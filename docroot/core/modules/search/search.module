@@ -5,8 +5,10 @@
  * Enables site-wide keyword searching.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -103,23 +105,6 @@ function search_theme() {
       'variables' => array('result' => NULL, 'plugin_id' => NULL),
       'file' => 'search.pages.inc',
       'template' => 'search-result',
-    ),
-  );
-}
-
-/**
- * Implements hook_permission().
- */
-function search_permission() {
-  return array(
-    'administer search' => array(
-      'title' => t('Administer search'),
-    ),
-    'search content' => array(
-      'title' => t('Use search'),
-    ),
-    'use advanced search' => array(
-      'title' => t('Use advanced search'),
     ),
   );
 }
@@ -599,6 +584,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
   // Prepare text by stripping HTML tags and decoding HTML entities.
   $text = strip_tags(str_replace(array('<', '>'), array(' <', '> '), $text));
   $text = decode_entities($text);
+  $text_length = strlen($text);
 
   // Make a list of unique keywords that are actually found in the text,
   // which could be items in $keys or replacements that are equivalent through
@@ -651,11 +637,15 @@ function search_excerpt($keys, $text, $langcode = NULL) {
         // characters of context on each end.
         $before = strpos(' ' . $text, ' ', max(0, $found_position - 61));
         if ($before !== FALSE && $before <= $found_position) {
-          $after = strrpos(' ' . $text . ' ', ' ', min($found_position + 61, strlen($text) + 1));
+          if ($text_length > $found_position + 60) {
+            $after = strrpos(substr($text, 0, $found_position + 60), ' ', $found_position);
+          }
+          else {
+            $after = $text_length;
+          }
           if ($after !== FALSE && $after > $found_position) {
             // Account for the spaces we added.
             $before = max($before - 1, 0);
-            $after = min($after - 1, strlen($text));
             if ($before < $after) {
               // Save this range.
               $ranges[$before] = $after;
@@ -720,7 +710,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
   // Highlight keywords. Must be done at once to prevent conflicts ('strong'
   // and '<strong>').
   $text = trim(preg_replace('/' . $boundary . '(?:' . implode('|', $keys) . ')' . $boundary . '/iu', '<strong>\0</strong>', ' ' . $text . ' '));
-  return $text;
+  return SafeMarkup::set($text);
 }
 
 /**
@@ -808,14 +798,6 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
 }
 
 /**
- * Implements hook_module_preinstall().
- */
-function search_module_preinstall() {
-  // @todo Remove in https://drupal.org/node/2155635.
-  \Drupal::service('plugin.manager.search')->clearCachedDefinitions();
-}
-
-/**
  * Implements hook_form_FORM_ID_alter() for the search_block_form form.
  *
  * Since the exposed form is a GET form, we don't want it to send the form
@@ -825,7 +807,7 @@ function search_module_preinstall() {
  *
  * @see \Drupal\search\Form\SearchBlockForm
  */
-function search_form_search_block_form_alter(&$form, &$form_state) {
+function search_form_search_block_form_alter(&$form, FormStateInterface $form_state) {
   $form['form_build_id']['#access'] = FALSE;
   $form['form_token']['#access'] = FALSE;
   $form['form_id']['#access'] = FALSE;

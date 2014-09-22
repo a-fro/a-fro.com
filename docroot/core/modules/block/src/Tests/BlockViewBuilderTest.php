@@ -7,11 +7,13 @@
 
 namespace Drupal\block\Tests;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\UrlCacheContext;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\block\Entity\Block;
 
 /**
  * Tests the block view builder.
@@ -44,7 +46,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->controller = $this->container
@@ -78,10 +80,10 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $entity->save();
 
     // Test the rendering of a block.
-    $entity = entity_load('block', 'test_block1');
+    $entity = Block::load('test_block1');
     $output = entity_view($entity, 'block');
     $expected = array();
-    $expected[] = '<div class="block block-block-test" id="block-test-block1">';
+    $expected[] = '<div id="block-test-block1" class="block block-block-test">';
     $expected[] = '  ';
     $expected[] = '    ';
     $expected[] = '';
@@ -94,7 +96,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->assertEqual(drupal_render($output), $expected_output);
 
     // Reset the HTML IDs so that the next render is not affected.
-    drupal_static_reset('drupal_html_id');
+    Html::resetSeenIds();
 
     // Test the rendering of a block with a given title.
     $entity = $this->controller->create(array(
@@ -108,7 +110,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $entity->save();
     $output = entity_view($entity, 'block');
     $expected = array();
-    $expected[] = '<div class="block block-block-test" id="block-test-block2">';
+    $expected[] = '<div id="block-test-block2" class="block block-block-test">';
     $expected[] = '  ';
     $expected[] = '      <h2>Powered by Bananas</h2>';
     $expected[] = '    ';
@@ -149,8 +151,9 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
    */
   protected function verifyRenderCacheHandling() {
     // Force a request via GET so we can get drupal_render() cache working.
-    $request_method = \Drupal::request()->server->get('REQUEST_METHOD');
-    $this->container->get('request')->setMethod('GET');
+    $request = \Drupal::request();
+    $request_method = $request->server->get('REQUEST_METHOD');
+    $request->setMethod('GET');
 
     // Test that entities with caching disabled do not generate a cache entry.
     $build = $this->getBlockRenderArray();
@@ -184,7 +187,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->assertFalse($this->container->get('cache.render')->get($cid), 'The block render cache entry has been cleared when the block was deleted.');
 
     // Restore the previous request method.
-    $this->container->get('request')->setMethod($request_method);
+    $request->setMethod($request_method);
   }
 
   /**
@@ -213,8 +216,9 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     \Drupal::state()->set('block_test_view_alter_suffix', FALSE);
 
     // Force a request via GET so we can get drupal_render() cache working.
-    $request_method = \Drupal::request()->server->get('REQUEST_METHOD');
-    $this->container->get('request')->setMethod('GET');
+    $request = \Drupal::request();
+    $request_method = $request->server->get('REQUEST_METHOD');
+    $request->setMethod('GET');
 
     $default_keys = array('entity_view', 'block', 'test_block', 'en', 'cache_context.theme');
     $default_tags = array('block_view' => TRUE, 'block' => array('test_block'), 'theme' => 'stark', 'block_plugin' => array('test_cache'));
@@ -223,7 +227,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->setBlockCacheConfig(array(
       'max_age' => 600,
     ));
-    $alter_add_key = $this->randomName();
+    $alter_add_key = $this->randomMachineName();
     \Drupal::state()->set('block_test_view_alter_cache_key', $alter_add_key);
     $expected_keys = array_merge($default_keys, array($alter_add_key));
     $build = $this->getBlockRenderArray();
@@ -237,7 +241,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->container->get('cache.render')->delete($cid);
 
     // Advanced: cached block, but an alter hook adds an additional cache tag.
-    $alter_add_tag = $this->randomName();
+    $alter_add_tag = $this->randomMachineName();
     \Drupal::state()->set('block_test_view_alter_cache_tag', $alter_add_tag);
     $expected_tags = NestedArray::mergeDeep($default_tags, array($alter_add_tag => TRUE));
     $build = $this->getBlockRenderArray();
@@ -259,7 +263,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->assertTrue(isset($build['#prefix']) && $build['#prefix'] === 'Hiya!<br>', 'A cached block without content is altered.');
 
     // Restore the previous request method.
-    $this->container->get('request')->setMethod($request_method);
+    $request->setMethod($request_method);
   }
 
   /**
@@ -272,8 +276,9 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
    */
   public function testBlockViewBuilderCacheContexts() {
     // Force a request via GET so we can get drupal_render() cache working.
-    $request_method = \Drupal::request()->server->get('REQUEST_METHOD');
-    $this->container->get('request')->setMethod('GET');
+    $request = \Drupal::request();
+    $request_method = $request->server->get('REQUEST_METHOD');
+    $request->setMethod('GET');
 
     // First: no cache context.
     $this->setBlockCacheConfig(array(
@@ -311,7 +316,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->container->set('cache_context.url', $original_url_cache_context);
 
     // Restore the previous request method.
-    $this->container->get('request')->setMethod($request_method);
+    $request->setMethod($request_method);
   }
 
   /**

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
@@ -121,7 +122,7 @@ function template_preprocess_file_widget_multiple(&$variables) {
       $row[] = $display;
     }
     $row[] = $weight;
-    $row[] = $operations;
+    $row[] = SafeMarkup::set($operations);
     $rows[] = array(
       'data' => $row,
       'class' => isset($widget['#attributes']['class']) ? array_merge($widget['#attributes']['class'], array('draggable')) : array('draggable'),
@@ -181,7 +182,7 @@ function template_preprocess_file_upload_help(&$variables) {
     $descriptions[] = t('!size limit.', array('!size' => format_size($upload_validators['file_validate_size'][0])));
   }
   if (isset($upload_validators['file_validate_extensions'])) {
-    $descriptions[] = t('Allowed types: !extensions.', array('!extensions' => String::checkPlain($upload_validators['file_validate_extensions'][0])));
+    $descriptions[] = t('Allowed types: @extensions.', array('@extensions' => $upload_validators['file_validate_extensions'][0]));
   }
 
   if (isset($upload_validators['file_validate_image_resolution'])) {

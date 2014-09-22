@@ -25,7 +25,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy', 'options', 'text', 'filter');
+  public static $modules = array('taxonomy', 'entity_reference', 'options', 'text', 'filter');
 
   /**
    * The term entity.
@@ -34,18 +34,18 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
    */
   protected $term;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('taxonomy_term');
 
     $vocabulary = entity_create('taxonomy_vocabulary', array(
-      'name' => $this->randomName(),
-      'vid' => drupal_strtolower($this->randomName()),
+      'name' => $this->randomMachineName(),
+      'vid' => drupal_strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $vocabulary->save();
 
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => 'field_test_taxonomy',
       'entity_type' => 'entity_test',
       'type' => 'taxonomy_term_reference',
@@ -65,7 +65,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
       'bundle' => 'entity_test',
     ))->save();
     $this->term = entity_create('taxonomy_term', array(
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       'vid' => $vocabulary->id(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
@@ -80,7 +80,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
     // Just being able to create the entity like this verifies a lot of code.
     $entity = entity_create('entity_test');
     $entity->field_test_taxonomy->target_id = $this->term->id();
-    $entity->name->value = $this->randomName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
 
     $entity = entity_load('entity_test', $entity->id());
@@ -92,7 +92,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_test_taxonomy->entity->uuid(), $this->term->uuid(), 'Field item entity contains the expected UUID.');
 
     // Change the name of the term via the reference.
-    $new_name = $this->randomName();
+    $new_name = $this->randomMachineName();
     $entity->field_test_taxonomy->entity->setName($new_name);
     $entity->field_test_taxonomy->entity->save();
     // Verify it is the correct name.
@@ -101,7 +101,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
 
     // Make sure the computed term reflects updates to the term id.
     $term2 = entity_create('taxonomy_term', array(
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       'vid' => $this->term->getVocabularyId(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
@@ -110,6 +110,11 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
     $entity->field_test_taxonomy->target_id = $term2->id();
     $this->assertEqual($entity->field_test_taxonomy->entity->id(), $term2->id(), 'Field item entity contains the new TID.');
     $this->assertEqual($entity->field_test_taxonomy->entity->getName(), $term2->getName(), 'Field item entity contains the new name.');
+
+    // Test sample item generation.
+    $entity = entity_create('entity_test');
+    $entity->field_test_taxonomy->generateSampleItems();
+    $this->entityValidateAndSave($entity);
   }
 
 }

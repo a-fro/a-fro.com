@@ -7,10 +7,10 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\simpletest\WebTestBase;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -27,7 +27,7 @@ class NodeFieldMultilingualTest extends WebTestBase {
    */
   public static $modules = array('node', 'language');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create Basic page node type.
@@ -38,11 +38,7 @@ class NodeFieldMultilingualTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     // Add a new language.
-    $language = new Language(array(
-      'id' => 'it',
-      'name' => 'Italian',
-    ));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode('it')->save();
 
     // Enable URL language detection and selection.
     $edit = array('language_interface[enabled][language-url]' => '1');
@@ -56,9 +52,9 @@ class NodeFieldMultilingualTest extends WebTestBase {
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
 
     // Make node body translatable.
-    $field = FieldConfig::loadByName('node', 'body');
-    $field->translatable = TRUE;
-    $field->save();
+    $field_storage = FieldStorageConfig::loadByName('node', 'body');
+    $field_storage->translatable = TRUE;
+    $field_storage->save();
   }
 
   /**
@@ -68,9 +64,9 @@ class NodeFieldMultilingualTest extends WebTestBase {
     // Create "Basic page" content.
     $langcode = language_get_default_langcode('node', 'page');
     $title_key = 'title[0][value]';
-    $title_value = $this->randomName(8);
+    $title_value = $this->randomMachineName(8);
     $body_key = 'body[0][value]';
-    $body_value = $this->randomName(16);
+    $body_value = $this->randomMachineName(16);
 
     // Create node to edit.
     $edit = array();
@@ -87,7 +83,7 @@ class NodeFieldMultilingualTest extends WebTestBase {
     $langcode = 'it';
     $this->drupalGet("node/{$node->id()}/edit");
     $edit = array(
-      $title_key => $this->randomName(8),
+      $title_key => $this->randomMachineName(8),
       'langcode' => $langcode,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -112,9 +108,9 @@ class NodeFieldMultilingualTest extends WebTestBase {
   function testMultilingualDisplaySettings() {
     // Create "Basic page" content.
     $title_key = 'title[0][value]';
-    $title_value = $this->randomName(8);
+    $title_value = $this->randomMachineName(8);
     $body_key = 'body[0][value]';
-    $body_value = $this->randomName(16);
+    $body_value = $this->randomMachineName(16);
 
     // Create node to edit.
     $edit = array();

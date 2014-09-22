@@ -11,8 +11,9 @@ use Drupal\comment\CommentManagerInterface;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -97,7 +98,7 @@ class CommentTypeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('comment.type_list');
   }
 
@@ -111,16 +112,16 @@ class CommentTypeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $comments = $this->queryFactory->get('comment')->condition('comment_type', $this->entity->id())->execute();
     $entity_type = $this->entity->getTargetEntityTypeId();
     $caption = '';
     foreach (array_keys($this->commentManager->getFields($entity_type)) as $field_name) {
-      /** @var \Drupal\field\FieldConfigInterface $field */
-      if (($field = FieldConfig::loadByName($entity_type, $field_name)) && $field->getSetting('comment_type') == $this->entity->id() && !$field->deleted) {
+      /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
+      if (($field_storage = FieldStorageConfig::loadByName($entity_type, $field_name)) && $field_storage->getSetting('comment_type') == $this->entity->id() && !$field_storage->deleted) {
         $caption .= '<p>' . $this->t('%label is used by the %field field on your site. You can not remove this comment type until you have removed the field.', array(
           '%label' => $this->entity->label(),
-          '%field' => $field->label(),
+          '%field' => $field_storage->label(),
         )) . '</p>';
       }
     }
@@ -140,9 +141,9 @@ class CommentTypeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
-    $form_state['redirect_route']['route_name'] = 'comment.type_list';
+    $form_state->setRedirect('comment.type_list');
     drupal_set_message($this->t('Comment type %label has been deleted.', array('%label' => $this->entity->label())));
     $this->logger->notice('comment type %label has been deleted.', array('%label' => $this->entity->label()));
   }

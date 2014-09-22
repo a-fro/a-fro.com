@@ -9,13 +9,12 @@ namespace Drupal\system\Tests\Routing;
 
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\State\State;
+use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-
-use Drupal\simpletest\UnitTestBase;
 use Drupal\Core\Routing\RouteProvider;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Routing\MatcherDumper;
@@ -27,7 +26,7 @@ use Drupal\Tests\Core\Routing\NullRouteBuilder;
  *
  * @group Routing
  */
-class RouteProviderTest extends UnitTestBase {
+class RouteProviderTest extends KernelTestBase {
 
   /**
    * A collection of shared fixture data for tests.
@@ -50,13 +49,13 @@ class RouteProviderTest extends UnitTestBase {
    */
   protected $state;
 
-  public function setUp() {
+  protected function setUp() {
     $this->fixtures = new RoutingFixtures();
     $this->routeBuilder = new NullRouteBuilder();
     $this->state = new State(new KeyValueMemoryFactory());
   }
 
-  public function tearDown() {
+  protected function tearDown() {
     $this->fixtures->dropTables(Database::getConnection());
 
     parent::tearDown();
@@ -398,7 +397,7 @@ class RouteProviderTest extends UnitTestBase {
     }
     $this->assertTrue($exception_thrown, 'Random route was not found.');
 
-    $routes = $provider->getRoutesByNames(array('route_c', 'route_d', $this->randomName()));
+    $routes = $provider->getRoutesByNames(array('route_c', 'route_d', $this->randomMachineName()));
     $this->assertEqual(count($routes), 2, 'Only two valid routes found.');
     $this->assertEqual($routes['route_c']->getPath(), '/path/two');
     $this->assertEqual($routes['route_d']->getPath(), '/path/three');
