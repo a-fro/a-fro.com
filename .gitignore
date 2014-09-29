@@ -4,8 +4,9 @@ docroot/.drupal_streamline_guard_running
 # Ignore files folder
 docroot/sites/default/files/
 
-# Ignore settings
+# Ignore settings and services
 docroot/sites/default/settings.php
+docroot/sites/default/services.yml
 
 # Ignore the stylesheets
 docroot/themes/afro/css/
