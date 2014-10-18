@@ -301,7 +301,6 @@ function install_begin_request(&$install_state) {
   require_once __DIR__ . '/database.inc';
   require_once __DIR__ . '/form.inc';
   require_once __DIR__ . '/batch.inc';
-  require_once __DIR__ . '/ajax.inc';
 
   // Load module basics (needed for hook invokes).
   include_once __DIR__ . '/module.inc';
@@ -325,6 +324,12 @@ function install_begin_request(&$install_state) {
   $container
     ->register('path.matcher', 'Drupal\Core\Path\PathMatcher')
     ->addArgument(new Reference('config.factory'));
+
+  // Register the stream wrapper manager.
+  $container
+    ->register('stream_wrapper_manager', 'Drupal\Core\StreamWrapper\StreamWrapperManager')
+    ->addArgument(new Reference('module_handler'))
+    ->addMethodCall('setContainer', array(new Reference('service_container')));
 
   \Drupal::setContainer($container);
 
@@ -544,7 +549,10 @@ function install_run_task($task, &$install_state) {
       }
       // Process the batch. For progressive batches, this will redirect.
       // Otherwise, the batch will complete.
-      $response = batch_process(install_redirect_url($install_state), install_full_redirect_url($install_state));
+      // install_redirect_url() returns core/install.php, so let's ensure to
+      // drop it from it and use base:// as batch_process() is using the
+      // unrouted URL assembler, which requires base://.
+      $response = batch_process(preg_replace('@^core/@', 'base://', install_redirect_url($install_state)), install_full_redirect_url($install_state));
       if ($response instanceof Response) {
         // Save $_SESSION data from batch.
         \Drupal::service('session_manager')->save();
@@ -639,8 +647,9 @@ function install_tasks_to_perform($install_state) {
 function install_tasks($install_state) {
   // Determine whether a translation file must be imported during the
   // 'install_import_translations' task. Import when a non-English language is
-  // available and selected.
-  $needs_translations = count($install_state['translations']) > 1 && !empty($install_state['parameters']['langcode']) && $install_state['parameters']['langcode'] != 'en';
+  // available and selected. Also we will need translations even if the
+  // installer language is English but there are other languages on the system.
+  $needs_translations = (count($install_state['translations']) > 1 && !empty($install_state['parameters']['langcode']) && $install_state['parameters']['langcode'] != 'en') || \Drupal::languageManager()->isMultilingual();
   // Determine whether a translation file must be downloaded during the
   // 'install_download_translation' task. Download when a non-English language
   // is selected, but no translation is yet in the translations directory.
@@ -766,7 +775,7 @@ function install_tasks($install_state) {
  * Returns a list of tasks that should be displayed to the end user.
  *
  * The output of this function is a list suitable for sending to
- * theme_task_list().
+ * maintenance-task-list.html.twig.
  *
  * @param $install_state
  *   An array of information about the current installation state.
@@ -775,7 +784,7 @@ function install_tasks($install_state) {
  *   A list of tasks, with keys equal to the machine-readable task name and
  *   values equal to the name that should be displayed.
  *
- * @see theme_task_list()
+ * @see maintenance-task-list.html.twig
  */
 function install_tasks_to_display($install_state) {
   $displayed_tasks = array();
@@ -887,8 +896,6 @@ function install_display_output($output, $install_state) {
   // reached in case of an early installer error.
   drupal_maintenance_theme();
 
-  drupal_page_header();
-
   // Prevent install.php from being indexed when installed in a sub folder.
   // robots.txt rules are not read if the site is within domain.com/subfolder
   // resulting in /subfolder/install.php being found through search engines.
@@ -901,7 +908,7 @@ function install_display_output($output, $install_state) {
       'content' => 'noindex, nofollow',
     ),
   );
-  drupal_add_html_head($noindex_meta_tag, 'install_meta_robots');
+  $output['#attached']['html_head'][] = [$noindex_meta_tag, 'install_meta_robots'];
 
   // Only show the task list if there is an active task; otherwise, the page
   // request has ended before tasks have even been started, so there is nothing
@@ -912,14 +919,23 @@ function install_display_output($output, $install_state) {
     // been completed.
     $active_task = $install_state['installation_finished'] ? NULL : $install_state['active_task'];
     $task_list = array(
-      '#theme' => 'task_list',
+      '#theme' => 'maintenance_task_list',
       '#items' => install_tasks_to_display($install_state),
       '#active' => $active_task,
     );
     $regions['sidebar_first'] = $task_list;
   }
 
-  print DefaultHtmlPageRenderer::renderPage($output, $output['#title'], 'install', $regions);
+  $response = new Response();
+  $default_headers = array(
+    'Expires' => 'Sun, 19 Nov 1978 05:00:00 GMT',
+    'Last-Modified' => gmdate(DATE_RFC1123, REQUEST_TIME),
+    'Cache-Control' => 'no-cache, must-revalidate, post-check=0, pre-check=0',
+    'ETag' => '"' . REQUEST_TIME . '"',
+  );
+  $response->headers->add($default_headers);
+  $response->setContent(DefaultHtmlPageRenderer::renderPage($output, $output['#title'], 'install', $regions));
+  $response->send();
   exit;
 }
 
@@ -1222,13 +1238,16 @@ function install_select_language(&$install_state) {
 function install_download_translation(&$install_state) {
   // Check whether all conditions are met to download. Download the translation
   // if possible.
-  $requirements = install_check_translations($install_state);
+  $requirements = install_check_translations($install_state['parameters']['langcode'], $install_state['server_pattern']);
   if ($output = install_display_requirements($install_state, $requirements)) {
     return $output;
   }
 
   // The download was successful, reload the page in the new language.
-  install_goto(install_redirect_url($install_state));
+  $install_state['translations'][$install_state['parameters']['langcode']] = TRUE;
+  if ($install_state['interactive']) {
+    install_goto(install_redirect_url($install_state));
+  }
 }
 
 /**
@@ -1290,11 +1309,10 @@ function install_check_localization_server($uri) {
 /**
  * Gets the core release version and release alternatives for localization.
  *
- * In case core is a development version or the translation file for the release
- * is not available, fall back to the latest stable release. For example,
- * 8.2-dev might fall back to 8.1 and 8.0-dev might fall back to 7.0. Fallback
- * is required because the localization server only provides translation files
- * for stable releases.
+ * In case core is a development version or the translation file for the
+ * release is not available, fall back to an earlier release.
+ * For example, 8.2.0-dev might fall back to 8.1.0 and 8.0.0-dev
+ * might fall back to 7.0.
  *
  * @param string $version
  *   (optional) Version of core trying to find translation files for.
@@ -1302,95 +1320,109 @@ function install_check_localization_server($uri) {
  * @return array
  *   Array of release data. Each array element is an associative array with:
  *   - core: Core compatibility version (e.g., 8.x).
- *   - version: Release version (e.g., 8.1).
+ *   - version: Release version (e.g., 8.1.0).
  */
 function install_get_localization_release($version = \Drupal::VERSION) {
   $releases = array();
   $alternatives = array();
 
-  // The version string is broken up into:
-  // - major: Major version (e.g., "8").
-  // - minor: Minor version (e.g., "0").
-  // - extra: Extra version info (e.g., "alpha2").
-  // - extra_text: The text part of "extra" (e.g., "alpha").
-  // - extra_number: The number part of "extra" (e.g., "2").
   $info = _install_get_version_info($version);
+
+  // This code assumes there is a first alpha available as "alpha1". For
+  // Drupal 8.0.0 that isn't the case. In addition the semantic versioning
+  // wasn't introduced before "alpha14". However, we have already gotten to
+  // "beta1" so we are ignoring this for now.
+
+  // The fallback detection is relaxed - removing version duplicates at the end.
 
   // Check if the version is a regular stable release (no 'rc', 'beta', 'alpha',
   // 'dev', etc.)
   if (!isset($info['extra_text'])) {
     // First version alternative: the current version.
     $alternatives[] = $version;
-    // Point-releases: previous minor release (e.g., 8.2 falls back to 8.1).
-    if ($info['minor'] > 0) {
-      $alternatives[]= $info['major'] . '.' . ($info['minor'] - 1);
+
+    // Patch-level: Previous and zero patch level (e.g., 8.2.4 falls back to
+    // 8.2.3 and 8.2.0).
+    if ($info['patch'] > 0) {
+      $alternatives[] = $info['major'] . '.' . $info['minor'] . '.' . ($info['patch'] - 1);
+      $alternatives[] = $info['major'] . '.' . $info['minor'] . '.0';
     }
-    // Zero release: first release candidate (e.g., 8.0 falls back to 8.0-rc1).
+    // Zero patch: First release candidate (e.g., 8.0.0 falls back to
+    // 8.0.0-rc1).
     else {
-      $alternatives[] = $info['major'] . '.0-rc1';
+      $alternatives[] = $info['major'] . '.' . $info['minor'] . '.0-rc1';
+    }
+    // Point-releases: Previous and zero minor release (e.g., 8.2.x falls back
+    // to 8.1.0 and 8.0.0).
+    if ($info['minor'] > 0) {
+      $alternatives[] = $info['major'] . '.' . ($info['minor'] - 1) . '.0';
+      $alternatives[] = $info['major'] . '.0.0';
     }
   }
   else {
-    switch ($info['extra_text']) {
-      // Alpha release: current alpha or previous alpha release (e.g. 8.0-alpha2
-      // falls back to 8.0-alpha1).
-      case 'alpha':
-        $alternatives[] = $version;
-        if ($info['extra_number'] > 1) {
-          $alternatives[] = $info['major'] . '.0-alpha' . ($info['extra_number'] - 1);
-        }
-        break;
+    // Below we assume that for all dev, alpha, beta or rc releases the patch
+    // level is 0.
 
-      // Beta release: current beta or previous beta release (e.g. 8.0-beta2
-      // falls back to 8.0-beta1) or first alpha release.
-      case 'beta':
-        $alternatives[] = $version;
-        if ($info['extra_number'] > 1) {
-          $alternatives[] = $info['major'] . '.0-beta' . ($info['extra_number'] - 1);
-        }
-        else {
-          $alternatives[] = $info['major'] . '.0-alpha2';
-        }
-        break;
+    $release_levels = array('rc', 'beta', 'alpha');
 
-      // Dev release: the previous point release (e.g., 8.2-dev falls back to
-      // 8.1) or any unstable release (e.g., 8.0-dev falls back to 8.0-rc1,
-      // 8.0-beta1 or 8.0-alpha12)
-      case 'dev':
-        if ($info['minor'] >= 1) {
-          $alternatives[] = $info['major'] . '.' . ($info['minor'] - 1);
-        }
-        else {
-          $alternatives[] = $info['major'] . '.0-rc1';
-          $alternatives[] = $info['major'] . '.0-beta1';
-          $alternatives[] = $info['major'] . '.0-alpha12';
-        }
-        break;
-
-      // Release candidate: the current or previous release candidate (e.g.,
-      // 8.0-rc2 falls back to 8.0-rc1) or the first beta release.
-      case 'rc':
-        $alternatives[] =  $version;
-        if ($info['extra_number'] >= 2) {
-          $alternatives[] = $info['major'] . '.0-rc' . ($info['extra_number'] - 1);
-        }
-        else {
-          $alternatives[] = $info['major'] . '.0-beta1';
-        }
-        break;
+    if ($info['extra_text'] == 'dev') {
+      // Dev release: Any unstable release (e.g., 8.2.0-dev falls back to
+      // 8.2.0-rc1, 8.2.0-beta1 and 8.2.0-alpha1).
+      $alternatives[] = $info['major'] . '.' . $info['minor'] . '.0-rc1';
+      $alternatives[] = $info['major'] . '.' . $info['minor'] . '.0-beta1';
+      $alternatives[] = $info['major'] . '.' . $info['minor'] . '.0-alpha1';
+    }
+    elseif (in_array($info['extra_text'], $release_levels)) {
+      // All other unstable release always includes the current version.
+      $alternatives[] = $version;
+      // Alpha release: Previous alpha release (e.g. 8.0.0-alpha2 falls back to
+      // 8.0.0-alpha1).
+      // Beta release: Previous beta release and first alpha release (e.g.
+      // 8.0.0-beta2 falls back to 8.0.0-beta1 and 8.0.0-alpha1).
+      // Release candidate: Previous release candidate and the first beta
+      // release (e.g. 8.0.0-rc2 falls back to 8.0.0-rc1 and 8.0.0-beta1).
+      $release_level_key = array_search($info['extra_text'], $release_levels);
+      if ($info['extra_number'] > 1) {
+        $alternatives[] = $info['major'] . '.' . $info['minor'] . '.0-' . $info['extra_text'] . ($info['extra_number'] - 1);
+      }
+      if ($info['extra_text'] != 'alpha') {
+        $alternatives[] = $info['major'] . '.' . $info['minor'] . '.0-' . $release_levels[$release_level_key + 1] . '1';
+      }
+    }
+    else {
+      $alternatives[] = $info['major'] . '.' . $info['minor'] . '.0';
+    }
+    // All unstable releases except the zero release: The previous minor release
+    // and the zero release.
+    if ($info['minor'] > 0) {
+      $alternatives[] = $info['major'] . '.' . ($info['minor'] - 1) . '.0';
+      $alternatives[] = $info['major'] . '.0.0';
     }
   }
 
-  // All releases may fall back to the previous major release (e.g., 8.1 falls
-  // back to 7.0, 8.x-dev falls back to 7.0). This will probably only be used
-  // for early dev releases or languages with an inactive translation team.
-  $alternatives[] = $info['major'] - 1 . '.0';
-
+  $alternatives = array_unique($alternatives);
   foreach ($alternatives as $alternative) {
     list($core) = explode('.', $alternative);
     $releases[] = array(
       'core' => $core . '.x',
       'version' => $alternative,
+    );
+  }
+
+  // All releases may fall back to the previous major release (e.g., 8.1.0
+  // may fall back to 7.0). This will probably only be used for early dev
+  // releases or languages with an inactive translation team.
+  if ($info['major'] == 8) {
+    $releases[] = array(
+      'core' => '7.x',
+      'version' => '7.0',
+    );
+  }
+  else {
+    $prev_major = $info['major'] - 1;
+    $releases[] = array(
+      'core' => $prev_major . '.x',
+      'version' => $prev_major . '.0.0',
     );
   }
 
@@ -1401,14 +1433,14 @@ function install_get_localization_release($version = \Drupal::VERSION) {
  * Extracts version information from a drupal core version string.
  *
  * @param string $version
- *   Version info string (e.g., 8.0, 8.1, 8.0-dev, 8.0-unstable1, 8.0-alpha2,
- *   8.0-beta3, and 8.0-rc4).
- *
+ *   Version info string (e.g., 8.0.0, 8.1.0, 8.0.0-dev, 8.0.0-unstable1,
+ *   8.0.0-alpha2, 8.0.0-beta3, and 8.0.0-rc4).
  *
  * @return array
  *   Associative array of version info:
  *   - major: Major version (e.g., "8").
  *   - minor: Minor version (e.g., "0").
+ *   - patch: Patch version (e.g., "0").
  *   - extra: Extra version info (e.g., "alpha2").
  *   - extra_text: The text part of "extra" (e.g., "alpha").
  *   - extra_number: The number part of "extra" (e.g., "2").
@@ -1419,6 +1451,8 @@ function _install_get_version_info($version) {
       (?P<major>[0-9]+)    # Major release number.
       \.          # .
       (?P<minor>[0-9]+)    # Minor release number.
+      \.          # .
+      (?P<patch>[0-9]+)    # Patch release number.
     )             #
     (             #
       -           # - separator for "extra" version information.
@@ -1537,6 +1571,51 @@ function install_profile_themes(&$install_state) {
 }
 
 /**
+ * Prepares the system for import and downloads additional translations.
+ *
+ * @param $install_state
+ *   An array of information about the current installation state.
+ *
+ * @return
+ *   The batch definition, if there are language files to download.
+ */
+function install_download_additional_translations_operations(&$install_state) {
+  \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+
+  $langcode = $install_state['parameters']['langcode'];
+  if (!($language = entity_load('configurable_language', $langcode))) {
+    // Create the language if not already shipped with a profile.
+    $language = ConfigurableLanguage::createFromLangcode($langcode);
+  }
+  $language->save();
+
+  // If a non-English language was selected, change the default language and
+  // remove English.
+  if ($langcode != 'en') {
+    \Drupal::config('system.site')->set('langcode', $langcode)->save();
+    \Drupal::service('language.default')->set($language);
+    if (empty($install_state['profile_info']['keep_english'])) {
+      entity_delete_multiple('configurable_language', array('en'));
+    }
+  }
+
+  // If there is more than one language or the single one is not English, we
+  // should download/import translations.
+  $languages = \Drupal::languageManager()->getLanguages();
+  $operations = array();
+  foreach($languages as $langcode => $language) {
+    // The installer language was already downloaded. Check downloads for the
+    // other languages if any. Ignore any download errors here, since we
+    // are in the middle of an install process and there is no way back. We
+    // will not import what we cannot download.
+    if ($langcode != 'en' && $langcode != $install_state['parameters']['langcode']) {
+      $operations[] = array('install_check_translations', array($langcode, $install_state['server_pattern']));
+    }
+  }
+  return $operations;
+}
+
+/**
  * Imports languages via a batch process during installation.
  *
  * @param $install_state
@@ -1546,61 +1625,77 @@ function install_profile_themes(&$install_state) {
  *   The batch definition, if there are language files to import.
  */
 function install_import_translations(&$install_state) {
-  include_once __DIR__ . '/../modules/locale/locale.bulk.inc';
+  \Drupal::moduleHandler()->loadInclude('locale', 'translation.inc');
 
-  $langcode = $install_state['parameters']['langcode'];
-  $language = ConfigurableLanguage::createFromLangcode($langcode);
-  $language->set('default', TRUE);
-  $language->save();
+  // If there is more than one language or the single one is not English, we
+  // should import translations.
+  $operations = install_download_additional_translations_operations($install_state);
+  $languages = \Drupal::languageManager()->getLanguages();
+  if (count($languages) > 1 || !isset($languages['en'])) {
+    $operations[] = array('_install_prepare_import', array(array_keys($languages), $install_state['server_pattern']));
 
-  // If a non-English language was selected, remove English and import the
-  // translations.
-  if ($langcode != 'en') {
-    entity_delete_multiple('configurable_language', array('en'));
-
-    // Set up a batch to import translations for the newly added language.
-    _install_prepare_import($langcode);
-    module_load_include('fetch.inc', 'locale');
-    if ($batch = locale_translation_batch_fetch_build(array(), array($langcode))) {
-      return $batch;
+    // Set up a batch to import translations for drupal core. Translation import
+    // for contrib modules happens in install_import_translations_remaining.
+    foreach ($languages as $language) {
+      if (locale_translation_use_remote_source()) {
+        $operations[] = array('locale_translation_batch_fetch_download', array('drupal', $language->getId()));
+      }
+      $operations[] = array('locale_translation_batch_fetch_import', array('drupal', $language->getId(), array()));
     }
+
+    module_load_include('fetch.inc', 'locale');
+    $batch = array(
+      'operations' => $operations,
+      'title' => t('Updating translations.'),
+      'progress_message' => '',
+      'error_message' => t('Error importing translation files'),
+      'finished' => 'locale_translation_batch_fetch_finished',
+      'file' => drupal_get_path('module', 'locale') . '/locale.batch.inc',
+    );
+    return $batch;
   }
 }
 
 /**
  * Tells the translation import process that Drupal core is installed.
  *
- * @param string $langcode
- *   Language code used for the translation.
+ * @param array $langcodes
+ *   Language codes used for the translations.
+ * @param string $server_pattern
+ *   Server access pattern (to replace language code, version number, etc. in).
  */
-function _install_prepare_import($langcode) {
+function _install_prepare_import($langcodes, $server_pattern) {
+  \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
   $matches = array();
-  global $install_state;
 
-  // Get the translation files located in the translations directory.
-  $files = locale_translate_get_interface_translation_files(array('drupal'), array($langcode));
-  // We pick the first file which matches the installation language.
-  $file = reset($files);
-  $filename = $file->filename;
-  preg_match('/drupal-([0-9a-z\.-]+)\.' . $langcode . '\.po/', $filename, $matches);
-  // Get the version information.
-  if ($version = $matches[1]) {
-    $info = _install_get_version_info($version);
-    // Picking the first file does not necessarily result in the right file. So
-    // we check if at least the major version number is available.
-    if ($info['major']) {
-      $core = $info['major'] . '.x';
-      $data = array(
-         'name' => 'drupal',
-         'project_type' => 'module',
-         'core' => $core,
-         'version' => $version,
-         'server_pattern' => $install_state['server_pattern'],
-         'status' => 1,
-      );
-      \Drupal::service('locale.project')->set($data['name'], $data);
-      module_load_include('compare.inc', 'locale');
-      locale_translation_check_projects_local(array('drupal'), array($install_state['parameters']['langcode']));
+  foreach ($langcodes as $langcode) {
+    // Get the translation files located in the translations directory.
+    $files = locale_translate_get_interface_translation_files(array('drupal'), array($langcode));
+    // Pick the first file which matches the language, if any.
+    $file = reset($files);
+    if (is_object($file)) {
+      $filename = $file->filename;
+      preg_match('/drupal-([0-9a-z\.-]+)\.' . $langcode . '\.po/', $filename, $matches);
+      // Get the version information.
+      if ($version = $matches[1]) {
+        $info = _install_get_version_info($version);
+        // Picking the first file does not necessarily result in the right file. So
+        // we check if at least the major version number is available.
+        if ($info['major']) {
+          $core = $info['major'] . '.x';
+          $data = array(
+            'name' => 'drupal',
+            'project_type' => 'module',
+            'core' => $core,
+            'version' => $version,
+            'server_pattern' => $server_pattern,
+            'status' => 1,
+          );
+          \Drupal::service('locale.project')->set($data['name'], $data);
+          module_load_include('compare.inc', 'locale');
+          locale_translation_check_projects_local(array('drupal'), array($langcode));
+        }
+      }
     }
   }
 }
@@ -1618,8 +1713,8 @@ function _install_prepare_import($langcode) {
  *   The batch definition, if there are language files to import.
  */
 function install_import_translations_remaining(&$install_state) {
-  module_load_include('fetch.inc', 'locale');
-  module_load_include('compare.inc', 'locale');
+  \Drupal::moduleHandler()->loadInclude('locale', 'fetch.inc');
+  \Drupal::moduleHandler()->loadInclude('locale', 'compare.inc');
 
   // Build a fresh list of installed projects. When more projects than core are
   // installed, their translations will be downloaded (if required) and imported
@@ -1627,7 +1722,8 @@ function install_import_translations_remaining(&$install_state) {
   $projects = locale_translation_build_projects();
   if (count($projects) > 1) {
     $options = _locale_translation_default_update_options();
-    if ($batch =  locale_translation_batch_update_build(array(), array($install_state['parameters']['langcode']), $options)) {
+    $languages = \Drupal::languageManager()->getLanguages();
+    if ($batch = locale_translation_batch_update_build(array(), array_keys($languages), $options)) {
       return $batch;
     }
   }
@@ -1646,7 +1742,8 @@ function install_import_translations_remaining(&$install_state) {
  */
 function install_update_configuration_translations(&$install_state) {
   \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
-  return locale_config_batch_update_components(array(), array($install_state['parameters']['langcode']));
+  $languages = \Drupal::languageManager()->getLanguages();
+  return locale_config_batch_update_components(array(), array_keys($languages));
 }
 
 /**
@@ -1711,8 +1808,18 @@ function _install_module_batch($module, $module_name, &$context) {
 
 /**
  * Checks installation requirements and reports any errors.
+ *
+ * @param string $langcode
+ *   Language code to check for download.
+ * @param string $server_pattern
+ *   Server access pattern (to replace language code, version number, etc. in).
+ *
+ * @return array
+ *   Requirements compliance array. If the translation was downloaded
+ *   successfully then an empty array is returned. Otherwise the requirements
+ *   error with detailed information.
  */
-function install_check_translations($install_state) {
+function install_check_translations($langcode, $server_pattern) {
   $requirements = array();
 
   $readable = FALSE;
@@ -1736,9 +1843,13 @@ function install_check_translations($install_state) {
     $translations_directory_exists = TRUE;
   }
 
+  // The file already exists, no need to attempt to download.
+  if ($existing_file = glob($translations_directory . '/drupal-*.' . $langcode . '.po')) {
+    return;
+  }
+
   // Build URLs for the translation file and the translation server.
   $releases = install_get_localization_release();
-  $langcode = $install_state['parameters']['langcode'];
   $translation_urls = array();
   foreach ($releases as $release) {
     $variables = array(
@@ -1747,7 +1858,7 @@ function install_check_translations($install_state) {
       '%core' => $release['core'],
       '%language' => $langcode,
     );
-    $translation_urls[] = strtr($install_state['server_pattern'], $variables);
+    $translation_urls[] = strtr($server_pattern, $variables);
   }
   $elements = parse_url(reset($translation_urls));
   $server_url = $elements['scheme'] . '://' . $elements['host'];
@@ -1932,8 +2043,9 @@ function install_check_requirements($install_state) {
         // common configuration on shared hosting, and there is nothing Drupal
         // can do to prevent it. In this situation, having $file also owned by
         // the webserver does not introduce any additional security risk, so we
-        // keep the file in place.
-        if (fileowner($default_file) === fileowner($file)) {
+        // keep the file in place. Additionally, this situation also occurs when
+        // the test runner is being run be different user than the webserver.
+        if (fileowner($default_file) === fileowner($file) || DRUPAL_TEST_IN_CHILD_SITE) {
           $readable = drupal_verify_install_file($file, FILE_READABLE);
           $writable = drupal_verify_install_file($file, FILE_WRITABLE);
           $exists = TRUE;

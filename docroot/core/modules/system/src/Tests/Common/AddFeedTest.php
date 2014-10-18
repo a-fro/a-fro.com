@@ -12,30 +12,30 @@ use Drupal\Core\Page\HtmlPage;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Make sure that drupal_add_feed() works correctly with various constructs.
+ * Make sure that _drupal_add_feed() works correctly with various constructs.
  *
  * @group Common
  */
 class AddFeedTest extends WebTestBase {
   /**
-   * Tests drupal_add_feed() with paths, URLs, and titles.
+   * Tests _drupal_add_feed() with paths, URLs, and titles.
    */
   function testBasicFeedAddNoTitle() {
     $path = $this->randomMachineName(12);
     $external_url = 'http://' . $this->randomMachineName(12) . '/' . $this->randomMachineName(12);
-    $fully_qualified_local_url = url($this->randomMachineName(12), array('absolute' => TRUE));
+    $fully_qualified_local_url = _url($this->randomMachineName(12), array('absolute' => TRUE));
 
     $path_for_title = $this->randomMachineName(12);
     $external_for_title = 'http://' . $this->randomMachineName(12) . '/' . $this->randomMachineName(12);
-    $fully_qualified_for_title = url($this->randomMachineName(12), array('absolute' => TRUE));
+    $fully_qualified_for_title = _url($this->randomMachineName(12), array('absolute' => TRUE));
 
-    // Possible permutations of drupal_add_feed() to test.
-    // - 'input_url': the path passed to drupal_add_feed(),
+    // Possible permutations of _drupal_add_feed() to test.
+    // - 'input_url': the path passed to _drupal_add_feed(),
     // - 'output_url': the expected URL to be found in the header.
-    // - 'title' == the title of the feed as passed into drupal_add_feed().
+    // - 'title' == the title of the feed as passed into _drupal_add_feed().
     $urls = array(
       'path without title' => array(
-        'url' => url($path, array('absolute' => TRUE)),
+        'url' => _url($path, array('absolute' => TRUE)),
         'title' => '',
       ),
       'external URL without title' => array(
@@ -47,7 +47,7 @@ class AddFeedTest extends WebTestBase {
         'title' => '',
       ),
       'path with title' => array(
-        'url' => url($path_for_title, array('absolute' => TRUE)),
+        'url' => _url($path_for_title, array('absolute' => TRUE)),
         'title' => $this->randomMachineName(12),
       ),
       'external URL with title' => array(

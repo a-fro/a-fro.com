@@ -52,7 +52,7 @@ class SetCustomize extends EntityForm {
     foreach ($this->entity->getShortcuts() as $shortcut) {
       $id = $shortcut->id();
       $form['shortcuts']['links'][$id]['#attributes']['class'][] = 'draggable';
-      $form['shortcuts']['links'][$id]['name']['#markup'] = l($shortcut->getTitle(), $shortcut->path->value);
+      $form['shortcuts']['links'][$id]['name']['#markup'] = $this->l($shortcut->getTitle(), $shortcut->getUrl());
       $form['shortcuts']['links'][$id]['#weight'] = $shortcut->getWeight();
       $form['shortcuts']['links'][$id]['weight'] = array(
         '#type' => 'weight',
@@ -64,11 +64,11 @@ class SetCustomize extends EntityForm {
 
       $links['edit'] = array(
         'title' => t('Edit'),
-        'href' => "admin/config/user-interface/shortcut/link/$id",
+        'url' => $shortcut->urlInfo(),
       );
       $links['delete'] = array(
         'title' => t('Delete'),
-        'href' => "admin/config/user-interface/shortcut/link/$id/delete",
+        'url' => $shortcut->urlInfo('delete-form'),
       );
       $form['shortcuts']['links'][$id]['operations'] = array(
         '#type' => 'operations',

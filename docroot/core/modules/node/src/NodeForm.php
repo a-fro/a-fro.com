@@ -112,7 +112,7 @@ class NodeForm extends ContentEntityForm {
     $form['langcode'] = array(
       '#title' => t('Language'),
       '#type' => 'language_select',
-      '#default_value' => $node->getUntranslated()->language()->id,
+      '#default_value' => $node->getUntranslated()->language()->getId(),
       '#languages' => LanguageInterface::STATE_ALL,
       '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
     );
@@ -408,7 +408,7 @@ class NodeForm extends ContentEntityForm {
     $node = $this->entity;
     $insert = $node->isNew();
     $node->save();
-    $node_link = l(t('View'), 'node/' . $node->id());
+    $node_link = $node->link($this->t('View'));
     $context = array('@type' => $node->getType(), '%title' => $node->label(), 'link' => $node_link);
     $t_args = array('@type' => node_get_type_label($node), '%title' => $node->label());
 

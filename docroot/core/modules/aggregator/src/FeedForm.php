@@ -12,6 +12,7 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,7 +32,7 @@ class FeedForm extends ContentEntityForm {
     $form['langcode'] = array(
       '#title' => $this->t('Language'),
       '#type' => 'language_select',
-      '#default_value' => $feed->language()->id,
+      '#default_value' => $feed->language()->getId(),
       '#languages' => LanguageInterface::STATE_ALL,
       '#weight' => -4,
     );
@@ -70,7 +71,7 @@ class FeedForm extends ContentEntityForm {
       $form_state->setRedirectUrl($feed->urlInfo('canonical'));
     }
     else {
-      $this->logger('aggregator')->notice('Feed %feed added.', array('%feed' => $feed->label(), 'link' => l($this->t('View'), 'admin/config/services/aggregator')));
+      $this->logger('aggregator')->notice('Feed %feed added.', array('%feed' => $feed->label(), 'link' => $this->l($this->t('View'), new Url('aggregator.admin_overview'))));
       drupal_set_message($this->t('The feed %feed has been added.', array('%feed' => $feed->label())));
     }
   }

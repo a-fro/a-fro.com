@@ -108,7 +108,7 @@ class ViewsData {
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
 
-    $this->langcode = $this->languageManager->getCurrentLanguage()->id;
+    $this->langcode = $this->languageManager->getCurrentLanguage()->getId();
     $this->skipCache = $config->get('views.settings')->get('skip_cache');
   }
 
@@ -199,7 +199,7 @@ class ViewsData {
    *   The data that will be cached.
    */
   protected function cacheSet($cid, $data) {
-    return $this->cacheBackend->set($this->prepareCid($cid), $data, Cache::PERMANENT, array('views_data' => TRUE, 'extension' => array(TRUE, 'views')));
+    return $this->cacheBackend->set($this->prepareCid($cid), $data, Cache::PERMANENT, array('views_data', 'extension', 'extension:views'));
   }
 
   /**
@@ -310,6 +310,6 @@ class ViewsData {
     $this->storage = array();
     $this->allStorage = array();
     $this->fullyLoaded = FALSE;
-    Cache::deleteTags(array('views_data' => TRUE));
+    Cache::deleteTags(array('views_data'));
   }
 }

@@ -13,6 +13,7 @@ use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * @addtogroup schemaapi
@@ -168,13 +169,7 @@ class Schema extends DatabaseSchema {
 
     // $spec['default'] can be NULL, so we explicitly check for the key here.
     if (array_key_exists('default', $spec)) {
-      if (is_string($spec['default'])) {
-        $spec['default'] = $this->connection->quote($spec['default']);
-      }
-      elseif (!isset($spec['default'])) {
-        $spec['default'] = 'NULL';
-      }
-      $sql .= ' DEFAULT ' . $spec['default'];
+      $sql .= ' DEFAULT ' . $this->escapeDefaultValue($spec['default']);
     }
 
     if (empty($spec['not null']) && !isset($spec['default'])) {
@@ -385,14 +380,7 @@ class Schema extends DatabaseSchema {
       throw new SchemaObjectDoesNotExistException(t("Cannot set default value of field @table.@field: field doesn't exist.", array('@table' => $table, '@field' => $field)));
     }
 
-    if (!isset($default)) {
-      $default = 'NULL';
-    }
-    else {
-      $default = is_string($default) ? "'$default'" : $default;
-    }
-
-    $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN `' . $field . '` SET DEFAULT ' . $default);
+    $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN `' . $field . '` SET DEFAULT ' . $this->escapeDefaultValue($default));
   }
 
   public function fieldSetNoDefault($table, $field) {
@@ -492,7 +480,7 @@ class Schema extends DatabaseSchema {
     // Truncate comment to maximum comment length.
     if (isset($length)) {
       // Add table prefixes before truncating.
-      $comment = substr($this->connection->prefixTables($comment), 0, $length);
+      $comment = Unicode::truncate($this->connection->prefixTables($comment), $length, TRUE, TRUE);
     }
 
     return $this->connection->quote($comment);

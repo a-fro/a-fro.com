@@ -9,6 +9,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 
 /**
  * Prepares variables for Views UI display tab setting templates.
@@ -166,7 +167,7 @@ function theme_views_ui_build_group_filter_form($variables) {
       'title' => drupal_render($form['group_items'][$group_id]['title']),
       'operator' => drupal_render($form['group_items'][$group_id]['operator']),
       'value' => drupal_render($form['group_items'][$group_id]['value']),
-      'remove' => drupal_render($form['group_items'][$group_id]['remove']) . l('<span>' . t('Remove') . '</span>', 'javascript:void()', array('attributes' => array('id' => 'views-remove-link-' . $group_id, 'class' => array('views-hidden', 'views-button-remove', 'views-groups-remove-link', 'views-remove-link'), 'alt' => t('Remove this item'), 'title' => t('Remove this item')), 'html' => true)),
+      'remove' => drupal_render($form['group_items'][$group_id]['remove']) . _l('<span>' . t('Remove') . '</span>', 'javascript:void()', array('attributes' => array('id' => 'views-remove-link-' . $group_id, 'class' => array('views-hidden', 'views-button-remove', 'views-groups-remove-link', 'views-remove-link'), 'alt' => t('Remove this item'), 'title' => t('Remove this item')), 'html' => true)),
     );
     $rows[] = array('data' => $data, 'id' => 'views-row-' . $group_id, 'class' => array('draggable'));
   }
@@ -283,7 +284,7 @@ function template_preprocess_views_ui_rearrange_filter_form(&$variables) {
 
         $remove_link = array(
           '#type' => 'link',
-          '#href' => '',
+          '#url' => Url::fromRoute('<none>'),
           '#title' => '<span>' . t('Remove') . '</span>',
           '#weight' => '1',
           '#options' => array(

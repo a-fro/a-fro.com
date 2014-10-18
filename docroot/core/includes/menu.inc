@@ -308,64 +308,6 @@ use Drupal\Core\Template\Attribute;
  */
 
 /**
- * Implements template_preprocess_HOOK() for theme_menu_tree().
- */
-function template_preprocess_menu_tree(&$variables) {
-  if (isset($variables['tree']['#heading'])) {
-    $variables['heading'] = $variables['tree']['#heading'];
-    $heading = &$variables['heading'];
-    // Convert a string heading into an array, using a H2 tag by default.
-    if (is_string($heading)) {
-      $heading = array('text' => $heading);
-    }
-    // Merge in default array properties into $heading.
-    $heading += array(
-      'level' => 'h2',
-      'attributes' => array(),
-    );
-    // Convert the attributes array into an Attribute object.
-    $heading['attributes'] = new Attribute($heading['attributes']);
-    $heading['text'] = String::checkPlain($heading['text']);
-  }
-
-  if (isset($variables['tree']['#attributes'])) {
-    $variables['attributes'] = new Attribute($variables['tree']['#attributes']);
-  }
-  else {
-    $variables['attributes'] = new Attribute();
-  }
-  if (!isset($variables['attributes']['class'])) {
-    $variables['attributes']['class'] = array();
-  }
-  $variables['attributes']['class'][] = 'menu';
-
-  $variables['tree'] = $variables['tree']['#children'];
-}
-
-/**
- * Returns HTML for a menu link and submenu.
- *
- * @param $variables
- *   An associative array containing:
- *   - element: Structured array data for a menu link.
- *
- * @ingroup themeable
- */
-function theme_menu_link(array $variables) {
-  $element = $variables['element'];
-  $sub_menu = '';
-
-  if ($element['#below']) {
-    $sub_menu = drupal_render($element['#below']);
-  }
-  /** @var \Drupal\Core\Url $url */
-  $url = $element['#url'];
-  $url->setOption('set_active_class', TRUE);
-  $output = \Drupal::linkGenerator()->generateFromUrl($element['#title'], $url);
-  return '<li' . new Attribute($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
-}
-
-/**
  * Prepares variables for single local task link templates.
  *
  * Default template: menu-local-task.html.twig.
@@ -402,19 +344,9 @@ function template_preprocess_menu_local_task(&$variables) {
   $variables['link'] = array(
     '#type' => 'link',
     '#title' => $link_text,
+    '#url' => $link['url'],
     '#options' => $link['localized_options'],
   );
-
-  if (!empty($link['href'])) {
-    // @todo - Remove this once all pages are converted to routes.
-    $variables['link']['#href'] = $link['href'];
-  }
-  else {
-    $variables['link'] += array(
-      '#route_name' => $link['route_name'],
-      '#route_parameters' => $link['route_parameters'],
-    );
-  }
 }
 
 /**
@@ -431,9 +363,7 @@ function template_preprocess_menu_local_task(&$variables) {
 function template_preprocess_menu_local_action(&$variables) {
   $link = $variables['element']['#link'];
   $link += array(
-    'href' => '',
     'localized_options' => array(),
-    'route_parameters' => array(),
   );
   $link['localized_options']['attributes']['class'][] = 'button';
   $link['localized_options']['attributes']['class'][] = 'button-action';
@@ -443,19 +373,8 @@ function template_preprocess_menu_local_action(&$variables) {
     '#type' => 'link',
     '#title' => $link['title'],
     '#options' => $link['localized_options'],
+    '#url' => $link['url'],
   );
-
-  // @todo Figure out how to support local actions without a href properly.
-  if ($link['href'] === '' && !empty($link['route_name'])) {
-    $variables['link'] += array(
-      '#route_name' => $link['route_name'],
-      '#route_parameters' => $link['route_parameters'],
-    );
-  }
-  else {
-    // @todo - Remove this once all pages are converted to routes.
-    $variables['link']['#href'] = $link['href'];
-  }
 }
 
 /**
@@ -469,72 +388,6 @@ function menu_list_system_menus() {
     'main' => 'Main navigation',
     'footer' => 'Footer menu',
   );
-}
-
-/**
- * Returns an array of links to be rendered as the Main menu.
- */
-function menu_main_menu() {
-  $main_links_source = _menu_get_links_source('main_links', 'main');
-  return menu_navigation_links($main_links_source);
-}
-
-/**
- * Returns an array of links to be rendered as the Secondary links.
- */
-function menu_secondary_menu() {
-  $main_links_source = _menu_get_links_source('main_links', 'main');
-  $secondary_links_source = _menu_get_links_source('secondary_links', 'account');
-
-  // If the secondary menu source is set as the primary menu, we display the
-  // second level of the primary menu.
-  if ($secondary_links_source == $main_links_source) {
-    return menu_navigation_links($main_links_source, 1);
-  }
-  else {
-    return menu_navigation_links($secondary_links_source, 0);
-  }
-}
-
-/**
- * Returns the source of links of a menu.
- *
- * @param string $name
- *   A string configuration key of menu link source.
- * @param string $default
- *   Default menu name.
- *
- * @return string
- *   Returns menu name, if exist
- */
-function _menu_get_links_source($name, $default) {
-  $config = \Drupal::config('menu_ui.settings');
-  return \Drupal::moduleHandler()->moduleExists('menu_ui') ? $config->get($name) : $default;
-}
-
-/**
- * Builds a renderable array for a navigation menu.
- *
- * @param string $menu_name
- *   The name of the menu.
- * @param int $level
- *   Optional, the depth of the menu to be returned.
- *
- * @return array
- *   A renderable array.
- */
-function menu_navigation_links($menu_name, $level = 0) {
-  $menu_tree = \Drupal::menuTree();
-  $parameters = $menu_tree->getCurrentRouteMenuTreeParameters($menu_name);
-  $parameters->setMaxDepth($level + 1);
-  $tree = $menu_tree->load($menu_name, $parameters);
-  $manipulators = array(
-    array('callable' => 'menu.default_tree_manipulators:checkAccess'),
-    array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
-    array('callable' => 'menu.default_tree_manipulators:extractSubtreeOfActiveTrail', 'args' => array($level)),
-  );
-  $tree = $menu_tree->transform($tree, $manipulators);
-  return $menu_tree->build($tree);
 }
 
 /**

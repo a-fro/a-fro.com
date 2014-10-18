@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -72,7 +73,7 @@ class NodeTypeForm extends EntityForm {
       '#title' => t('Name'),
       '#type' => 'textfield',
       '#default_value' => $type->name,
-      '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>Add content</em> page. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
+      '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>Add content</em> page. This name must be unique.'),
       '#required' => TRUE,
       '#size' => 30,
     );
@@ -230,7 +231,7 @@ class NodeTypeForm extends EntityForm {
     }
     elseif ($status == SAVED_NEW) {
       drupal_set_message(t('The content type %name has been added.', $t_args));
-      $context = array_merge($t_args, array('link' => l(t('View'), 'admin/structure/types')));
+      $context = array_merge($t_args, array('link' => $this->l(t('View'), new Url('node.overview_types'))));
       $this->logger('node')->notice('Added content type %name.', $context);
     }
 

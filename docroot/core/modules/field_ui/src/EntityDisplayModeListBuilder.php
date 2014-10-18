@@ -11,6 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -92,8 +93,8 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
         continue;
       }
 
-      // Filter entities
-      if ($this->entityTypes[$entity_type]->isFieldable() && !$this->isValidEntity($entity_type)) {
+      // Filter entities.
+      if (!$this->isValidEntity($entity_type)) {
         continue;
       }
 
@@ -118,7 +119,7 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
       $table['#rows']['_add_new'][] = array(
         'data' => array(
           '#type' => 'link',
-          '#href' => "admin/structure/display-modes/$short_type/add/$entity_type",
+          '#url' => Url::fromRoute($short_type == 'view' ? 'field_ui.entity_view_mode_add_type' : 'field_ui.entity_form_mode_add_type', ['entity_type_id' => $entity_type]),
           '#title' => t('Add new %label @entity-type', array('%label' => $this->entityTypes[$entity_type]->getLabel(), '@entity-type' => $this->entityType->getLowercaseLabel())),
           '#options' => array(
             'html' => TRUE,
@@ -142,7 +143,7 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
    *   doesn't has the correct controller.
    */
   protected function isValidEntity($entity_type) {
-    return $this->entityTypes[$entity_type]->hasViewBuilderClass();
+    return $this->entityTypes[$entity_type]->get('field_ui_base_route') && $this->entityTypes[$entity_type]->hasViewBuilderClass();
   }
 
 }

@@ -41,7 +41,6 @@ use Drupal\user\UserInterface;
  *   data_table = "node_field_data",
  *   revision_table = "node_revision",
  *   revision_data_table = "node_field_revision",
- *   fieldable = TRUE,
  *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "nid",
@@ -161,14 +160,14 @@ class Node extends ContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public function prepareLangcode() {
-    $langcode = $this->language()->id;
+    $langcode = $this->language()->getId();
     // If the Language module is enabled, try to use the language from content
     // negotiation.
     if (\Drupal::moduleHandler()->moduleExists('language')) {
       // Load languages the node exists in.
       $node_translations = $this->getTranslationLanguages();
       // Load the language from content negotiation.
-      $content_negotiation_langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->id;
+      $content_negotiation_langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
       // If there is a translation available, use it.
       if (isset($node_translations[$content_negotiation_langcode])) {
         $langcode = $content_negotiation_langcode;
@@ -377,7 +376,7 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
-      ->setDefaultValueCallback(array('Drupal\node\Entity\Node', 'getCurrentUserId'))
+      ->setDefaultValueCallback('Drupal\node\Entity\Node::getCurrentUserId')
       ->setTranslatable(TRUE)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',

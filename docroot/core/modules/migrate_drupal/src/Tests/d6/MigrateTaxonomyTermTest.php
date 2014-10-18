@@ -51,7 +51,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupalTestBase {
         'source_vid' => 1,
         'vid' => 'vocabulary_1_i_0_',
         'weight' => 0,
-        'parent' => array(0),
+        'parent' => array(2),
       ),
       '2' => array(
         'source_vid' => 2,
@@ -84,7 +84,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupalTestBase {
         'parent' => array(4, 5),
       ),
     );
-    $terms = entity_load_multiple('taxonomy_term', array_keys($expected_results));
+    $terms = Term::loadMultiple(array_keys($expected_results));
     foreach ($expected_results as $tid => $values) {
       /** @var Term $term */
       $term = $terms[$tid];

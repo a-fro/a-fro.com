@@ -28,6 +28,7 @@ use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\block\Entity\Block;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\user\Entity\Role;
 
 /**
  * Test case for typical Drupal tests.
@@ -599,7 +600,7 @@ abstract class WebTestBase extends TestBase {
       // Grant the specified permissions to the role, if any.
       if (!empty($permissions)) {
         user_role_grant_permissions($role->id(), $permissions);
-        $assigned_permissions = entity_load('user_role', $role->id())->getPermissions();
+        $assigned_permissions = Role::load($role->id())->getPermissions();
         $missing_permissions = array_diff($permissions, $assigned_permissions);
         if (!$missing_permissions) {
           $this->pass(String::format('Created permissions: @perms', array('@perms' => implode(', ', $permissions))), 'Role');
@@ -737,7 +738,7 @@ abstract class WebTestBase extends TestBase {
    *
    * Installs Drupal with the installation profile specified in
    * \Drupal\simpletest\WebTestBase::$profile into the prefixed database.
-
+   *
    * Afterwards, installs any additional modules specified in the static
    * \Drupal\simpletest\WebTestBase::$modules property of each class in the
    * class hierarchy.
@@ -908,13 +909,17 @@ abstract class WebTestBase extends TestBase {
     // Reset/rebuild all data structures after enabling the modules, primarily
     // to synchronize all data structures and caches between the test runner and
     // the child site.
-    // Affects e.g. file_get_stream_wrappers().
     // @see \Drupal\Core\DrupalKernel::bootCode()
     // @todo Test-specific setUp() methods may set up further fixtures; find a
     //   way to execute this after setUp() is done, or to eliminate it entirely.
     $this->resetAll();
     $this->kernel->prepareLegacyRequest($request);
 
+    // Explicitly call register() again on the container registered in \Drupal.
+    // @todo This should already be called through
+    //   DrupalKernel::prepareLegacyRequest() -> DrupalKernel::boot() but that
+    //   appears to be calling a different container.
+    $this->container->get('stream_wrapper_manager')->register();
     // Temporary fix so that when running from run-tests.sh we don't get an
     // empty current path which would indicate we're on the home page.
     $path = current_path();
@@ -969,6 +974,12 @@ abstract class WebTestBase extends TestBase {
         ),
       ),
     );
+
+    // If we only have one db driver available, we cannot set the driver.
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    if (count(drupal_get_database_types()) == 1) {
+      unset($parameters['forms']['install_settings_form']['driver']);
+    }
     return $parameters;
   }
 
@@ -1094,12 +1105,6 @@ abstract class WebTestBase extends TestBase {
     $request = \Drupal::request();
     // Rebuild the kernel and bring it back to a fully bootstrapped state.
     $this->container = $this->kernel->rebuildContainer();
-
-    // The request context is normally set by the router_listener from within
-    // its KernelEvents::REQUEST listener. In the simpletest parent site this
-    // event is not fired, therefore it is necessary to updated the request
-    // context manually here.
-    $this->container->get('router.request_context')->fromRequest($request);
 
     // Make sure the url generator has a request object, otherwise calls to
     // $this->drupalGet() will fail.
@@ -1482,7 +1487,7 @@ abstract class WebTestBase extends TestBase {
    * @param string $path
    *   Path to request AJAX from.
    * @param array $options
-   *   Array of options to pass to url().
+   *   Array of options to pass to _url().
    * @param array $headers
    *   Array of headers. Eg array('Accept: application/vnd.drupal-ajax').
    *
@@ -1902,6 +1907,12 @@ abstract class WebTestBase extends TestBase {
           break;
         case 'add_css':
           break;
+        case 'update_build_id':
+          $buildId = $xpath->query('//input[@name="form_build_id" and @value="' . $command['old'] . '"]')->item(0);
+          if ($buildId) {
+            $buildId->setAttribute('value', $command['new']);
+          }
+          break;
       }
     }
     $content = $dom->saveHTML();
@@ -1931,11 +1942,11 @@ abstract class WebTestBase extends TestBase {
    *
    * @see WebTestBase::getAjaxPageStatePostData()
    * @see WebTestBase::curlExec()
-   * @see url()
+   * @see _url()
    */
   protected function drupalPost($path, $accept, array $post, $options = array()) {
     return $this->curlExec(array(
-      CURLOPT_URL => url($path, $options + array('absolute' => TRUE)),
+      CURLOPT_URL => _url($path, $options + array('absolute' => TRUE)),
       CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $this->serializePostValues($post),
       CURLOPT_HTTPHEADER => array(
@@ -2478,8 +2489,9 @@ abstract class WebTestBase extends TestBase {
    */
   protected function assertUrl($path, array $options = array(), $message = '', $group = 'Other') {
     if (!$message) {
-      $message = String::format('Current URL is @url.', array(
+      $message = String::format('Expected @url matches current URL (@current_url).', array(
         '@url' => var_export($this->container->get('url_generator')->generateFromPath($path, $options), TRUE),
+        '@current_url' => $this->getUrl(),
       ));
     }
     $options['absolute'] = TRUE;
@@ -2673,7 +2685,6 @@ abstract class WebTestBase extends TestBase {
    *   The mocked request object.
    */
   protected function prepareRequestForGenerator($clean_urls = TRUE, $override_server_vars = array()) {
-    $generator = $this->container->get('url_generator');
     $request = Request::createFromGlobals();
     $server = $request->server->all();
     if (basename($server['SCRIPT_FILENAME']) != basename($server['SCRIPT_NAME'])) {
@@ -2697,7 +2708,13 @@ abstract class WebTestBase extends TestBase {
 
     $request = Request::create($request_path, 'GET', array(), array(), array(), $server);
     $this->container->get('request_stack')->push($request);
-    $generator->updateFromRequest();
+
+    // The request context is normally set by the router_listener from within
+    // its KernelEvents::REQUEST listener. In the simpletest parent site this
+    // event is not fired, therefore it is necessary to updated the request
+    // context manually here.
+    $this->container->get('router.request_context')->fromRequest($request);
+
     return $request;
   }
 }

@@ -25,7 +25,7 @@ use Drupal\Core\Session\AccountInterface;
  * - Content language: The language used to present content that is available
  *   in more than one language.
  * - URL language: The language associated with URLs. When generating a URL,
- *   this value will be used by url() as a default if no explicit preference is
+ *   this value will be used by _url() as a default if no explicit preference is
  *   provided.
  * Modules can define additional language types through
  * hook_language_types_info(), and alter existing language type definitions
@@ -90,7 +90,7 @@ use Drupal\Core\Session\AccountInterface;
  *       // If we are on an administrative path, override with the default
  *       language.
  *       if ($request->query->has('q') && strtok($request->query->get('q'), '/') == 'admin') {
- *         return $this->languageManager->getDefaultLanguage()->id;
+ *         return $this->languageManager->getDefaultLanguage()->getId();
  *       }
  *       return $langcode;
  *     }

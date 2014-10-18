@@ -6,8 +6,8 @@
  */
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\UrlMatcher;
 use Drupal\Core\Url;
@@ -39,7 +39,7 @@ function shortcut_help($route_name, RouteMatchInterface $route_match) {
     case 'entity.shortcut_set.edit_form':
       $user = \Drupal::currentUser();
       if ($user->hasPermission('access shortcuts') && $user->hasPermission('switch shortcut sets')) {
-        $output = '<p>' . t('Define which shortcut set you are using on the <a href="@shortcut-link">Shortcuts tab</a> of your account page.', array('@shortcut-link' => url("user/{$user->id()}/shortcuts"))) . '</p>';
+        $output = '<p>' . t('Define which shortcut set you are using on the <a href="@shortcut-link">Shortcuts tab</a> of your account page.', array('@shortcut-link' => \Drupal::url('shortcut.set_switch', array('user' => $user->id())))) . '</p>';
         return $output;
       }
   }
@@ -90,12 +90,12 @@ function shortcut_set_switch_access($account = NULL) {
 
   if (!$user->hasPermission('access shortcuts')) {
     // The user has no permission to use shortcuts.
-    return AccessResult::create()->cachePerRole();
+    return AccessResult::neutral()->cachePerRole();
   }
 
   if (!$user->hasPermission('switch shortcut sets')) {
     // The user has no permission to switch anyone's shortcut set.
-    return AccessResult::create()->cachePerRole();
+    return AccessResult::neutral()->cachePerRole();
   }
 
   // Users with the 'switch shortcut sets' permission can switch their own
@@ -108,7 +108,7 @@ function shortcut_set_switch_access($account = NULL) {
   }
 
   // No opinion.
-  return AccessResult::create()->cachePerRole();
+  return AccessResult::neutral()->cachePerRole();
 }
 
 /**
@@ -253,14 +253,14 @@ function shortcut_renderable_links($shortcut_set = NULL) {
 
   /** @var \Drupal\shortcut\ShortcutInterface[] $shortcuts  */
   $shortcuts = \Drupal::entityManager()->getStorage('shortcut')->loadByProperties(array('shortcut_set' => $shortcut_set->id()));
-  $all_cache_tags = array();
+  $cache_tags = array();
   foreach ($shortcuts as $shortcut) {
     $shortcut = \Drupal::entityManager()->getTranslationFromContext($shortcut);
     $links[] = array(
       'title' => $shortcut->label(),
-      'href' => $shortcut->path->value,
+      'url' => Url::fromRoute($shortcut->getRouteName(), $shortcut->getRouteParameters()),
     );
-    $all_cache_tags[] = $shortcut->getCacheTag();
+    $cache_tags = Cache::mergeTags($cache_tags, $shortcut->getCacheTag());
   }
 
   if (!empty($links)) {
@@ -271,7 +271,7 @@ function shortcut_renderable_links($shortcut_set = NULL) {
         'class' => array('menu'),
       ),
       '#cache' => array(
-        'tags' => NestedArray::mergeDeepArray($all_cache_tags),
+        'tags' => $cache_tags,
       ),
     );
   }
@@ -314,7 +314,7 @@ function shortcut_preprocess_page(&$variables) {
     // Check if $link is already a shortcut and set $link_mode accordingly.
     $shortcuts = \Drupal::entityManager()->getStorage('shortcut')->loadByProperties(array('shortcut_set' => $shortcut_set->id()));
     foreach ($shortcuts as $shortcut) {
-      if ($shortcut->getRouteName() == $url->getRouteName() && $shortcut->getRouteParams() == $url->getRouteParameters()) {
+      if ($shortcut->getRouteName() == $url->getRouteName() && $shortcut->getRouteParameters() == $url->getRouteParameters()) {
         $shortcut_id = $shortcut->id();
         break;
       }
@@ -343,8 +343,7 @@ function shortcut_preprocess_page(&$variables) {
         '#prefix' => '<div class="add-or-remove-shortcuts ' . $link_mode . '-shortcut">',
         '#type' => 'link',
         '#title' => '<span class="icon"></span><span class="text">'. $link_text .'</span>',
-        '#route_name' => $route_name,
-        '#route_parameters' => $route_parameters,
+        '#url' => Url::fromRoute($route_name, $route_parameters),
         '#options' => array('query' => $query, 'html' => TRUE),
         '#suffix' => '</div>',
       );
@@ -367,8 +366,7 @@ function shortcut_toolbar() {
       $configure_link = array(
         '#type' => 'link',
         '#title' => t('Edit shortcuts'),
-        '#route_name' => 'entity.shortcut_set.customize_form',
-        '#route_parameters' => array('shortcut_set' => $shortcut_set->id()),
+        '#url' => Url::fromRoute('entity.shortcut_set.customize_form', ['shortcut_set' => $shortcut_set->id()]),
         '#options' => array('attributes' => array('class' => array('edit-shortcuts'))),
       );
     }
@@ -378,7 +376,7 @@ function shortcut_toolbar() {
         'tab' => array(
           '#type' => 'link',
           '#title' => t('Shortcuts'),
-          '#href' => 'admin/config/user-interface/shortcut',
+          '#url' => Url::fromRoute('shortcut.set_admin'),
           '#attributes' => array(
             'title' => t('Shortcuts'),
             'class' => array('toolbar-icon', 'toolbar-icon-shortcut'),

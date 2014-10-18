@@ -59,7 +59,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     // no point in querying the database for access grants.
     if (!$this->moduleHandler->getImplementations('node_grants') || !$node->id()) {
       // No opinion.
-      return AccessResult::create();
+      return AccessResult::neutral();
     }
 
     // Check the database for potential access grants.
@@ -202,7 +202,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
             $grant['nid'] = $node->id();
             $grant['langcode'] = $grant_langcode;
             // The record with the original langcode is used as the fallback.
-            if ($grant['langcode'] == $node->language()->id) {
+            if ($grant['langcode'] == $node->language()->getId()) {
               $grant['fallback'] = 1;
             }
             else {

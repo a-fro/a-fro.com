@@ -22,10 +22,13 @@ class MenuNodeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu_ui', 'test_page_test', 'node');
+  public static $modules = array('menu_ui', 'test_page_test', 'node', 'block');
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalPlaceBlock('system_menu_block:main');
+
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     $this->admin_user = $this->drupalCreateUser(array(
@@ -131,7 +134,6 @@ class MenuNodeTest extends WebTestBase {
       'route_parameters' => array('node' => $node->id()),
       'title' => $this->randomMachineName(16),
       'menu_name' => 'admin',
-      'bundle' => 'menu_link_content',
     ));
     $item->save();
 
@@ -156,7 +158,6 @@ class MenuNodeTest extends WebTestBase {
       'title' => $this->randomMachineName(16),
       'parent' => $item->getPluginId(),
       'menu_name' => $item->getMenuName(),
-      'bundle' => 'menu_link_content',
     ));
     $child_item->save();
     // Edit the first node.

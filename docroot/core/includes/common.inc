@@ -29,7 +29,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\EventSubscriber\HtmlViewSubscriber;
 use Drupal\Core\Routing\GeneratorNotInitializedException;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Element;
@@ -146,49 +145,6 @@ const JS_THEME = 100;
 const LOCALE_PLURAL_DELIMITER = "\03";
 
 /**
- * Adds content to a specified region.
- *
- * @param $region
- *   Page region the content is added to.
- * @param $data
- *   Content to be added.
- */
-function drupal_add_region_content($region = NULL, $data = NULL) {
-  static $content = array();
-
-  if (isset($region) && isset($data)) {
-    $content[$region][] = $data;
-  }
-  return $content;
-}
-
-/**
- * Gets assigned content for a given region.
- *
- * @param $region
- *   A specified region to fetch content for. If NULL, all regions will be
- *   returned.
- * @param $delimiter
- *   Content to be inserted between imploded array elements.
- */
-function drupal_get_region_content($region = NULL, $delimiter = ' ') {
-  $content = drupal_add_region_content();
-  if (isset($region)) {
-    if (isset($content[$region]) && is_array($content[$region])) {
-      return implode($delimiter, $content[$region]);
-    }
-  }
-  else {
-    foreach (array_keys($content) as $region) {
-      if (is_array($content[$region])) {
-        $content[$region] = implode($delimiter, $content[$region]);
-      }
-    }
-    return $content;
-  }
-}
-
-/**
  * Gets the name of the currently active installation profile.
  *
  * When this function is called during Drupal's initial installation process,
@@ -238,8 +194,11 @@ function drupal_get_profile() {
  *   An array of all stored HEAD elements.
  *
  * @see \Drupal\Core\Render\Element\HtmlTag::preRenderHtmlTag()
+ *
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
+ *   Use #attached on render arrays.
  */
-function drupal_add_html_head($data = NULL, $key = NULL) {
+function _drupal_add_html_head($data = NULL, $key = NULL) {
   $stored_head = &drupal_static(__FUNCTION__, array());
 
   if (isset($data) && isset($key)) {
@@ -259,9 +218,12 @@ function drupal_add_html_head($data = NULL, $key = NULL) {
  *
  * @return string|array
  *   Return the rendered HTML head or the elements itself.
+ *
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
+ *   Use #attached on render arrays.
  */
 function drupal_get_html_head($render = TRUE) {
-  $elements = drupal_add_html_head();
+  $elements = _drupal_add_html_head();
   \Drupal::moduleHandler()->alter('html_head', $elements);
   if ($render) {
     return drupal_render($elements);
@@ -280,8 +242,11 @@ function drupal_get_html_head($render = TRUE) {
  *   An internal system path or a fully qualified external URL of the feed.
  * @param $title
  *   The title of the feed.
+ *
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
+ *   Use #attached on render arrays.
  */
-function drupal_add_feed($url = NULL, $title = '') {
+function _drupal_add_feed($url = NULL, $title = '') {
   $stored_feed_links = &drupal_static(__FUNCTION__, array());
 
   if (isset($url)) {
@@ -292,9 +257,12 @@ function drupal_add_feed($url = NULL, $title = '') {
 
 /**
  * Gets the feed URLs for the current page.
+ *
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
+ *   Use #attached on render arrays.
  */
 function drupal_get_feeds() {
-  $feeds = drupal_add_feed();
+  $feeds = _drupal_add_feed();
   return $feeds;
 }
 
@@ -639,24 +607,25 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  * When creating links in modules, consider whether l() could be a better
  * alternative than url().
  *
- * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromPath().
+ * @see \Drupal\Core\Url::fromUri()
+ * @see \Drupal\Core\Url::fromRoute()
+ * @see \Drupal\Core\Url::toString()
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Core\Url::fromRoute() for internal paths served by Drupal
+ *   controllers or \Drupal\Core\Url::fromUri() for external paths or
+ *   non-controller or sub-domain URIs such as core/install.php. Note that
+ *   \Drupal\Core\Url::fromUri() expects a valid URI including the scheme. URIs
+ *   from the same sub-domain that are not handled by Drupal controllers should
+ *   be prepended with base://. For example:
+ * @code
+ * $installer_url = \Drupal\Core\Url::fromUri('base://core/install.php')->toString();
+ * $external_url = \Drupal\Core\Url::fromUri('http://example.com', ['query' => ['foo' => 'bar']])->toString();
+ * $internal_url = \Drupal\Core\Url::fromRoute('system.admin')->toString();
+ * @endcode
  */
-function url($path = NULL, array $options = array()) {
-  $generator = \Drupal::urlGenerator();
-  try {
-    $url = $generator->generateFromPath($path, $options);
-  }
-  catch (GeneratorNotInitializedException $e) {
-    // Fallback to using globals.
-    // @todo Remove this once there is no code that calls url() when there is
-    //   no request.
-    global $base_url, $base_path, $script_path;
-    $generator->setBasePath($base_path);
-    $generator->setBaseUrl($base_url . '/');
-    $generator->setScriptPath($script_path);
-    $url = $generator->generateFromPath($path, $options);
-  }
-  return $url;
+function _url($path = NULL, array $options = array()) {
+  return \Drupal::urlGenerator()->generateFromPath($path, $options);
 }
 
 /**
@@ -668,8 +637,6 @@ function url($path = NULL, array $options = array()) {
  * @return
  *   A ; separated string ready for insertion in a HTTP header. No escaping is
  *   performed for HTML entities, so this string is not safe to be printed.
- *
- * @see drupal_add_http_header()
  */
 function drupal_http_header_attributes(array $attributes = array()) {
   foreach ($attributes as $attribute => &$data) {
@@ -692,7 +659,7 @@ function drupal_http_header_attributes(array $attributes = array()) {
  * However, for links enclosed in translatable text you should use t() and
  * embed the HTML anchor tag directly in the translated string. For example:
  * @code
- * t('Visit the <a href="@url">settings</a> page', array('@url' => url('admin')));
+ * t('Visit the <a href="@url">settings</a> page', array('@url' => \Drupal::url('system.admin')));
  * @endcode
  * This keeps the context of the link title ('settings' in the example) for
  * translators.
@@ -745,10 +712,27 @@ function drupal_http_header_attributes(array $attributes = array()) {
  * @return string
  *   An HTML string containing a link to the given path.
  *
- * @see url()
+ * @see _url()
  * @see system_page_build()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal::l($text, $url) where $url is an instance of
+ *   \Drupal\Core\Url. To build a \Drupal\Core\Url object for internal paths
+ *   served by Drupal controllers use \Drupal\Core\Url::fromRoute(). For
+ *   external paths or non-controller or sub-domain URIs such as
+ *   core/install.php use \Drupal\Core\Url::fromUri(). Note that
+ *   \Drupal\Core\Url::fromUri() expects a valid URI including the scheme. URIs
+ *   from the same sub-domain that are not handled by Drupal controllers should
+ *   be prepended with base://. For example:
+ * @code
+ * $installer_url = \Drupal\Core\Url::fromUri('base://core/install.php')->toString();
+ * $installer_link = \Drupal::l($text, $installer_url);
+ * $external_url = \Drupal\Core\Url::fromUri('http://example.com', ['query' => ['foo' => 'bar']])->toString();
+ * $external_link = \Drupal::l($text, $external_url);
+ * $internal_url = \Drupal\Core\Url::fromRoute('system.admin')->toString();
+ * $internal_link = \Drupal::l($text, $internal_url);
+ * @endcode
  */
-function l($text, $path, array $options = array()) {
+function _l($text, $path, array $options = array()) {
   // Start building a structured representation of our link to be altered later.
   $variables = array(
     'text' => is_array($text) ? drupal_render($text) : $text,
@@ -768,7 +752,7 @@ function l($text, $path, array $options = array()) {
   // Add a hreflang attribute if we know the language of this link's url and
   // hreflang has not already been set.
   if (!empty($variables['options']['language']) && !isset($variables['options']['attributes']['hreflang'])) {
-    $variables['options']['attributes']['hreflang'] = $variables['options']['language']->id;
+    $variables['options']['attributes']['hreflang'] = $variables['options']['language']->getId();
   }
 
   // Set the "active" class if the 'set_active_class' option is not empty.
@@ -803,7 +787,7 @@ function l($text, $path, array $options = array()) {
 
   // The result of url() is a plain-text URL. Because we are using it here
   // in an HTML argument context, we need to encode it properly.
-  $url = String::checkPlain(url($variables['path'], $variables['options']));
+  $url = String::checkPlain(_url($variables['path'], $variables['options']));
 
   // Sanitize the link text if necessary.
   $text = $variables['options']['html'] ? $variables['text'] : String::checkPlain($variables['text']);
@@ -891,8 +875,11 @@ function base_path() {
  *   Associative array of element attributes including 'href' and 'rel'.
  * @param $header
  *   Optional flag to determine if a HTTP 'Link:' header should be sent.
+ *
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
+ *   Use #attached on render arrays.
  */
-function drupal_add_html_head_link($attributes, $header = FALSE) {
+function _drupal_add_html_head_link($attributes, $header = FALSE) {
   $element = array(
     '#tag' => 'link',
     '#attributes' => $attributes,
@@ -903,10 +890,10 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
     // Also add a HTTP header "Link:".
     $href = '<' . String::checkPlain($attributes['href']) . '>;';
     unset($attributes['href']);
-    $element['#attached']['drupal_add_http_header'][] = array('Link',  $href . drupal_http_header_attributes($attributes), TRUE);
+    $element['#attached']['http_header'][] = array('Link',  $href . drupal_http_header_attributes($attributes), TRUE);
   }
 
-  drupal_add_html_head($element, 'drupal_add_html_head_link:' . $attributes['rel'] . ':' . $href);
+  _drupal_add_html_head($element, 'html_head_link:' . $attributes['rel'] . ':' . $href);
 }
 
 /**
@@ -1524,7 +1511,7 @@ function _drupal_add_js($data = NULL, $options = NULL) {
           $scriptPath = $GLOBALS['script_path'];
           $pathPrefix = '';
           $current_query = \Drupal::service('request_stack')->getCurrentRequest()->query->all();
-          url('', array('script' => &$scriptPath, 'prefix' => &$pathPrefix));
+          _url('', array('script' => &$scriptPath, 'prefix' => &$pathPrefix));
           $current_path = current_path();
           $current_path_is_admin = FALSE;
           // The function path_is_admin() is not available on update.php pages.
@@ -1538,7 +1525,7 @@ function _drupal_add_js($data = NULL, $options = NULL) {
             'currentPath' => $current_path,
             'currentPathIsAdmin' => $current_path_is_admin,
             'isFront' => drupal_is_front_page(),
-            'currentLanguage' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->id,
+            'currentLanguage' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId(),
           );
           if (!empty($current_query)) {
             ksort($current_query);
@@ -1783,41 +1770,6 @@ function drupal_merge_attached(array $a, array $b) {
 }
 
 /**
- * Merges sets of cache tags.
- *
- * The cache tags array is returned in a format that is valid for
- * \Drupal\Core\Cache\CacheBackendInterface::set().
- *
- * When caching elements, it is necessary to collect all cache tags into a
- * single array, from both the element itself and all child elements. This
- * allows items to be invalidated based on all tags attached to the content
- * they're constituted from.
- *
- * @param array $tags
- *   The first set of cache tags.
- * @param array $other
- *   The other set of cache tags.
- *
- * @return array
- *   The merged set of cache tags.
- */
-function drupal_merge_cache_tags(array $tags, array $other) {
-  foreach ($other as $namespace => $values) {
-    if (is_array($values)) {
-      foreach ($values as $value) {
-        $tags[$namespace][$value] = $value;
-      }
-    }
-    else {
-      if (!isset($tags[$namespace])) {
-        $tags[$namespace] = $values;
-      }
-    }
-  }
-  return $tags;
-}
-
-/**
  * Adds attachments to a render() structure.
  *
  * Libraries, JavaScript, CSS and other types of custom structures are attached
@@ -1836,7 +1788,7 @@ function drupal_merge_cache_tags(array $tags, array $other) {
  * other kind of attached data, the array key must be the full name of the
  * callback function and each value an array of arguments. For example:
  * @code
- * $build['#attached']['drupal_add_http_header'] = array(
+ * $build['#attached']['http_header'] = array(
  *   array('Content-Type', 'application/rss+xml; charset=utf-8'),
  * );
  * @endcode
@@ -1914,7 +1866,23 @@ function drupal_process_attached($elements, $dependency_check = FALSE) {
   // special handling.
   foreach ($elements['#attached'] as $callback => $options) {
     foreach ($elements['#attached'][$callback] as $args) {
-      call_user_func_array($callback, $args);
+      // Limit the amount allowed entries.
+      switch ($callback) {
+        case 'html_head':
+          call_user_func_array('_drupal_add_html_head', $args);
+          break;
+        case 'feed':
+          call_user_func_array('_drupal_add_feed', $args);
+          break;
+        case 'html_head_link':
+          call_user_func_array('_drupal_add_html_head_link', $args);
+          break;
+        case 'http_header':
+          call_user_func_array('_drupal_add_http_header', $args);
+          break;
+        default:
+          throw new \LogicException(sprintf('You are not allowed to use %s in #attached', $callback));
+      }
     }
   }
 
@@ -2075,6 +2043,9 @@ function drupal_process_states(&$elements) {
  *
  * @see \Drupal\Core\Asset\LibraryDiscovery
  * @see hook_library_info_alter()
+ *
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
+ *   Use #attached on render arrays.
  */
 function _drupal_add_library($library_name, $every_page = NULL) {
   $added = &drupal_static(__FUNCTION__, array());
@@ -2317,7 +2288,7 @@ function drupal_page_set_cache(Response $response, Request $request) {
   $expire = ($date > (new DateTime())) ? $date->getTimestamp() : Cache::PERMANENT;
 
   $cid = drupal_page_cache_get_cid($request);
-  $tags = HtmlViewSubscriber::convertHeaderToCacheTags($response->headers->get('X-Drupal-Cache-Tags'));
+  $tags = explode(' ', $response->headers->get('X-Drupal-Cache-Tags'));
   \Drupal::cache('render')->set($cid, $response, $expire, $tags);
 }
 
@@ -2501,20 +2472,6 @@ function drupal_prepare_page($page) {
   \Drupal::moduleHandler()->alter('page', $page);
   \Drupal::theme()->alter('page', $page);
 
-  // The "main" and "secondary" menus are never part of the page-level render
-  // array and therefore their cache tags will never bubble up into the page
-  // cache, even though they should be. This happens because they're rendered
-  // directly by the theme system.
-  // @todo Remove this once https://drupal.org/node/1869476 lands.
-  if (theme_get_setting('features.main_menu') && count(menu_main_menu())) {
-    $main_links_source = _menu_get_links_source('main_links', 'main');
-    $page['page_top']['#cache']['tags']['menu'][$main_links_source] = $main_links_source;
-  }
-  if (theme_get_setting('features.secondary_menu') && count(menu_secondary_menu())) {
-    $secondary_links_source = _menu_get_links_source('secondary_links', 'account');
-    $page['page_top']['#cache']['tags']['menu'][$secondary_links_source] = $secondary_links_source;
-  }
-
   // If no module has taken care of the main content, add it to the page now.
   // This allows the site to still be usable even if no modules that
   // control page regions (for example, the Block module) are enabled.
@@ -2584,7 +2541,8 @@ function drupal_prepare_page($page) {
  *     the defaults for this type of element, defined in hook_element_info(),
  *     are merged into the array. #defaults_loaded is set by functions that
  *     process render arrays and call element_info() before passing the array to
- *     drupal_render(), such as form_builder() in the Form API.
+ *     drupal_render(), such as \Drupal::formBuilder()->doBuildForm() in the
+ *     Form API.
  *   - If this element has an array of #pre_render functions defined, they are
  *     called sequentially to modify the element before rendering. After all the
  *     #pre_render functions have been called, #printed is checked a second time
@@ -2724,7 +2682,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
     $frame = $stack->top();
     // Update the frame, but also update the current element, to ensure it
     // contains up-to-date information in case it gets render cached.
-    $frame->tags = $element['#cache']['tags'] = drupal_merge_cache_tags($element['#cache']['tags'], $frame->tags);
+    $frame->tags = $element['#cache']['tags'] = Cache::mergeTags($element['#cache']['tags'], $frame->tags);
     $frame->attached = $element['#attached'] = drupal_merge_attached($element['#attached'], $frame->attached);
     $frame->postRenderCache = $element['#post_render_cache'] = NestedArray::mergeDeep($element['#post_render_cache'], $frame->postRenderCache);
   };
@@ -2740,7 +2698,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
     // Merge the current and the parent stack frame.
     $current = $stack->pop();
     $parent = $stack->pop();
-    $current->tags = drupal_merge_cache_tags($current->tags, $parent->tags);
+    $current->tags = Cache::mergeTags($current->tags, $parent->tags);
     $current->attached = drupal_merge_attached($current->attached, $parent->attached);
     $current->postRenderCache = NestedArray::mergeDeep($current->postRenderCache, $parent->postRenderCache);
     $stack->push($current);
@@ -2957,7 +2915,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
     $stack->push(new RenderStackFrame());
     _drupal_render_process_post_render_cache($elements);
     $post_render_additions = $stack->pop();
-    $elements['#cache']['tags'] = drupal_merge_cache_tags($elements['#cache']['tags'], $post_render_additions->tags);
+    $elements['#cache']['tags'] = Cache::mergeTags($elements['#cache']['tags'], $post_render_additions->tags);
     $elements['#attached'] = drupal_merge_attached($elements['#attached'], $post_render_additions->attached);
     $elements['#post_render_cache'] = NestedArray::mergeDeep($elements['#post_render_cache'], $post_render_additions->postRenderCache);
   }
@@ -3150,17 +3108,15 @@ function drupal_render_cache_set(&$markup, array $elements) {
     $data['#post_render_cache'] = $elements['#post_render_cache'];
   }
 
-  // Tag every render cache item with the "rendered" cache tag. This allows us
-  // to invalidate the entire render cache, regardless of the cache bin.
-  $cache_tags = $elements['#cache']['tags'] ?: array();
-  $cache_tags['rendered'] = TRUE;
-
-  // Persist cache tags associated with this element.
-  $data['#cache']['tags'] = $cache_tags;
+  // Persist cache tags associated with this element. Also associate the
+  // "rendered" cache tag. This allows us to invalidate the entire render cache,
+  // regardless of the cache bin.
+  $data['#cache']['tags'] = $elements['#cache']['tags'];
+  $data['#cache']['tags'][] = 'rendered';
 
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
   $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : Cache::PERMANENT;
-  \Drupal::cache($bin)->set($cid, $data, $expire, $cache_tags);
+  \Drupal::cache($bin)->set($cid, $data, $expire, $data['#cache']['tags']);
 }
 
 /**
@@ -3386,29 +3342,6 @@ function element_set_attributes(array &$element, array $map) {
 }
 
 /**
- * Returns a list of severity levels, as defined in RFC 3164.
- *
- * @return
- *   Array of the possible severity levels for log messages.
- *
- * @see http://www.ietf.org/rfc/rfc3164.txt
- * @see watchdog()
- * @ingroup logging_severity_levels
- */
-function watchdog_severity_levels() {
-  return array(
-    WATCHDOG_EMERGENCY   => t('Emergency'),
-    WATCHDOG_ALERT   => t('Alert'),
-    WATCHDOG_CRITICAL    => t('Critical'),
-    WATCHDOG_ERROR     => t('Error'),
-    WATCHDOG_WARNING => t('Warning'),
-    WATCHDOG_NOTICE  => t('Notice'),
-    WATCHDOG_INFO    => t('Info'),
-    WATCHDOG_DEBUG   => t('Debug'),
-  );
-}
-
-/**
  * Flushes all persistent caches, resets all variables, and rebuilds all data structures.
  *
  * At times, it is necessary to re-initialize the entire system to account for
@@ -3480,9 +3413,6 @@ function drupal_flush_all_caches() {
   // Reset all static caches.
   drupal_static_reset();
 
-  // Clear all non-drupal_static() static caches.
-  \Drupal::entityManager()->clearCachedDefinitions();
-
   // Wipe the PHP Storage caches.
   PhpStorageFactory::get('service_container')->deleteAll();
   PhpStorageFactory::get('twig')->deleteAll();
@@ -3531,6 +3461,9 @@ function drupal_flush_all_caches() {
 
   // Rebuild all information based on new module data.
   $module_handler->invokeAll('rebuild');
+
+  // Clear all plugin caches.
+  \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
 
   // Rebuild the menu router based on all rebuilt data.
   // Important: This rebuild must happen last, so the menu router is guaranteed

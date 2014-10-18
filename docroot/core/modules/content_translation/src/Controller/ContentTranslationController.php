@@ -122,11 +122,13 @@ class ContentTranslationController extends ControllerBase {
           $source = isset($entity->translation[$langcode]['source']) ? $entity->translation[$langcode]['source'] : '';
           $is_original = $langcode == $original;
           $label = $entity->getTranslation($langcode)->label();
-          $link = isset($links->links[$langcode]['href']) ? $links->links[$langcode] : array('href' => $entity->getSystemPath());
-          $link += array('language' => $language);
-          $row_title = l($label, $link['href'], $link);
+          $link = isset($links->links[$langcode]['url']) ? $links->links[$langcode] : array('url' => $entity->urlInfo());
+          if (!empty($link['url'])) {
+            $link['url']->setOption('language', $language);
+            $row_title = $this->l($label, $link['url']);
+          }
 
-          if (empty($link['href'])) {
+          if (empty($link['url'])) {
             $row_title = $is_original ? $label : $this->t('n/a');
           }
 
@@ -134,13 +136,11 @@ class ContentTranslationController extends ControllerBase {
           // the entity form, otherwise if we are not dealing with the original
           // language we point the link to the translation form.
           if ($entity->access('update')) {
-            $links['edit'] = array(
-              'href' => $entity->getSystemPath('edit-form'),
-              'language' => $language,
-            );
+            $links['edit']['url'] = $entity->urlInfo('edit-form');
+            $links['edit']['language'] = $language;
           }
           elseif (!$is_original && $handler->getTranslationAccess($entity, 'update')->isAllowed()) {
-            $links['edit'] = $edit_url->toArray();
+            $links['edit']['url'] = $edit_url;
           }
 
           if (isset($links['edit'])) {
@@ -165,7 +165,8 @@ class ContentTranslationController extends ControllerBase {
             if ($handler->getTranslationAccess($entity, 'delete')->isAllowed()) {
               $links['delete'] = array(
                 'title' => $this->t('Delete'),
-              ) + $delete_url->toArray();
+                'url' => $delete_url,
+              );
             }
           }
         }
@@ -178,7 +179,8 @@ class ContentTranslationController extends ControllerBase {
             if ($translatable) {
               $links['add'] = array(
                 'title' => $this->t('Add'),
-              ) + $add_url->toArray();
+                'url' => $add_url,
+              );
             }
             elseif ($field_ui) {
               $url = new Url('language.content_settings_page');
@@ -187,7 +189,8 @@ class ContentTranslationController extends ControllerBase {
               // setting to enable translation on fields.
               $links['nofields'] = array(
                 'title' => $this->t('No translatable fields'),
-              ) + $url->toArray();
+                'url' => $url,
+              );
             }
           }
 

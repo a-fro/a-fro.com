@@ -167,6 +167,9 @@ class DisplayTest extends PluginTestBase {
    * Tests the readmore functionality.
    */
   public function testReadMore() {
+    if (!isset($this->options['validate']['type'])) {
+      return;
+    }
     $expected_more_text = 'custom more text';
 
     $view = Views::getView('test_display_more');
@@ -177,7 +180,7 @@ class DisplayTest extends PluginTestBase {
 
     $this->drupalSetContent($output);
     $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
-    $this->assertEqual($result[0]->attributes()->href, url('test_display_more'), 'The right more link is shown.');
+    $this->assertEqual($result[0]->attributes()->href, \Drupal::url('view.test_display_more.page_1'), 'The right more link is shown.');
     $this->assertEqual(trim($result[0][0]), $expected_more_text, 'The right link text is shown.');
 
     // Test the renderMoreLink method directly. This could be directly unit
@@ -186,7 +189,7 @@ class DisplayTest extends PluginTestBase {
     $more_link = drupal_render($more_link);
     $this->drupalSetContent($more_link);
     $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
-    $this->assertEqual($result[0]->attributes()->href, url('test_display_more'), 'The right more link is shown.');
+    $this->assertEqual($result[0]->attributes()->href, \Drupal::url('view.test_display_more.page_1'), 'The right more link is shown.');
     $this->assertEqual(trim($result[0][0]), $expected_more_text, 'The right link text is shown.');
 
     // Test the useMoreText method directly. This could be directly unit

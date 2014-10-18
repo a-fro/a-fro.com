@@ -20,6 +20,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
@@ -34,7 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsField("field")
  */
-class Field extends FieldPluginBase {
+class Field extends FieldPluginBase implements CacheablePluginInterface {
 
   /**
    * An array to store field renderable arrays for use by renderItems().
@@ -400,7 +401,6 @@ class Field extends FieldPluginBase {
     // Options used for multiple value fields.
     $options['group_rows'] = array(
       'default' => TRUE,
-      'bool' => TRUE,
     );
     // If we know the exact number of allowed values, then that can be
     // the default. Otherwise, default to 'all'.
@@ -412,11 +412,9 @@ class Field extends FieldPluginBase {
     );
     $options['delta_reversed'] = array(
       'default' => FALSE,
-      'bool' => TRUE,
     );
     $options['delta_first_last'] = array(
       'default' => FALSE,
-      'bool' => TRUE,
     );
 
     $options['multi_type'] = array(
@@ -428,7 +426,6 @@ class Field extends FieldPluginBase {
 
     $options['field_api_classes'] = array(
       'default' => FALSE,
-      'bool' => TRUE,
     );
 
     return $options;
@@ -459,16 +456,16 @@ class Field extends FieldPluginBase {
     else {
       $form['click_sort_column'] = array(
         '#type' => 'select',
-        '#title' => t('Column used for click sorting'),
+        '#title' => $this->t('Column used for click sorting'),
         '#options' => array_combine($column_names, $column_names),
         '#default_value' => $this->options['click_sort_column'],
-        '#description' => t('Used by Style: Table to determine the actual column to click sort the field on. The default is usually fine.'),
+        '#description' => $this->t('Used by Style: Table to determine the actual column to click sort the field on. The default is usually fine.'),
       );
     }
 
     $form['type'] = array(
       '#type' => 'select',
-      '#title' => t('Formatter'),
+      '#title' => $this->t('Formatter'),
       '#options' => $formatters,
       '#default_value' => $this->options['type'],
       '#ajax' => array(
@@ -479,16 +476,16 @@ class Field extends FieldPluginBase {
     );
 
     $form['field_api_classes'] = array(
-      '#title' => t('Use field template'),
+      '#title' => $this->t('Use field template'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['field_api_classes'],
-      '#description' => t('If checked, field api classes will be added by field templates. This is not recommended unless your CSS depends upon these classes. If not checked, template will not be used.'),
+      '#description' => $this->t('If checked, field api classes will be added by field templates. This is not recommended unless your CSS depends upon these classes. If not checked, template will not be used.'),
       '#fieldset' => 'style_settings',
       '#weight' => 20,
     );
 
     if ($this->multiple) {
-      $form['field_api_classes']['#description'] .= ' ' . t('Checking this option will cause the group Display Type and Separator values to be ignored.');
+      $form['field_api_classes']['#description'] .= ' ' . $this->t('Checking this option will cause the group Display Type and Separator values to be ignored.');
     }
 
     // Get the currently selected formatter.
@@ -523,21 +520,21 @@ class Field extends FieldPluginBase {
 
     $form['multiple_field_settings'] = array(
       '#type' => 'details',
-      '#title' => t('Multiple field settings'),
+      '#title' => $this->t('Multiple field settings'),
       '#weight' => 5,
     );
 
     $form['group_rows'] = array(
-      '#title' => t('Display all values in the same row'),
+      '#title' => $this->t('Display all values in the same row'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['group_rows'],
-      '#description' => t('If checked, multiple values for this field will be shown in the same row. If not checked, each value in this field will create a new row. If using group by, please make sure to group by "Entity ID" for this setting to have any effect.'),
+      '#description' => $this->t('If checked, multiple values for this field will be shown in the same row. If not checked, each value in this field will create a new row. If using group by, please make sure to group by "Entity ID" for this setting to have any effect.'),
       '#fieldset' => 'multiple_field_settings',
     );
 
     // Make the string translatable by keeping it as a whole rather than
     // translating prefix and suffix separately.
-    list($prefix, $suffix) = explode('@count', t('Display @count value(s)'));
+    list($prefix, $suffix) = explode('@count', $this->t('Display @count value(s)'));
 
     if ($field->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
       $type = 'textfield';
@@ -552,11 +549,11 @@ class Field extends FieldPluginBase {
     }
     $form['multi_type'] = array(
       '#type' => 'radios',
-      '#title' => t('Display type'),
+      '#title' => $this->t('Display type'),
       '#options' => array(
-        'ul' => t('Unordered list'),
-        'ol' => t('Ordered list'),
-        'separator' => t('Simple separator'),
+        'ul' => $this->t('Unordered list'),
+        'ol' => $this->t('Ordered list'),
+        'separator' => $this->t('Simple separator'),
       ),
       '#states' => array(
         'visible' => array(
@@ -569,7 +566,7 @@ class Field extends FieldPluginBase {
 
     $form['separator'] = array(
       '#type' => 'textfield',
-      '#title' => t('Separator'),
+      '#title' => $this->t('Separator'),
       '#default_value' => $this->options['separator'],
       '#states' => array(
         'visible' => array(
@@ -596,7 +593,7 @@ class Field extends FieldPluginBase {
       '#fieldset' => 'multiple_field_settings',
     );
 
-    list($prefix, $suffix) = explode('@count', t('starting from @count'));
+    list($prefix, $suffix) = explode('@count', $this->t('starting from @count'));
     $form['delta_offset'] = array(
       '#type' => 'textfield',
       '#size' => 5,
@@ -608,11 +605,11 @@ class Field extends FieldPluginBase {
           ':input[name="options[group_rows]"]' => array('checked' => TRUE),
         ),
       ),
-      '#description' => t('(first item is 0)'),
+      '#description' => $this->t('(first item is 0)'),
       '#fieldset' => 'multiple_field_settings',
     );
     $form['delta_reversed'] = array(
-      '#title' => t('Reversed'),
+      '#title' => $this->t('Reversed'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['delta_reversed'],
       '#suffix' => $suffix,
@@ -621,11 +618,11 @@ class Field extends FieldPluginBase {
           ':input[name="options[group_rows]"]' => array('checked' => TRUE),
         ),
       ),
-      '#description' => t('(start from last values)'),
+      '#description' => $this->t('(start from last values)'),
       '#fieldset' => 'multiple_field_settings',
     );
     $form['delta_first_last'] = array(
-      '#title' => t('First and last only'),
+      '#title' => $this->t('First and last only'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['delta_first_last'],
       '#suffix' => '</div>',
@@ -648,14 +645,14 @@ class Field extends FieldPluginBase {
 
     $field_columns = array_keys($this->getFieldDefinition()->getColumns());
     $group_columns = array(
-      'entity_id' => t('Entity ID'),
+      'entity_id' => $this->t('Entity ID'),
     ) + array_map('ucfirst', array_combine($field_columns, $field_columns));
 
     $form['group_column'] = array(
       '#type' => 'select',
-      '#title' => t('Group column'),
+      '#title' => $this->t('Group column'),
       '#default_value' => $this->options['group_column'],
-      '#description' => t('Select the column of this field to apply the grouping function selected above.'),
+      '#description' => $this->t('Select the column of this field to apply the grouping function selected above.'),
       '#options' => $group_columns,
     );
 
@@ -667,9 +664,9 @@ class Field extends FieldPluginBase {
     // Add on defined fields, noting that they're prefixed with the field name.
     $form['group_columns'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Group columns (additional)'),
+      '#title' => $this->t('Group columns (additional)'),
       '#default_value' => $this->options['group_columns'],
-      '#description' => t('Select any additional columns of this field to include in the query and to group on.'),
+      '#description' => $this->t('Select any additional columns of this field to include in the query and to group on.'),
       '#options' => $options + $group_columns,
     );
   }
@@ -889,7 +886,7 @@ class Field extends FieldPluginBase {
   protected function documentSelfTokens(&$tokens) {
     $field = $this->getFieldDefinition();
     foreach ($field->getColumns() as $id => $column) {
-      $tokens['[' . $this->options['id'] . '-' . $id . ']'] = t('Raw @column', array('@column' => $id));
+      $tokens['[' . $this->options['id'] . '-' . $id . ']'] = $this->t('Raw @column', array('@column' => $id));
     }
   }
 
@@ -933,7 +930,7 @@ class Field extends FieldPluginBase {
       // no data for the selected language. FieldItemListInterface::view() does
       // this as well, but since the returned language code is used before
       // calling it, the fallback needs to happen explicitly.
-      $langcode = $this->entityManager->getTranslationFromContext($entity, $langcode)->language()->id;
+      $langcode = $this->entityManager->getTranslationFromContext($entity, $langcode)->language()->getId();
 
       return $langcode;
     }
@@ -950,5 +947,23 @@ class Field extends FieldPluginBase {
     return array('entity' => array($this->getFieldStorageConfig()->getConfigDependencyName()));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    // @todo what to do about field access?
+    $contexts = [];
+
+    $contexts[] = 'cache.context.user';
+
+    return $contexts;
+  }
 
 }

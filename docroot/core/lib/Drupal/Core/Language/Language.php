@@ -25,7 +25,6 @@ class Language implements LanguageInterface {
     'direction' => self::DIRECTION_LTR,
     'weight' => 0,
     'locked' => FALSE,
-    'default' => TRUE,
   );
 
   // Properties within the Language are set up as the default language.
@@ -42,7 +41,7 @@ class Language implements LanguageInterface {
    *
    * @var string
    */
-  public $id = '';
+  protected $id = '';
 
   /**
    * The direction, left-to-right, or right-to-left.
@@ -51,21 +50,14 @@ class Language implements LanguageInterface {
    *
    * @var int
    */
-  public $direction = self::DIRECTION_LTR;
+  protected $direction = self::DIRECTION_LTR;
 
   /**
    * The weight, used for ordering languages in lists, like selects or tables.
    *
    * @var int
    */
-  public $weight = 0;
-
-  /**
-   * Flag indicating if this is the only site default language.
-   *
-   * @var bool
-   */
-  public $default = FALSE;
+  protected $weight = 0;
 
   /**
    * Locked indicates a language used by the system, not an actual language.
@@ -76,7 +68,7 @@ class Language implements LanguageInterface {
    *
    * @var bool
    */
-  public $locked = FALSE;
+  protected $locked = FALSE;
 
   /**
    * Constructs a new class instance.
@@ -136,7 +128,14 @@ class Language implements LanguageInterface {
    * {@inheritdoc}
    */
   public function isDefault() {
-    return $this->default;
+    return static::getDefaultLangcode() == $this->getId();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isLocked() {
+    return (bool) $this->locked;
   }
 
   /**
@@ -154,6 +153,17 @@ class Language implements LanguageInterface {
       }
       return ($a_weight < $b_weight) ? -1 : 1;
     });
+  }
+
+  /**
+   * Gets the default langcode.
+   *
+   * @return string
+   *   The current default langcode.
+   */
+  protected static function getDefaultLangcode() {
+    $language = \Drupal::service('language.default')->get();
+    return $language->getId();
   }
 
 }

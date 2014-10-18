@@ -20,9 +20,6 @@ class NodePreviewController extends EntityViewController {
    * {@inheritdoc}
    */
   public function view(EntityInterface $node_preview, $view_mode_id = 'full', $langcode = NULL) {
-    // Do not cache this page.
-    drupal_page_is_cacheable(FALSE);
-
     $node_preview->preview_view_mode = $view_mode_id;
     $build = array('nodes' => parent::view($node_preview, $view_mode_id));
 
@@ -36,7 +33,7 @@ class NodePreviewController extends EntityViewController {
 
     foreach ($node_preview->uriRelationships() as $rel) {
       // Set the node path as the canonical URL to prevent duplicate content.
-      $build['#attached']['drupal_add_html_head_link'][] = array(
+      $build['#attached']['html_head_link'][] = array(
         array(
         'rel' => $rel,
         'href' => $node_preview->url($rel),
@@ -45,7 +42,7 @@ class NodePreviewController extends EntityViewController {
 
       if ($rel == 'canonical') {
         // Set the non-aliased canonical path as a default shortlink.
-        $build['#attached']['drupal_add_html_head_link'][] = array(
+        $build['#attached']['html_head_link'][] = array(
           array(
             'rel' => 'shortlink',
             'href' => $node_preview->url($rel, array('alias' => TRUE)),

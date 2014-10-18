@@ -14,6 +14,15 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 
 /**
  * Sources whose data may be fetched via DBTNG.
+ *
+ * You can specify a 'target' configuration key to specify the database target
+ * to use for a specific migration source. You can specify an additional
+ * database target in settings.php. For example:
+ * @code
+ *   $databases['migrate']['other_database'] = [ ... ];
+ * @endcode
+ * Given that you can specify 'target: other_database' in the 'source' part of
+ * a migration configuration entity.
  */
 abstract class SqlBase extends SourcePluginBase {
 
@@ -57,7 +66,11 @@ abstract class SqlBase extends SourcePluginBase {
    */
   public function getDatabase() {
     if (!isset($this->database)) {
-      $this->database = Database::getConnection('default', 'migrate');
+      $target = 'default';
+      if (isset($this->configuration['target'])) {
+        $target = $this->configuration['target'];
+      }
+      $this->database = Database::getConnection($target, 'migrate');
     }
     return $this->database;
   }
@@ -204,8 +217,10 @@ abstract class SqlBase extends SourcePluginBase {
     $id_map_database_options = $id_map->getDatabase()->getConnectionOptions();
     $source_database_options = $this->getDatabase()->getConnectionOptions();
     foreach (array('username', 'password', 'host', 'port', 'namespace', 'driver') as $key) {
-      if ($id_map_database_options[$key] != $source_database_options[$key]) {
-        return FALSE;
+      if (isset($source_database_options[$key])) {
+        if ($id_map_database_options[$key] != $source_database_options[$key]) {
+          return FALSE;
+        }
       }
     }
     return TRUE;

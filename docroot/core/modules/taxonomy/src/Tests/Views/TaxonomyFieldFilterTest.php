@@ -11,6 +11,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
+use Drupal\views\Views;
 
 /**
  * Tests taxonomy field filters with translations.
@@ -22,7 +23,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('language', 'taxonomy', 'taxonomy_test_views', 'text', 'views', 'node', 'options');
+  public static $modules = array('language', 'taxonomy', 'taxonomy_test_views', 'text', 'views', 'node');
 
   /**
    * Views used by this test.
@@ -61,13 +62,13 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
 
     // Add a translatable field to the vocabulary.
     $field = entity_create('field_storage_config', array(
-      'name' => 'field_foo',
+      'field_name' => 'field_foo',
       'entity_type' => 'taxonomy_term',
       'type' => 'text',
     ));
     $field->translatable = TRUE;
     $field->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => 'field_foo',
       'entity_type' => 'taxonomy_term',
       'label' => 'Foo',
@@ -82,6 +83,8 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
       $translation->field_foo->value = $this->term_names[$langcode];
     }
     $taxonomy->save();
+
+    Views::viewsData()->clear();
 
     ViewTestData::createTestViews(get_class($this), array('taxonomy_test_views'));
 

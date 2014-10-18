@@ -9,7 +9,7 @@ namespace Drupal\search\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\String;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests integration searching comments.
@@ -74,9 +74,9 @@ class SearchCommentTest extends SearchTestBase {
     $comment_body = 'Test comment body';
 
     // Make preview optional.
-    $instance = FieldInstanceConfig::loadByName('node', 'article', 'comment');
-    $instance->settings['preview'] = DRUPAL_OPTIONAL;
-    $instance->save();
+    $field = FieldConfig::loadByName('node', 'article', 'comment');
+    $field->settings['preview'] = DRUPAL_OPTIONAL;
+    $field->save();
 
     // Allow anonymous users to search content.
     $edit = array(
@@ -132,7 +132,7 @@ class SearchCommentTest extends SearchTestBase {
 
     // Search for $title.
     $this->drupalPostForm('search/node', $edit, t('Search'));
-    $this->assertNoText($comment_body, 'Comment body text not found in search results.');
+    $this->assertText(t('Your search yielded no results.'));
   }
 
   /**
@@ -146,9 +146,9 @@ class SearchCommentTest extends SearchTestBase {
 
     // Create a node.
     // Make preview optional.
-    $instance = FieldInstanceConfig::loadByName('node', 'article', 'comment');
-    $instance->settings['preview'] = DRUPAL_OPTIONAL;
-    $instance->save();
+    $field = FieldConfig::loadByName('node', 'article', 'comment');
+    $field->settings['preview'] = DRUPAL_OPTIONAL;
+    $field->save();
     $this->node = $this->drupalCreateNode(array('type' => 'article'));
 
     // Post a comment using 'Full HTML' text format.
@@ -226,8 +226,8 @@ class SearchCommentTest extends SearchTestBase {
       $expected_comment_result = $this->assertText($this->comment_subject);
     }
     else {
-      $expected_node_result = $this->assertNoText($this->node->label());
-      $expected_comment_result = $this->assertNoText($this->comment_subject);
+      $expected_node_result = $this->assertText(t('Your search yielded no results.'));
+      $expected_comment_result = $this->assertText(t('Your search yielded no results.'));
     }
     $this->assertTrue($expected_node_result && $expected_comment_result, $message);
   }

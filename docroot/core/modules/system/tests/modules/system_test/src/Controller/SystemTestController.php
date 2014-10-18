@@ -8,11 +8,39 @@
 namespace Drupal\system_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Drupal\Core\Lock\LockBackendInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines for system_test routes.
  */
 class SystemTestController extends ControllerBase {
+
+  /**
+   * The persistent lock service.
+   *
+   * @var \Drupal\Core\Lock\LockBackendInterface
+   */
+  protected $persistentLock;
+
+  /**
+   * Constructs the SystemTestController.
+   *
+   * @param \Drupal\Core\Lock\LockBackendInterface $persistent_lock
+   *   The persistent lock service.
+   */
+  public function __construct(LockBackendInterface $persistent_lock) {
+    $this->persistentLock = $persistent_lock;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('lock.persistent'));
+  }
 
   /**
    * Tests main content fallback.
@@ -22,6 +50,22 @@ class SystemTestController extends ControllerBase {
    */
   public function mainContentFallback() {
     return $this->t('Content to test main content fallback');
+  }
+
+  /**
+   * Tests setting messages and removing one before it is displayed.
+   *
+   * @return string
+   *   Empty string, we just test the setting of messages.
+   */
+  public function drupalSetMessageTest() {
+    // Set two messages.
+    drupal_set_message('First message (removed).');
+    drupal_set_message('Second message (not removed).');
+
+    // Remove the first.
+    unset($_SESSION['messages']['status'][0]);
+    return '';
   }
 
   /**
@@ -39,11 +83,29 @@ class SystemTestController extends ControllerBase {
   }
 
   /**
+   * Creates a lock that will persist across requests.
+   *
+   * @param string $lock_name
+   *   The name of the persistent lock to acquire.
+   *
+   * @return string
+   *   The text to display.
+   */
+  public function lockPersist($lock_name) {
+    if ($this->persistentLock->acquire($lock_name)) {
+      return 'TRUE: Lock successfully acquired in SystemTestController::lockPersist()';
+    }
+    else {
+      return 'FALSE: Lock not acquired in SystemTestController::lockPersist()';
+    }
+  }
+
+  /**
    * Set cache tag on on the returned render array.
    */
   public function system_test_cache_tags_page() {
     $build['main'] = array(
-      '#cache' => array('tags' => array('system_test_cache_tags_page' => TRUE)),
+      '#cache' => array('tags' => array('system_test_cache_tags_page')),
       '#pre_render' => array(
         '\Drupal\system_test\Controller\SystemTestController::preRenderCacheTags',
       ),
@@ -58,7 +120,7 @@ class SystemTestController extends ControllerBase {
    * Sets a cache tag on an element to help test #pre_render and cache tags.
    */
   public static function preRenderCacheTags($elements) {
-    $elements['#cache']['tags']['pre_render'] = TRUE;
+    $elements['#cache']['tags'][] = 'pre_render';
     return $elements;
   }
 
@@ -70,10 +132,15 @@ class SystemTestController extends ControllerBase {
   }
 
   /**
-   * @todo Remove system_test_set_header().
+   * Sets a header.
    */
-  public function setHeader() {
-    return system_test_set_header();
+  public function setHeader(Request $request) {
+    $query = $request->query->all();
+    $response = new Response();
+    $response->headers->set($query['name'], $query['value']);
+    $response->setContent($this->t('The following header was set: %name: %value', array('%name' => $query['name'], '%value' => $query['value'])));
+
+    return $response;
   }
 
   /**

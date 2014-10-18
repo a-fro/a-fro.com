@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -118,7 +119,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       $row['url'] = array(
         '#type' => 'link',
         '#title' => $row['url'],
-        '#route_name' => 'search.view_' . $entity->id(),
+        '#url' => Url::fromRoute('search.view_' . $entity->id()),
       );
     }
 
@@ -202,7 +203,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       '#title' => $this->t('Number of items to index per cron run'),
       '#default_value' => $search_settings->get('index.cron_limit'),
       '#options' => $items,
-      '#description' => $this->t('The maximum number of items indexed in each pass of a <a href="@cron">cron maintenance task</a>. If necessary, reduce the number of items to prevent timeouts and memory errors while indexing.', array('@cron' => url('admin/reports/status'))),
+      '#description' => $this->t('The maximum number of items indexed in each pass of a <a href="@cron">cron maintenance task</a>. If necessary, reduce the number of items to prevent timeouts and memory errors while indexing.', array('@cron' => \Drupal::url('system.status'))),
     );
     // Indexing settings:
     $form['indexing_settings'] = array(
@@ -305,10 +306,9 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
     else {
       $operations['default'] = array(
         'title' => $this->t('Set as default'),
-        'route_name' => 'entity.search_page.set_default',
-        'route_parameters' => array(
+        'url' => Url::fromRoute('entity.search_page.set_default', [
           'search_page' => $entity->id(),
-        ),
+        ]),
         'weight' => 50,
       );
     }

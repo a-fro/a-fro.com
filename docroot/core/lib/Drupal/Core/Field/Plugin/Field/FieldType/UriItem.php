@@ -21,7 +21,8 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "uri",
  *   label = @Translation("URI"),
  *   description = @Translation("An entity field containing a URI."),
- *   no_ui = TRUE
+ *   no_ui = TRUE,
+ *   default_formatter = "uri_link",
  * )
  */
 class UriItem extends StringItem {
@@ -29,10 +30,10 @@ class UriItem extends StringItem {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultStorageSettings() {
     return array(
       'max_length' => 2048,
-    ) + parent::defaultSettings();
+    ) + parent::defaultStorageSettings();
   }
 
   /**
@@ -58,6 +59,17 @@ class UriItem extends StringItem {
         ),
       ),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEmpty() {
+    $value = $this->getValue();
+    if (!isset($value['value']) || $value['value'] === '') {
+      return TRUE;
+    }
+    return parent::isEmpty();
   }
 
 }

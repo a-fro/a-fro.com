@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Common;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -120,7 +121,7 @@ class RenderTest extends DrupalUnitTestBase {
             ),
           ),
           '#attributes' => array('id' => 'foo'),
-          '#href' => 'http://drupal.org',
+          '#url' => Url::fromUri('http://drupal.org'),
           '#title' => 'bar',
         ),
         'expected' => '<div class="baz"><a href="http://drupal.org" id="foo">bar</a></div>' . "\n",
@@ -131,7 +132,7 @@ class RenderTest extends DrupalUnitTestBase {
         'name' => '#theme_wrappers attribute disambiguation with undefined #theme attribute',
         'value' => array(
           '#type' => 'link',
-          '#href' => 'http://drupal.org',
+          '#url' => Url::fromUri('http://drupal.org'),
           '#title' => 'foo',
           '#theme_wrappers' => array(
             'container' => array(
@@ -411,6 +412,31 @@ class RenderTest extends DrupalUnitTestBase {
   }
 
   /**
+   * Tests theme preprocess functions being able to attach assets.
+   */
+  function testDrupalRenderThemePreprocessAttached() {
+    \Drupal::state()->set('theme_preprocess_attached_test', TRUE);
+
+    $test_element = [
+      '#theme' => 'common_test_render_element',
+      'foo' => [
+        '#markup' => 'Kittens!',
+      ],
+    ];
+    drupal_render($test_element);
+
+    $expected_attached = [
+      'library' => [
+        'test/generic_preprocess',
+        'test/specific_preprocess',
+      ]
+    ];
+    $this->assertEqual($expected_attached, $test_element['#attached'], 'All expected assets from theme preprocess hooks attached.');
+
+    \Drupal::state()->set('theme_preprocess_attached_test', FALSE);
+  }
+
+  /**
    * Tests caching of an empty render item.
    */
   function testDrupalRenderCache() {
@@ -422,13 +448,13 @@ class RenderTest extends DrupalUnitTestBase {
     $test_element = array(
       '#cache' => array(
         'cid' => 'render_cache_test',
-        'tags' => array('render_cache_tag' => TRUE),
+        'tags' => array('render_cache_tag'),
       ),
       '#markup' => '',
       'child' => array(
         '#cache' => array(
           'cid' => 'render_cache_test_child',
-          'tags' => array('render_cache_tag_child' => array(1, 2))
+          'tags' => array('render_cache_tag_child:1', 'render_cache_tag_child:2'),
         ),
         '#markup' => '',
       ),
@@ -449,9 +475,10 @@ class RenderTest extends DrupalUnitTestBase {
     // Test that cache tags are correctly collected from the render element,
     // including the ones from its subchild.
     $expected_tags = array(
-      'rendered' => TRUE,
-      'render_cache_tag' => TRUE,
-      'render_cache_tag_child' => array(1 => 1, 2 => 2),
+      'render_cache_tag',
+      'render_cache_tag_child:1',
+      'render_cache_tag_child:2',
+      'rendered',
     );
     $this->assertEqual($expected_tags, $element['#cache']['tags'], 'Cache tags were collected from the element and its subchild.');
 
@@ -508,7 +535,7 @@ class RenderTest extends DrupalUnitTestBase {
       '#markup' => '<p>#cache enabled, GET</p>',
       '#attached' => $test_element['#attached'],
       '#post_render_cache' => $test_element['#post_render_cache'],
-      '#cache' => array('tags' => array('rendered' => TRUE)),
+      '#cache' => array('tags' => array('rendered')),
     );
     $this->assertIdentical($cached_element, $expected_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
 
@@ -629,7 +656,7 @@ class RenderTest extends DrupalUnitTestBase {
           $context_3,
         )
       ),
-      '#cache' => array('tags' => array('rendered' => TRUE)),
+      '#cache' => array('tags' => array('rendered')),
     );
 
     $dom = Html::load($cached_element['#markup']);
@@ -699,7 +726,7 @@ class RenderTest extends DrupalUnitTestBase {
           $context_3,
         )
       ),
-      '#cache' => array('tags' => array('rendered' => TRUE)),
+      '#cache' => array('tags' => array('rendered')),
     );
 
     $dom = Html::load($cached_parent_element['#markup']);
@@ -725,7 +752,7 @@ class RenderTest extends DrupalUnitTestBase {
           $context_3,
         )
       ),
-      '#cache' => array('tags' => array('rendered' => TRUE)),
+      '#cache' => array('tags' => array('rendered')),
     );
 
     $dom = Html::load($cached_child_element['#markup']);
@@ -832,7 +859,7 @@ class RenderTest extends DrupalUnitTestBase {
           $context
         ),
       ),
-      '#cache' => array('tags' => array('rendered' => TRUE)),
+      '#cache' => array('tags' => array('rendered')),
     );
     $this->assertIdentical($cached_element, $expected_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
 
@@ -923,7 +950,7 @@ class RenderTest extends DrupalUnitTestBase {
           $context,
         ),
       ),
-      '#cache' => array('tags' => array('rendered' => TRUE)),
+      '#cache' => array('tags' => array('rendered')),
     );
     $this->assertIdentical($cached_element, $expected_element, 'The correct data is cached for the child element: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
 
@@ -949,7 +976,7 @@ class RenderTest extends DrupalUnitTestBase {
           $context,
         ),
       ),
-      '#cache' => array('tags' => array('rendered' => TRUE)),
+      '#cache' => array('tags' => array('rendered')),
     );
     $this->assertIdentical($cached_element, $expected_element); //, 'The correct data is cached for the parent element: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
 
@@ -979,7 +1006,7 @@ class RenderTest extends DrupalUnitTestBase {
           $context,
         ),
       ),
-      '#cache' => array('tags' => array('rendered' => TRUE)),
+      '#cache' => array('tags' => array('rendered')),
     );
     $this->assertIdentical($cached_element, $expected_element, 'The correct data is cached for the child element: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
 
@@ -1010,7 +1037,7 @@ class RenderTest extends DrupalUnitTestBase {
     $elements += array(
       'child_cache_tag' => array(
         '#cache' => array(
-          'tags' => array('child' => 'cache_tag'),
+          'tags' => array('child:cache_tag'),
         ),
         '#markup' => 'Cache tag!',
       ),
@@ -1086,7 +1113,7 @@ class RenderTest extends DrupalUnitTestBase {
       $output = drupal_render($test_element);
       // Assert top-level.
       $this->assertEqual('Cache tag!Asset!Post-render cache!barquxNested!Cached nested!', trim($output), 'Expected HTML generated.');
-      $this->assertEqual(array('child' => 'cache_tag'), $test_element['#cache']['tags'], 'Expected cache tags found.');
+      $this->assertEqual(array('child:cache_tag'), $test_element['#cache']['tags'], 'Expected cache tags found.');
       $expected_attached = array(
         'js' => array(
           0 => array(
@@ -1152,6 +1179,22 @@ class RenderTest extends DrupalUnitTestBase {
   protected function randomContextValue() {
     $tokens = array('llama', 'alpaca', 'camel', 'moose', 'elk');
     return $tokens[mt_rand(0, 4)];
+  }
+
+  /**
+   * Tests drupal_process_attached().
+   */
+  public function testDrupalProcessAttached() {
+    // Specify invalid attachments in a render array.
+    $build['#attached']['library'][] = 'core/drupal.states';
+    $build['#attached']['drupal_process_states'][] = [];
+    try {
+      drupal_process_attached($build);
+      $this->fail("Invalid #attachment 'drupal_process_states' allowed");
+    }
+    catch (\Exception $e) {
+      $this->pass("Invalid #attachment 'drupal_process_states' not allowed");
+    }
   }
 
 }

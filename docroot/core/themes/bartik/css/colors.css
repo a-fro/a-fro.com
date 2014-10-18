@@ -8,8 +8,8 @@ body {
 }
 #page,
 #main-wrapper,
-#main-menu-links li a.active,
-#main-menu-links li.active-trail a {
+.region-primary-menu .menu li a.active,
+.region-primary-menu .menu li .active-trail a {
   background: #ffffff;
 }
 .tabs ul.primary li a.active {
@@ -17,7 +17,7 @@ body {
 }
 .tabs ul.primary li.active a {
   background-color: #ffffff;
-  border-bottom: 1px solid #ffffff;
+  border-bottom-color: #ffffff;
 }
 #header {
   background-color: #1d84c3;
@@ -53,6 +53,6 @@ a:active,
 .site-branding-block,
 #name-and-slogan a,
 .site-branding-block a,
-#secondary-menu-links li a {
+.region-secondary-menu .menu li a {
   color: #fffeff;
 }

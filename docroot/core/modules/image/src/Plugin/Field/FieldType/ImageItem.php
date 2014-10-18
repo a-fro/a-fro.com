@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Random;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\file\Entity\File;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
@@ -40,7 +41,8 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  *       "translatable" = TRUE
  *     },
  *   },
- *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList"
+ *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",
+ *   constraints = {"ValidReference" = {}, "ReferenceAccess" = {}}
  * )
  */
 class ImageItem extends FileItem {
@@ -48,7 +50,7 @@ class ImageItem extends FileItem {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultStorageSettings() {
     return array(
       'default_image' => array(
         'fid' => NULL,
@@ -57,13 +59,13 @@ class ImageItem extends FileItem {
         'width' => NULL,
         'height' => NULL,
       ),
-    ) + parent::defaultSettings();
+    ) + parent::defaultStorageSettings();
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function defaultInstanceSettings() {
+  public static function defaultFieldSettings() {
     $settings = array(
       'file_extensions' => 'png gif jpg jpeg',
       'alt_field' => 0,
@@ -79,7 +81,7 @@ class ImageItem extends FileItem {
         'width' => NULL,
         'height' => NULL,
       ),
-    ) + parent::defaultInstanceSettings();
+    ) + parent::defaultFieldSettings();
 
     unset($settings['description_field']);
     return $settings;
@@ -139,16 +141,20 @@ class ImageItem extends FileItem {
     $properties = parent::propertyDefinitions($field_definition);
 
     $properties['alt'] = DataDefinition::create('string')
-      ->setLabel(t("Alternative image text, for the image's 'alt' attribute."));
+      ->setLabel(t('Alternative text'))
+      ->setDescription(t("Alternative image text, for the image's 'alt' attribute."));
 
     $properties['title'] = DataDefinition::create('string')
-      ->setLabel(t("Image title text, for the image's 'title' attribute."));
+      ->setLabel(t('Title'))
+      ->setDescription(t("Image title text, for the image's 'title' attribute."));
 
     $properties['width'] = DataDefinition::create('integer')
-      ->setLabel(t('The width of the image in pixels.'));
+      ->setLabel(t('Width'))
+      ->setDescription(t('The width of the image in pixels.'));
 
     $properties['height'] = DataDefinition::create('integer')
-      ->setLabel(t('The height of the image in pixels.'));
+      ->setLabel(t('Height'))
+      ->setDescription(t('The height of the image in pixels.'));
 
     return $properties;
   }
@@ -156,7 +162,7 @@ class ImageItem extends FileItem {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element = array();
 
     // We need the field-level 'default_image' setting, and $this->getSettings()
@@ -164,10 +170,7 @@ class ImageItem extends FileItem {
     // the field.
     $settings = $this->getFieldDefinition()->getFieldStorageDefinition()->getSettings();
 
-    $scheme_options = array();
-    foreach (file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE) as $scheme => $stream_wrapper) {
-      $scheme_options[$scheme] = $stream_wrapper['name'];
-    }
+    $scheme_options = \Drupal::service('stream_wrapper_manager')->getNames(StreamWrapperInterface::WRITE_VISIBLE);
     $element['uri_scheme'] = array(
       '#type' => 'radios',
       '#title' => t('Upload destination'),
@@ -186,14 +189,14 @@ class ImageItem extends FileItem {
   /**
    * {@inheritdoc}
    */
-  public function instanceSettingsForm(array $form, FormStateInterface $form_state) {
-    // Get base form from FileItem::instanceSettingsForm().
-    $element = parent::instanceSettingsForm($form, $form_state);
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+    // Get base form from FileItem.
+    $element = parent::fieldSettingsForm($form, $form_state);
 
     $settings = $this->getSettings();
 
     // Add maximum and minimum resolution settings.
-    $max_resolution = explode('x', $settings['max_resolution']) + array('', '');
+    $max_resolution = explode('×', $settings['max_resolution']) + array('', '');
     $element['max_resolution'] = array(
       '#type' => 'item',
       '#title' => t('Maximum image resolution'),
@@ -201,7 +204,7 @@ class ImageItem extends FileItem {
       '#weight' => 4.1,
       '#field_prefix' => '<div class="container-inline">',
       '#field_suffix' => '</div>',
-      '#description' => t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Leave blank for no restriction. If a larger image is uploaded, it will be resized to reflect the given width and height. Resizing images on upload will cause the loss of <a href="@url">EXIF data</a> in the image.', array('@url' => 'http://en.wikipedia.org/wiki/Exchangeable_image_file_format')),
+      '#description' => t('The maximum allowed image size expressed as WIDTH×HEIGHT (e.g. 640×480). Leave blank for no restriction. If a larger image is uploaded, it will be resized to reflect the given width and height. Resizing images on upload will cause the loss of <a href="@url">EXIF data</a> in the image.', array('@url' => 'http://en.wikipedia.org/wiki/Exchangeable_image_file_format')),
     );
     $element['max_resolution']['x'] = array(
       '#type' => 'number',
@@ -209,7 +212,7 @@ class ImageItem extends FileItem {
       '#title_display' => 'invisible',
       '#default_value' => $max_resolution[0],
       '#min' => 1,
-      '#field_suffix' => ' x ',
+      '#field_suffix' => ' × ',
     );
     $element['max_resolution']['y'] = array(
       '#type' => 'number',
@@ -220,7 +223,7 @@ class ImageItem extends FileItem {
       '#field_suffix' => ' ' . t('pixels'),
     );
 
-    $min_resolution = explode('x', $settings['min_resolution']) + array('', '');
+    $min_resolution = explode('×', $settings['min_resolution']) + array('', '');
     $element['min_resolution'] = array(
       '#type' => 'item',
       '#title' => t('Minimum image resolution'),
@@ -228,7 +231,7 @@ class ImageItem extends FileItem {
       '#weight' => 4.2,
       '#field_prefix' => '<div class="container-inline">',
       '#field_suffix' => '</div>',
-      '#description' => t('The minimum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Leave blank for no restriction. If a smaller image is uploaded, it will be rejected.'),
+      '#description' => t('The minimum allowed image size expressed as WIDTH×HEIGHT (e.g. 640×480). Leave blank for no restriction. If a smaller image is uploaded, it will be rejected.'),
     );
     $element['min_resolution']['x'] = array(
       '#type' => 'number',
@@ -236,7 +239,7 @@ class ImageItem extends FileItem {
       '#title_display' => 'invisible',
       '#default_value' => $min_resolution[0],
       '#min' => 1,
-      '#field_suffix' => ' x ',
+      '#field_suffix' => ' × ',
     );
     $element['min_resolution']['y'] = array(
       '#type' => 'number',
@@ -255,13 +258,14 @@ class ImageItem extends FileItem {
       '#type' => 'checkbox',
       '#title' => t('Enable <em>Alt</em> field'),
       '#default_value' => $settings['alt_field'],
-      '#description' => t('The alt attribute may be used by search engines, screen readers, and when the image cannot be loaded.'),
+      '#description' => t('The alt attribute may be used by search engines, screen readers, and when the image cannot be loaded. Enabling this field is recommended'),
       '#weight' => 9,
     );
     $element['alt_field_required'] = array(
       '#type' => 'checkbox',
       '#title' => t('<em>Alt</em> field required'),
       '#default_value' => $settings['alt_field_required'],
+      '#description' => t('Making this field required is recommended.'),
       '#weight' => 10,
       '#states' => array(
         'visible' => array(
@@ -273,7 +277,7 @@ class ImageItem extends FileItem {
       '#type' => 'checkbox',
       '#title' => t('Enable <em>Title</em> field'),
       '#default_value' => $settings['title_field'],
-      '#description' => t('The title attribute is used as a tooltip when the mouse hovers over the image.'),
+      '#description' => t('The title attribute is used as a tooltip when the mouse hovers over the image. Enabling this field is not recommended as it can cause problems with screen readers.'),
       '#weight' => 11,
     );
     $element['title_field_required'] = array(
@@ -407,7 +411,7 @@ class ImageItem extends FileItem {
     );
     $element['default_image']['alt'] = array(
       '#type' => 'textfield',
-      '#title' => t('Alternate text'),
+      '#title' => t('Alternative text'),
       '#description' => t('This text will be used by screen readers, search engines, and when the image cannot be loaded.'),
       '#default_value' => $settings['default_image']['alt'],
       '#maxlength' => 512,

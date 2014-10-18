@@ -10,6 +10,7 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element\Textfield;
 use Drupal\Core\Routing\RouteMatchInterface;
 
@@ -38,7 +39,6 @@ function color_theme() {
   return array(
     'color_scheme_form' => array(
       'render element' => 'form',
-      'template' => 'color-scheme-form',
     ),
   );
 }
@@ -87,6 +87,36 @@ function color_css_alter(&$css) {
           // Replace the path to the new css file.
           // This keeps the order of the stylesheets intact.
           $css[drupal_basename($old_path)]['data'] = $color_path;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_library_alter().
+ *
+ * Replaces style sheets declared in libraries with color-altered style sheets.
+ */
+function color_library_alter(&$library, $name) {
+  $active_theme = \Drupal::theme()->getActiveTheme();
+  $theme_key = $active_theme->getName();
+  $theme_libraries = $active_theme->getLibraries();
+  if (in_array($name, $theme_libraries)) {
+    // Override stylesheets.
+    $color_paths = \Drupal::config('color.theme.' . $theme_key)->get('stylesheets');
+    if (!empty($color_paths)) {
+      foreach ($library['css'] as &$css) {
+        // Loop over the path array with recolored CSS files to find matching
+        // paths which could replace the non-recolored paths.
+        foreach ($color_paths as $color_path) {
+          // Color module currently requires unique file names to be used,
+          // which allows us to compare different file paths.
+          if (drupal_basename($css['data']) == drupal_basename($color_path)) {
+            // Replace the path to the new css file.
+            // This keeps the order of the stylesheets intact.
+            $css['data'] = $color_path;
+          }
         }
       }
     }
@@ -242,7 +272,7 @@ function color_scheme_form($complete_form, FormStateInterface $form_state, $them
         '#value_callback' => 'color_palette_color_value',
         '#default_value' => $value,
         '#size' => 8,
-        '#attributes' => array('dir' => 'ltr'),
+        '#attributes' => array('dir' => LanguageInterface::DIRECTION_LTR),
       );
     }
   }

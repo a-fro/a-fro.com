@@ -5,9 +5,10 @@
  * Hooks provided the Entity module.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Render\Element;
 
@@ -185,7 +186,7 @@ use Drupal\Core\Render\Element;
  * To make a render array for a loaded entity:
  * @code
  * // You can omit the language ID if the default language is being used.
- * $build = $view_builder->view($entity, 'view_mode_name', $language->id);
+ * $build = $view_builder->view($entity, 'view_mode_name', $language->getId());
  * @endcode
  * You can also use the viewMultiple() method to view multiple entities.
  *
@@ -468,7 +469,7 @@ use Drupal\Core\Render\Element;
  * Then, to build and render the entity:
  * @code
  * // You can omit the language ID if the default language is being used.
- * $build = $view_builder->view($entity, 'view_mode_name', $language->id);
+ * $build = $view_builder->view($entity, 'view_mode_name', $language->getId());
  * // $build is a render array.
  * $rendered = drupal_render($build);
  * @endcode
@@ -532,7 +533,7 @@ use Drupal\Core\Render\Element;
  */
 function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account, $langcode) {
   // No opinion.
-  return AccessResult::create();
+  return AccessResult::neutral();
 }
 
 /**
@@ -558,7 +559,7 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  */
 function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account, $langcode) {
   // No opinion.
-  return AccessResult::create();
+  return AccessResult::neutral();
 }
 
 /**
@@ -584,7 +585,7 @@ function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $o
  */
 function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle) {
   // No opinion.
-  return AccessResult::create();
+  return AccessResult::neutral();
 }
 
 /**
@@ -610,7 +611,7 @@ function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $accoun
  */
 function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle) {
   // No opinion.
-  return AccessResult::create();
+  return AccessResult::neutral();
 }
 
 /**
@@ -722,7 +723,7 @@ function hook_entity_bundle_info_alter(&$bundles) {
 function hook_entity_bundle_create($entity_type_id, $bundle) {
   // When a new bundle is created, the menu needs to be rebuilt to add the
   // Field UI menu item tabs.
-  \Drupal::service('router.builder')->setRebuildNeeded();
+  \Drupal::service('router.builder_indicator')->setRebuildNeeded();
 }
 
 /**
@@ -785,7 +786,7 @@ function hook_entity_bundle_delete($entity_type_id, $bundle) {
  * @see hook_ENTITY_TYPE_create()
  */
 function hook_entity_create(\Drupal\Core\Entity\EntityInterface $entity) {
-  if ($entity instanceof ContentEntityInterface && !$entity->foo->value) {
+  if ($entity instanceof FieldableEntityInterface && !$entity->foo->value) {
     $entity->foo->value = 'some_initial_value';
   }
 }
@@ -892,7 +893,7 @@ function hook_ENTITY_TYPE_storage_load(array $entities) {
 function hook_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
  if ($entity instanceof ContentEntityInterface && $entity->isTranslatable()) {
    $attributes = \Drupal::request()->attributes;
-   \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->id, $attributes->get('source_langcode'));
+   \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->getId(), $attributes->get('source_langcode'));
   }
 }
 
@@ -908,7 +909,7 @@ function hook_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
 function hook_ENTITY_TYPE_presave(Drupal\Core\Entity\EntityInterface $entity) {
   if ($entity->isTranslatable()) {
     $attributes = \Drupal::request()->attributes;
-    \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->id, $attributes->get('source_langcode'));
+    \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->getId(), $attributes->get('source_langcode'));
   }
 }
 
@@ -1658,6 +1659,9 @@ function hook_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $en
  * @see hook_entity_base_field_info()
  * @see hook_entity_bundle_field_info()
  * @see hook_entity_bundle_field_info_alter()
+ *
+ * @todo WARNING: This hook will be changed in
+ *   https://www.drupal.org/node/2346329.
  */
 function hook_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type) {
   // Alter the mymodule_text field to use a custom class.
@@ -1690,6 +1694,9 @@ function hook_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityT
  * @see hook_entity_bundle_field_info_alter()
  * @see \Drupal\Core\Field\FieldDefinitionInterface
  * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
+ *
+ * @todo WARNING: This hook will be changed in
+ *   https://www.drupal.org/node/2346347.
  */
 function hook_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
   // Add a property only to nodes of the 'article' bundle.
@@ -1716,6 +1723,9 @@ function hook_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $
  * @see hook_entity_base_field_info()
  * @see hook_entity_base_field_info_alter()
  * @see hook_entity_bundle_field_info()
+ *
+ * @todo WARNING: This hook will be changed in
+ *   https://www.drupal.org/node/2346347.
  */
 function hook_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle) {
   if ($entity_type->id() == 'node' && $bundle == 'article' && !empty($fields['mymodule_text'])) {
@@ -1738,20 +1748,19 @@ function hook_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\Entit
  * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldStorageDefinitions()
  */
 function hook_entity_field_storage_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
-  // Expose storage definitions for all exposed bundle fields.
-  if ($entity_type->isFieldable()) {
+  if (\Drupal::entityManager()->getStorage($entity_type->id()) instanceof DynamicallyFieldableEntityStorageInterface) {
     // Query by filtering on the ID as this is more efficient than filtering
     // on the entity_type property directly.
     $ids = \Drupal::entityQuery('field_storage_config')
       ->condition('id', $entity_type->id() . '.', 'STARTS_WITH')
       ->execute();
-
     // Fetch all fields and key them by field name.
     $field_storages = entity_load_multiple('field_storage_config', $ids);
     $result = array();
     foreach ($field_storages as $field_storage) {
       $result[$field_storage->getName()] = $field_storage;
     }
+
     return $result;
   }
 }
@@ -1868,7 +1877,7 @@ function hook_entity_field_access_alter(array &$grants, array $context) {
     // don't want to switch node module's grant to
     // AccessResultInterface::isAllowed() , because the grants of other modules
     // should still decide on their own if this field is accessible or not
-    $grants['node']->resetAccess();
+    $grants['node'] = AccessResult::neutral()->inheritCacheability($grants['node']);
   }
 }
 

@@ -21,6 +21,7 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -135,7 +136,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     $this->account = $account;
     $this->moduleHandler = $module_handler;
     $this->alterInfo('local_tasks');
-    $this->setCacheBackend($cache, 'local_task_plugins:' . $language_manager->getCurrentLanguage()->getId(), array('local_task' => TRUE));
+    $this->setCacheBackend($cache, 'local_task_plugins:' . $language_manager->getCurrentLanguage()->getId(), array('local_task'));
   }
 
   /**
@@ -250,7 +251,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
           foreach ($children[$parent] as $plugin_id => $task_info) {
             $plugin = $this->createInstance($plugin_id);
             $this->instances[$route_name][$level][$plugin_id] = $plugin;
-            // Normally, l() compares the href of every link with the current
+            // Normally, _l() compares the href of every link with the current
             // path and sets the active class accordingly. But the parents of
             // the current local task may be on a different route in which
             // case we have to set the class manually by flagging it active.
@@ -306,8 +307,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
 
           $link = array(
             'title' => $this->getTitle($child),
-            'route_name' => $route_name,
-            'route_parameters' => $route_parameters,
+            'url' => Url::fromRoute($route_name, $route_parameters),
             'localized_options' => $child->getOptions($request),
           );
           $build[$level][$plugin_id] = array(

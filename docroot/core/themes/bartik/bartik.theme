@@ -55,17 +55,6 @@ function bartik_preprocess_page(&$variables) {
   // Store back the classes to the htmlpage object.
   $attributes['class'] = $classes;
 
-  // Set additional attributes on the primary and secondary navigation menus.
-  if (!empty($variables['main_menu'])) {
-    $variables['main_menu']['#attributes']['id'] = 'main-menu-links';
-    $variables['main_menu']['#attributes']['class'][] = 'links';
-  }
-  if (!empty($variables['secondary_menu'])) {
-    $variables['secondary_menu']['#attributes']['id'] = 'secondary-menu-links';
-    $variables['secondary_menu']['#attributes']['class'][] = 'links';
-    $variables['secondary_menu']['#attributes']['class'][] = 'inline';
-  }
-
   // Set the options that apply to both page and maintenance page.
   _bartik_process_page($variables);
 
@@ -98,16 +87,9 @@ function bartik_preprocess_maintenance_page(&$variables) {
   if (!$variables['db_is_active']) {
     $variables['site_name'] = '';
   }
-  // Normally we could attach libraries via hook_page_alter(), but when the
-  // database is inactive it's not called so we add them here.
-  $libraries = array(
-    '#attached' => array(
-      'library' => array(
-        'bartik/maintenance_page',
-      ),
-    ),
-  );
-  drupal_render($libraries);
+
+  // Bartik has custom styling for the maintenance page.
+  $variables['#attached']['library'][] = 'bartik/maintenance_page';
 
   // Set the options that apply to both page and maintenance page.
   _bartik_process_page($variables);
@@ -132,22 +114,17 @@ function bartik_preprocess_block(&$variables) {
   if ($variables['plugin_id'] == 'system_branding_block') {
     $variables['attributes']['class'][] = 'clearfix';
   }
+  // Add a container-inline class to keep consistent visual styles
+  if ($variables['plugin_id'] == 'search_form_block') {
+    $variables['content_attributes']['class'][] = 'container-inline';
+  }
 }
 
 /**
- * Implements hook_preprocess_HOOK() for menu-tree.html.twig.
- *
- * @see template_preprocess_menu_tree()
+ * Implements hook_preprocess_HOOK() for menu.html.twig.
  */
-function bartik_preprocess_menu_tree(&$variables) {
+function bartik_preprocess_menu(&$variables) {
   $variables['attributes']['class'][] = 'clearfix';
-}
-
-/**
- * Implements THEME_menu_tree__MENUNAME().
- */
-function bartik_menu_tree__shortcut_default($variables) {
-  return '<ul class="menu">' . $variables['tree'] . '</ul>';
 }
 
 /**

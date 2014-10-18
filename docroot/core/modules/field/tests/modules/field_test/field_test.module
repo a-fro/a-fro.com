@@ -92,7 +92,7 @@ function field_test_entity_display_build_alter(&$output, $context) {
   }
 
   if (isset($output['test_field'])) {
-    $output['test_field'][] = array('#markup' => 'entity language is ' . $context['entity']->language()->id);
+    $output['test_field'][] = array('#markup' => 'entity language is ' . $context['entity']->language()->getId());
   }
 }
 
@@ -111,7 +111,7 @@ function field_test_field_widget_form_alter(&$element, FormStateInterface $form_
       break;
   }
   // Set a message if this is for the form displayed to set default value for
-  // the field instance.
+  // the field.
   if ($context['default']) {
     drupal_set_message('From hook_field_widget_form_alter(): Default form is true.');
   }

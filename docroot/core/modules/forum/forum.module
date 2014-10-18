@@ -9,6 +9,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -51,8 +52,7 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       $output = '<p>' . t('Forums contain forum topics. Use containers to group related forums.') . '</p>';
       $more_help_link = array(
         '#type' => 'link',
-        '#route_name' => 'help.page',
-        '#route_parameters' => array('name' => 'forum'),
+        '#url' => Url::fromRoute('help.page', ['name' => 'forum']),
         '#title' => t('More help'),
       );
       $container = array(
@@ -82,19 +82,15 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
 function forum_theme() {
   return array(
     'forums' => array(
-      'template' => 'forums',
       'variables' => array('forums' => array(), 'topics' => array(), 'topics_pager' => array(), 'parents' => NULL, 'term' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL, 'header' => array()),
     ),
     'forum_list' => array(
-      'template' => 'forum-list',
       'variables' => array('forums' => NULL, 'parents' => NULL, 'tid' => NULL),
     ),
     'forum_icon' => array(
-      'template' => 'forum-icon',
       'variables' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0, 'first_new' => FALSE),
     ),
     'forum_submitted' => array(
-      'template' => 'forum-submitted',
       'variables' => array('topic' => NULL),
     ),
   );
@@ -104,8 +100,6 @@ function forum_theme() {
  * Implements hook_menu_local_tasks().
  */
 function forum_menu_local_tasks(&$data, $route_name) {
-  $user = \Drupal::currentUser();
-
   // Add action link to 'node/add/forum' on 'forum' sub-pages.
   if (in_array($route_name, array('forum.index', 'forum.page'))) {
     $forum_term = \Drupal::routeMatch()->getParameter('taxonomy_term');
@@ -119,7 +113,7 @@ function forum_menu_local_tasks(&$data, $route_name) {
           '#theme' => 'menu_local_action',
           '#link' => array(
             'title' => t('Add new @node_type', array('@node_type' => entity_load('node_type', $type)->label())),
-            'href' => 'node/add/' . $type,
+            'url' => Url::fromRoute('node.add', ['node_type' => $type]),
           ),
         );
         if ($forum_term && $forum_term->bundle() == $vid) {
@@ -129,31 +123,9 @@ function forum_menu_local_tasks(&$data, $route_name) {
         }
       }
     }
-    if (empty($links)) {
-      // Authenticated user does not have access to create new topics.
-      if ($user->isAuthenticated()) {
-        $links['disallowed'] = array(
-          '#theme' => 'menu_local_action',
-          '#link' => array(
-            'title' => t('You are not allowed to post new content in the forum.'),
-          ),
-        );
-      }
-      // Anonymous user does not have access to create new topics.
-      else {
-        $links['login'] = array(
-          '#theme' => 'menu_local_action',
-          '#link' => array(
-            'title' => t('<a href="@login">Log in</a> to post new content in the forum.', array(
-              '@login' => url('user/login', array('query' => drupal_get_destination())),
-            )),
-            'localized_options' => array('html' => TRUE),
-          ),
-        );
-      }
-    }
     $data['actions'] += $links;
   }
+  // @todo Bring back functionality in https://www.drupal.org/node/1853072.
 }
 
 /**
@@ -165,8 +137,9 @@ function forum_entity_type_build(array &$entity_types) {
   $entity_types['taxonomy_term']
     ->setFormClass('forum', 'Drupal\forum\Form\ForumForm')
     ->setFormClass('container', 'Drupal\forum\Form\ContainerForm')
-    ->setLinkTemplate('forum-delete-form', 'forum.delete')
-    ->setLinkTemplate('forum-edit-form', 'forum.edit_forum');
+    ->setLinkTemplate('forum-delete-form', 'entity.taxonomy_term.forum_delete_form')
+    ->setLinkTemplate('forum-edit-container-form', 'entity.taxonomy_term.forum_edit_container_form')
+    ->setLinkTemplate('forum-edit-form', 'entity.taxonomy_term.forum_edit_form');
 }
 
 /**
@@ -185,12 +158,7 @@ function forum_entity_bundle_info_alter(&$bundles) {
  * Entity URI callback used in forum_entity_bundle_info_alter().
  */
 function forum_uri($forum) {
-  return array(
-    'route_name' => 'forum.page',
-    'route_parameters' => array(
-      'taxonomy_term' => $forum->id(),
-    ),
-  );
+  return Url::fromRoute('forum.page', ['taxonomy_term' => $forum->id()]);
 }
 
 /**
@@ -536,11 +504,11 @@ function template_preprocess_forums(&$variables) {
         if ($variables['tid'] != $topic->forum_tid) {
           $variables['topics'][$id]->moved = TRUE;
           $variables['topics'][$id]->title = String::checkPlain($topic->getTitle());
-          $variables['topics'][$id]->message = l(t('This topic has been moved'), "forum/$topic->forum_tid");
+          $variables['topics'][$id]->message = \Drupal::l(t('This topic has been moved'), new Url('forum.page', ['taxonomy_term' => $topic->forum_tid]));
         }
         else {
           $variables['topics'][$id]->moved = FALSE;
-          $variables['topics'][$id]->title_link = l($topic->getTitle(), 'node/' . $topic->id());
+          $variables['topics'][$id]->title_link = \Drupal::l($topic->getTitle(), $topic->urlInfo());
           $variables['topics'][$id]->message = '';
         }
         $forum_submitted = array('#theme' => 'forum_submitted', '#topic' => (object) array(
@@ -563,7 +531,7 @@ function template_preprocess_forums(&$variables) {
             ->getNewCommentPageNumber($topic->comment_count, $topic->new_replies, $topic, 'comment_forum');
           $query = $page_number ? array('page' => $page_number) : NULL;
           $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new post<span class="visually-hidden"> in topic %title</span>', '@count new posts<span class="visually-hidden"> in topic %title</span>', array('%title' => $variables['topics'][$id]->label()));
-          $variables['topics'][$id]->new_url = url('node/' . $topic->id(), array('query' => $query, 'fragment' => 'new'));
+          $variables['topics'][$id]->new_url = \Drupal::url('entity.node.canonical', ['node' => $topic->id()], ['query' => $query, 'fragment' => 'new']);
         }
 
         // Build table rows from topics.
@@ -629,7 +597,7 @@ function template_preprocess_forum_list(&$variables) {
   // Sanitize each forum so that the template can safely print the data.
   foreach ($variables['forums'] as $id => $forum) {
     $variables['forums'][$id]->description = Xss::filterAdmin($forum->description->value);
-    $variables['forums'][$id]->link = url("forum/" . $forum->id());
+    $variables['forums'][$id]->link = $forum->url();
     $variables['forums'][$id]->name = String::checkPlain($forum->label());
     $variables['forums'][$id]->is_container = !empty($forum->forum_container->value);
     $variables['forums'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
@@ -645,7 +613,7 @@ function template_preprocess_forum_list(&$variables) {
       $variables['forums'][$id]->new_topics = \Drupal::service('forum_manager')->unreadTopics($forum->id(), $user->id());
       if ($variables['forums'][$id]->new_topics) {
         $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new post<span class="visually-hidden"> in forum %title</span>', '@count new posts<span class="visually-hidden"> in forum %title</span>', array('%title' => $variables['forums'][$id]->label()));
-        $variables['forums'][$id]->new_url = url('forum/' . $forum->id(), array('fragment' => 'new'));
+        $variables['forums'][$id]->new_url = \Drupal::url('forum.page', ['taxonomy_term' => $forum->id()], ['fragment' => 'new']);
         $variables['forums'][$id]->icon_class = 'new';
         $variables['forums'][$id]->icon_title = t('New posts');
       }
@@ -682,26 +650,24 @@ function template_preprocess_forum_icon(&$variables) {
   $variables['hot_threshold'] = \Drupal::config('forum.settings')->get('topics.hot_threshold');
 
   if ($variables['num_posts'] > $variables['hot_threshold']) {
-    $icon_status_class = $variables['new_posts'] ? 'hot-new' : 'hot';
+    $variables['icon_status'] = $variables['new_posts'] ? 'hot-new' : 'hot';
     $variables['icon_title'] = $variables['new_posts'] ? t('Hot topic, new comments') : t('Hot topic');
   }
   else {
-    $icon_status_class = $variables['new_posts'] ? 'new' : 'default';
+    $variables['icon_status'] = $variables['new_posts'] ? 'new' : 'default';
     $variables['icon_title'] = $variables['new_posts'] ? t('New comments') : t('Normal topic');
   }
 
   if ($variables['comment_mode'] == CommentItemInterface::CLOSED || $variables['comment_mode'] == CommentItemInterface::HIDDEN) {
-    $icon_status_class = 'closed';
+    $variables['icon_status'] = 'closed';
     $variables['icon_title'] = t('Closed topic');
   }
 
   if ($variables['sticky'] == 1) {
-    $icon_status_class = 'sticky';
+    $variables['icon_status'] = 'sticky';
     $variables['icon_title'] = t('Sticky topic');
   }
 
-  $variables['attributes']['class'][] = 'icon';
-  $variables['attributes']['class'][] = 'topic-status-' . $icon_status_class;
   $variables['attributes']['title'] = $variables['icon_title'];
 }
 

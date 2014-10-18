@@ -55,7 +55,7 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating vocabularies') . '</dt>';
-      $output .= '<dd>' . t('Users with sufficient <a href="@perm">permissions</a> can create <em>vocabularies</em> and <em>terms</em> through the <a href="@taxo">Taxonomy page</a>. The page listing the terms provides a drag-and-drop interface for controlling the order of the terms and sub-terms within a vocabulary, in a hierarchical fashion. A <em>controlled vocabulary</em> classifying music by genre with terms and sub-terms could look as follows:', array('@taxo' => url('admin/structure/taxonomy'), '@perm' => url('admin/people/permissions', array('fragment'=>'module-taxonomy'))));
+      $output .= '<dd>' . t('Users with sufficient <a href="@perm">permissions</a> can create <em>vocabularies</em> and <em>terms</em> through the <a href="@taxo">Taxonomy page</a>. The page listing the terms provides a drag-and-drop interface for controlling the order of the terms and sub-terms within a vocabulary, in a hierarchical fashion. A <em>controlled vocabulary</em> classifying music by genre with terms and sub-terms could look as follows:', array('@taxo' => \Drupal::url('taxonomy.vocabulary_list'), '@perm' => \Drupal::url('user.admin_permissions', [], array('fragment'=>'module-taxonomy'))));
       $output .= '<ul><li>' . t('<em>vocabulary</em>: Music') . '</li>';
       $output .= '<ul><li>' . t('<em>term</em>: Jazz') . '</li>';
       $output .= '<ul><li>' . t('<em>sub-term</em>: Swing') . '</li>';
@@ -66,9 +66,9 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
       $output .= t('You can assign a sub-term to multiple parent terms. For example, <em>fusion</em> can be assigned to both <em>rock</em> and <em>jazz</em>.') . '</dd>';
       $output .= '<dd>' . t('Terms in a <em>free-tagging vocabulary</em> can be built gradually as you create or edit content. This is often done used for blogs or photo management applications.') . '</dd>';
       $output .= '<dt>' . t('Assigning vocabularies to content types') . '</dt>';
-      $output .= '<dd>' . t('Before you can use a new vocabulary to classify your content, a new Taxonomy term field must be added to a <a href="@ctedit">content type</a> on its <em>manage fields</em> page. When adding a taxonomy field, you choose a <em>widget</em> to use to enter the taxonomy information on the content editing page: a select list, checkboxes, radio buttons, or an auto-complete field (to build a free-tagging vocabulary). After choosing the field type and widget, on the subsequent <em>field settings</em> page you can choose the desired vocabulary, whether one or multiple terms can be chosen from the vocabulary, and other settings. The same vocabulary can be added to multiple content types, by using the "Re-use existing field" section on the manage fields page.', array('@ctedit' => url('admin/structure/types'))) . '</dd>';
+      $output .= '<dd>' . t('Before you can use a new vocabulary to classify your content, a new Taxonomy term field must be added to a <a href="@ctedit">content type</a> on its <em>manage fields</em> page. When adding a taxonomy field, you choose a <em>widget</em> to use to enter the taxonomy information on the content editing page: a select list, checkboxes, radio buttons, or an auto-complete field (to build a free-tagging vocabulary). After choosing the field type and widget, on the subsequent <em>field settings</em> page you can choose the desired vocabulary, whether one or multiple terms can be chosen from the vocabulary, and other settings. The same vocabulary can be added to multiple content types, by using the "Re-use existing field" section on the manage fields page.', array('@ctedit' => \Drupal::url('node.overview_types'))) . '</dd>';
       $output .= '<dt>' . t('Classifying content') . '</dt>';
-      $output .= '<dd>' . t('After the vocabulary is assigned to the content type, you can start classifying content. The field with terms will appear on the content editing screen when you edit or <a href="@addnode">add new content</a>.', array('@addnode' => url('node/add'))) . '</dd>';
+      $output .= '<dd>' . t('After the vocabulary is assigned to the content type, you can start classifying content. The field with terms will appear on the content editing screen when you edit or <a href="@addnode">add new content</a>.', array('@addnode' => \Drupal::url('node.add_page'))) . '</dd>';
       $output .= '<dt>' . t('Viewing listings') . '</dt>';
       $output .= '<dd>' . t("Each taxonomy term automatically provides a page listing content that has its classification. For example, if the taxonomy term <em>country rock</em> has the ID 123 (you can see this by looking at the URL when hovering on the linked term, which you can click to navigate to the listing page), then you will find this list at the path <em>taxonomy/term/123</em>.") . '</dd>';
       $output .= '<dt>' . t('Extending Taxonomy module') . '</dt>';
@@ -110,7 +110,7 @@ function taxonomy_page_build(&$page) {
   if ($route_match->getRouteName() == 'entity.taxonomy_term.canonical' && ($term = $route_match->getParameter('taxonomy_term')) && $term instanceof TermInterface) {
     foreach ($term->uriRelationships() as $rel) {
       // Set the URI relationships, like canonical.
-      $page['#attached']['drupal_add_html_head_link'][] = array(
+      $page['#attached']['html_head_link'][] = array(
         array(
           'rel' => $rel,
           'href' => $term->url($rel),
@@ -121,7 +121,7 @@ function taxonomy_page_build(&$page) {
       // Set the term path as the canonical URL to prevent duplicate content.
       if ($rel == 'canonical') {
         // Set the non-aliased canonical path as a default shortlink.
-        $page['#attached']['drupal_add_html_head_link'][] = array(
+        $page['#attached']['html_head_link'][] = array(
           array(
             'rel' => 'shortlink',
             'href' => $term->url($rel, array('alias' => TRUE)),
@@ -134,7 +134,7 @@ function taxonomy_page_build(&$page) {
 }
 
 /**
- * Return nodes attached to a term across all field instances.
+ * Return nodes attached to a term across all fields.
  *
  * This function requires taxonomy module to be maintaining its own tables,
  * and will return an empty array if it is not. If using other field storage
@@ -195,7 +195,6 @@ function taxonomy_theme() {
   return array(
     'taxonomy_term' => array(
       'render element' => 'elements',
-      'template' => 'taxonomy-term',
     ),
   );
 }
@@ -267,7 +266,7 @@ function taxonomy_term_view(Term $term, $view_mode = 'full', $langcode = NULL) {
  * Constructs a drupal_render() style array from an array of loaded terms.
  *
  * @param array $terms
- *   An array of taxonomy terms as returned by entity_load_multiple('taxonomy_term').
+ *   An array of taxonomy terms as returned by Term::loadMultiple().
  * @param string $view_mode
  *   View mode, e.g. 'full', 'teaser'...
  * @param string $langcode
@@ -684,7 +683,7 @@ function taxonomy_build_node_index($node) {
       $field_name = $field->getName();
       if ($field->getType() == 'taxonomy_term_reference') {
         foreach ($node->getTranslationLanguages() as $language) {
-          foreach ($node->getTranslation($language->id)->$field_name as $item) {
+          foreach ($node->getTranslation($language->getId())->$field_name as $item) {
             if (!$item->isEmpty()) {
               $tid_all[$item->target_id] = $item->target_id;
             }

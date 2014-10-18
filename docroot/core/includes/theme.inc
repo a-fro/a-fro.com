@@ -372,6 +372,15 @@ function _theme($hook, $variables = array()) {
         $preprocessor_function($variables, $hook, $info);
       }
     }
+    // Allow theme preprocess functions to set $variables['#attached'] and use
+    // it like the #attached property on render arrays. In Drupal 8, this is the
+    // (only) officially supported method of attaching assets from preprocess
+    // functions. Assets attached here should be associated with the template
+    // that we're preprocessing variables for.
+    if (isset($variables['#attached'])) {
+      $preprocess_attached = ['#attached' => $variables['#attached']];
+      drupal_render($preprocess_attached, TRUE);
+    }
   }
 
   // Generate the output using either a function or a template.
@@ -439,7 +448,7 @@ function _theme($hook, $variables = array()) {
     $variables['theme_hook_suggestions'] = $suggestions;
     // For backwards compatibility, pass 'theme_hook_suggestion' on to the
     // template engine. This is only set when calling a direct suggestion like
-    // '#theme' => 'menu_tree__shortcut_default' when the template exists in the
+    // '#theme' => 'menu__shortcut_default' when the template exists in the
     // current theme.
     if (isset($theme_hook_suggestion)) {
       $variables['theme_hook_suggestion'] = $theme_hook_suggestion;
@@ -893,14 +902,8 @@ function template_preprocess_status_messages(&$variables) {
  *     is used as its CSS class. Each link should be itself an array, with the
  *     following elements:
  *     - title: The link text.
- *     - route_name: (optional) The name of the route to link to. If omitted
- *       (and if 'href' is omitted as well), the 'title' is shown as
- *       a plain text item in the links list.
- *     - route_parameters: (optional) An array of route parameters for the link.
- *     - href: (optional) The link URL. It is preferred to use 'route_name' and
- *       'route parameters' for internal links. Use 'href' for links to external
- *       URLs. If omitted (and if 'route_name' is omitted as well), the 'title'
- *       is shown as a plain text item in the links list.
+ *     - url: (optional) The url object to link to. If omitted, no a tag is
+ *       printed out.
  *     - html: (optional) Whether or not 'title' is HTML. If set, the title
  *       will not be passed through
  *       \Drupal\Component\Utility\String::checkPlain().
@@ -948,7 +951,7 @@ function template_preprocess_status_messages(&$variables) {
  * class. I.e. we cannot yet convert this jQuery selector to a CSS selector:
  *   jQuery('li:has("a.active")')
  *
- * @see l()
+ * @see \Drupal\Core\Utility\LinkGenerator
  * @see \Drupal\Core\Utility\LinkGenerator::generate()
  * @see system_page_build()
  */
@@ -977,37 +980,33 @@ function template_preprocess_links(&$variables) {
     foreach ($links as $key => $link) {
       $item = array();
       $link += array(
-        'href' => NULL,
-        'route_name' => NULL,
-        'route_parameters' => NULL,
         'ajax' => NULL,
+        'url' => NULL,
       );
 
       $li_attributes = array('class' => array());
       // Use the array key as class name.
       $li_attributes['class'][] = drupal_html_class($key);
 
-      $keys = array('title', 'href', 'route_name', 'route_parameters');
+      $keys = ['title', 'url'];
       $link_element = array(
         '#type' => 'link',
         '#title' => $link['title'],
         '#options' => array_diff_key($link, array_combine($keys, $keys)),
-        '#href' => $link['href'],
-        '#route_name' => $link['route_name'],
-        '#route_parameters' => $link['route_parameters'],
+        '#url' => $link['url'],
         '#ajax' => $link['ajax'],
       );
 
       // Handle links and ensure that the active class is added on the LIs, but
       // only if the 'set_active_class' option is not empty.
-      if (isset($link['href']) || isset($link['route_name'])) {
+      if (isset($link['url'])) {
         if (!empty($variables['set_active_class'])) {
 
           // Also enable set_active_class for the contained link.
           $link_element['#options']['set_active_class'] = TRUE;
 
           if (!empty($link['language'])) {
-            $li_attributes['hreflang'] = $link['language']->id;
+            $li_attributes['hreflang'] = $link['language']->getId();
           }
 
           // Add a "data-drupal-link-query" attribute to let the
@@ -1018,16 +1017,16 @@ function template_preprocess_links(&$variables) {
             $li_attributes['data-drupal-link-query'] = Json::encode($query);
           }
 
-          if (isset($link['route_name'])) {
-            $path = \Drupal::service('url_generator')->getPathFromRoute($link['route_name'], $link['route_parameters']);
+          /** @var \Drupal\Core\Url $url */
+          $url = $link['url'];
+          if ($url->isRouted()) {
+            // Add a "data-drupal-link-system-path" attribute to let the
+            // drupal.active-link library know the path in a standardized manner.
+            $system_path = $url->getInternalPath();
+            // @todo System path is deprecated - use the route name and parameters.
+            // Special case for the front page.
+            $li_attributes['data-drupal-link-system-path'] = $system_path == '' ? '<front>' : $system_path;
           }
-          else {
-            $path = $link['href'];
-          }
-
-          // Add a "data-drupal-link-system-path" attribute to let the
-          // drupal.active-link library know the path in a standardized manner.
-          $li_attributes['data-drupal-link-system-path'] = \Drupal::service('path.alias_manager')->getPathByAlias($path);
         }
 
         $item['link'] = $link_element;
@@ -1073,11 +1072,33 @@ function template_preprocess_links(&$variables) {
  *   - title: The title text is displayed when the image is hovered in some
  *     popular browsers.
  *   - attributes: Associative array of attributes to be placed in the img tag.
+ *   - srcset: Array of multiple URIs and sizes/multipliers.
+ *   - sizes: The sizes attribute for viewport-based selection of images.
+ *     - http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content.html#introduction-3:viewport-based-selection-2
  */
 function template_preprocess_image(&$variables) {
-  $variables['attributes']['src'] = file_create_url($variables['uri']);
+  if (!empty($variables['uri'])) {
+    $variables['attributes']['src'] = file_create_url($variables['uri']);
+  }
+  // Generate a srcset attribute conforming to the spec at
+  // http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#attr-img-srcset
+  if (!empty($variables['srcset'])) {
+    $srcset = array();
+    foreach ($variables['srcset'] as $src) {
+      // URI is mandatory.
+      $source = file_create_url($src['uri']);
+      if (isset($src['width']) && !empty($src['width'])) {
+        $source .= ' ' . $src['width'];
+      }
+      elseif (isset($src['multiplier']) && !empty($src['multiplier'])) {
+        $source .= ' ' . $src['multiplier'];
+      }
+      $srcset[] = $source;
+    }
+    $variables['attributes']['srcset'] = implode(', ', $srcset);
+  }
 
-  foreach (array('width', 'height', 'alt', 'title') as $key) {
+  foreach (array('width', 'height', 'alt', 'title', 'sizes') as $key) {
     if (isset($variables[$key])) {
       // If the property has already been defined in the attributes,
       // do not override, including NULL.
@@ -1471,7 +1492,6 @@ function template_preprocess_feed_icon(&$variables) {
     '#height' => 16,
     '#alt' => $text,
   );
-  $variables['attributes']['class'] = array('feed-icon');
   // Stripping tags because that's what l() used to do.
   $variables['attributes']['title'] = strip_tags($text);
 }
@@ -1502,6 +1522,7 @@ function theme_indentation($variables) {
  *     Properties used: #id, #attributes, #children.
  */
 function template_preprocess_container(&$variables) {
+  $variables['has_parent'] = FALSE;
   $element = $variables['element'];
   // Ensure #attributes is set.
   $element += array('#attributes' => array());
@@ -1512,8 +1533,7 @@ function template_preprocess_container(&$variables) {
     if (!isset($element['#attributes']['id'])) {
       $element['#attributes']['id'] = $element['#id'];
     }
-    // Add the 'form-wrapper' class.
-    $element['#attributes']['class'][] = 'form-wrapper';
+    $variables['has_parent'] = TRUE;
   }
 
   $variables['children'] = $element['#children'];
@@ -1523,7 +1543,7 @@ function template_preprocess_container(&$variables) {
 /**
  * Prepares variables for maintenance task list templates.
  *
- * Default template: task-list.html.twig.
+ * Default template: maintenance-task-list.html.twig.
  *
  * @param array $variables
  *   An associative array containing:
@@ -1532,7 +1552,7 @@ function template_preprocess_container(&$variables) {
  *     dangerous HTML such as SCRIPT tags.
  *   - active: The key for the currently active maintenance task.
  */
-function template_preprocess_task_list(&$variables) {
+function template_preprocess_maintenance_task_list(&$variables) {
   $items = $variables['items'];
   $active = $variables['active'];
 
@@ -1656,27 +1676,29 @@ function template_preprocess_html(&$variables) {
   $variables['page'] = $page;
 
   // Compile a list of classes that are going to be applied to the body element.
-  // This allows advanced theming based on context (home page, node of certain type, etc.).
+  // This allows advanced theming based on context (home page, node of certain
+  // type, etc.).
   $body_classes = $variables['attributes']['class'];
-  $body_classes[] = 'html';
-  // Add a class that tells us whether we're on the front page or not.
-  $body_classes[] = $variables['is_front'] ? 'front' : 'not-front';
-  // Add a class that tells us whether the page is viewed by an authenticated user or not.
-  $body_classes[] = $variables['logged_in'] ? 'logged-in' : 'not-logged-in';
-  $variables['attributes']['class'] = $body_classes;
 
-  $path_args = explode('/', current_path());
-  // Populate the body classes.
-  if ($suggestions = theme_get_suggestions($path_args, 'page', '-')) {
-    foreach ($suggestions as $suggestion) {
-      if ($suggestion != 'page-front') {
-        // Add current suggestion to page classes to make it possible to theme
-        // the page depending on the current page type (e.g. node, admin, user,
-        // etc.) as well as more specific data like node-12 or node-edit.
-        $variables['attributes']['class'][] = drupal_html_class($suggestion);
-      }
-    }
+  // Add a class that tells us whether the page is viewed by an authenticated
+  // user.
+  if ($variables['logged_in']) {
+    $body_classes[] = 'user-logged-in';
   }
+  // Add a class that tells us what path the page is located make it possible
+  // to theme the page depending on the current path (e.g. node, admin, user,
+  // etc.) as well as more specific data like path-frontpage.
+  $path = \Drupal::request()->getPathInfo();
+
+  if (drupal_is_front_page()) {
+    $body_classes[] = 'path-frontpage';
+  }
+  else {
+    $segment = explode('/', $path);
+    $body_classes[] = 'path-' . drupal_html_class($segment[1]);
+  }
+
+  $variables['attributes']['class'] = $body_classes;
 
   $site_config = \Drupal::config('system.site');
   // Construct page title.
@@ -1766,26 +1788,14 @@ function template_preprocess_page(&$variables) {
     }
   }
 
-  // Set up layout variable.
-  $variables['layout'] = 'none';
-  if (!empty($variables['page']['sidebar_first'])) {
-    $variables['layout'] = 'first';
-  }
-  if (!empty($variables['page']['sidebar_second'])) {
-    $variables['layout'] = ($variables['layout'] == 'first') ? 'both' : 'second';
-  }
-
   $variables['base_path']         = base_path();
-  $variables['front_page']        = url();
+  $variables['front_page']        = \Drupal::url('<front>');
   $variables['language']          = $language_interface;
-  $variables['language']->dir     = $language_interface->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo.url');
   $variables['site_name']         = (theme_get_setting('features.name') ? String::checkPlain($site_config->get('name')) : '');
   $variables['site_slogan']       = (theme_get_setting('features.slogan') ? Xss::filterAdmin($site_config->get('slogan')) : '');
 
   if (!defined('MAINTENANCE_MODE')) {
-    $variables['main_menu']      = theme_get_setting('features.main_menu') ? menu_main_menu() : array();
-    $variables['secondary_menu'] = theme_get_setting('features.secondary_menu') ? menu_secondary_menu() : array();
     $variables['action_links']   = menu_get_local_actions();
     $variables['tabs']           = menu_local_tabs();
 
@@ -1803,31 +1813,9 @@ function template_preprocess_page(&$variables) {
     }
   }
   else {
-    $variables['main_menu']      = array();
-    $variables['secondary_menu'] = array();
     $variables['action_links']   = array();
     $variables['tabs']           = array();
     $variables['feed_icons']     = '';
-  }
-
-  // Pass the main menu and secondary menu to the template as render arrays.
-  if (!empty($variables['main_menu'])) {
-    $variables['main_menu']['#heading'] = array(
-      'text' => t('Main menu'),
-      'attributes' => array(
-        'id' => 'links__system_main_menu',
-        'class' => array('visually-hidden'),
-       ),
-    );
-  }
-  if (!empty($variables['secondary_menu'])) {
-    $variables['secondary_menu']['#heading'] = array(
-      'text' => t('Secondary menu'),
-      'attributes' => array(
-        'id' => 'links__system_secondary_menu',
-        'class' => array('visually-hidden'),
-      ),
-    );
   }
 
   if ($node = \Drupal::routeMatch()->getParameter('node')) {
@@ -1878,16 +1866,16 @@ function template_preprocess_page(&$variables) {
  */
 function theme_get_suggestions($args, $base, $delimiter = '__') {
 
-  // Build a list of suggested theme hooks or body classes in order of
+  // Build a list of suggested theme hooks in order of
   // specificity. One suggestion is made for every element of the current path,
   // though numeric elements are not carried to subsequent suggestions. For
   // example, for $base='page', http://www.example.com/node/1/edit would result
-  // in the following suggestions and body classes:
+  // in the following suggestions:
   //
-  // page__node              page-node
-  // page__node__%           page-node-%
-  // page__node__1           page-node-1
-  // page__node__edit        page-node-edit
+  // page__node
+  // page__node__%
+  // page__node__1
+  // page__node__edit
 
   $suggestions = array();
   $prefix = $base;
@@ -1942,22 +1930,14 @@ function template_preprocess_maintenance_page(&$variables) {
   $attributes = $page_object->getBodyAttributes();
   $classes = $attributes['class'];
   $classes[] = 'maintenance-page';
-  $classes[] = 'in-maintenance';
   if (isset($variables['db_is_active']) && !$variables['db_is_active']) {
     $classes[] = 'db-offline';
   }
   $attributes['class'] = $classes;
 
   // @see system_page_build()
-  $attached = array(
-    '#attached' => array(
-      'library' => array(
-        'core/normalize',
-        'system/maintenance',
-      ),
-    ),
-  );
-  drupal_render($attached);
+  $variables['#attached']['library'][] = 'core/normalize';
+  $variables['#attached']['library'][] = 'system/maintenance';
 }
 
 /**
@@ -2030,19 +2010,6 @@ function template_preprocess_field(&$variables, $hook) {
   // readers.
   $variables['label'] = String::checkPlain($element['#title']);
 
-  // We want other preprocess functions and the theme implementation to have
-  // fast access to the field item render arrays. The item render array keys
-  // (deltas) should always be numerically indexed starting from 0, and looping
-  // on those keys is faster than calling
-  // \Drupal\Core\Render\Element::children() or looping on all keys within
-  // $element, since that requires traversal of all element properties.
-  $variables['items'] = array();
-  $delta = 0;
-  while (!empty($element[$delta])) {
-    $variables['items'][$delta] = $element[$delta];
-    $delta++;
-  }
-
   // Add default CSS classes. Since there can be many fields rendered on a page,
   // save some overhead by calling strtr() directly instead of
   // drupal_html_class().
@@ -2056,6 +2023,7 @@ function template_preprocess_field(&$variables, $hook) {
     'field-type-' . $variables['field_type_css'],
     'field-label-' . $element['#label_display'],
   );
+
   // Add a "clearfix" class to the wrapper since we float the label and the
   // field items in field.module.css if the label is inline.
   if ($element['#label_display'] == 'inline') {
@@ -2072,15 +2040,26 @@ function template_preprocess_field(&$variables, $hook) {
     $default_attributes = new Attribute;
   }
 
-  // Modules (e.g., rdf.module) can add field item attributes (to
-  // $item->_attributes) within hook_entity_prepare_view(). Some field
-  // formatters move those attributes into some nested formatter-specific
-  // element in order have them rendered on the desired HTML element (e.g., on
-  // the <a> element of a field item being rendered as a link). Other field
-  // formatters leave them within $element['#items'][$delta]['_attributes'] to
-  // be rendered on the item wrappers provided by field.html.twig.
-  foreach ($variables['items'] as $delta => $item) {
-    $variables['item_attributes'][$delta] = !empty($element['#items'][$delta]->_attributes) ? new Attribute($element['#items'][$delta]->_attributes) : clone($default_attributes);
+  // We want other preprocess functions and the theme implementation to have
+  // fast access to the field item render arrays. The item render array keys
+  // (deltas) should always be numerically indexed starting from 0, and looping
+  // on those keys is faster than calling element_children() or looping on all
+  // keys within $element, since that requires traversal of all element
+  // properties.
+  $variables['items'] = array();
+  $delta = 0;
+  while (!empty($element[$delta])) {
+    $variables['items'][$delta]['content'] = $element[$delta];
+
+    // Modules (e.g., rdf.module) can add field item attributes (to
+    // $item->_attributes) within hook_entity_prepare_view(). Some field
+    // formatters move those attributes into some nested formatter-specific
+    // element in order have them rendered on the desired HTML element (e.g., on
+    // the <a> element of a field item being rendered as a link). Other field
+    // formatters leave them within $element['#items'][$delta]['_attributes'] to
+    // be rendered on the item wrappers provided by field.html.twig.
+    $variables['items'][$delta]['attributes'] = !empty($element['#items'][$delta]->_attributes) ? new Attribute($element['#items'][$delta]->_attributes) : clone($default_attributes);
+    $delta++;
   }
 }
 
@@ -2219,39 +2198,30 @@ function drupal_common_theme() {
     // From theme.inc.
     'html' => array(
       'variables' => array('page_object' => NULL),
-      'template' => 'html',
     ),
     'page' => array(
       'render element' => 'page',
-      'template' => 'page',
     ),
     'region' => array(
       'render element' => 'elements',
-      'template' => 'region',
     ),
     'time' => array(
       'variables' => array('timestamp' => NULL, 'text' => NULL, 'attributes' => array(), 'html' => FALSE),
-      'template' => 'time',
     ),
     'datetime_form' => array(
-      'template' => 'datetime-form',
       'render element' => 'element',
     ),
     'datetime_wrapper' => array(
-      'template' => 'datetime-wrapper',
       'render element' => 'element',
     ),
     'status_messages' => array(
       'variables' => array('display' => NULL),
-      'template' => 'status-messages',
     ),
     'links' => array(
       'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array(), 'set_active_class' => FALSE),
-      'template' => 'links',
     ),
     'dropbutton_wrapper' => array(
       'variables' => array('children' => NULL),
-      'template' => 'dropbutton-wrapper',
     ),
     'image' => array(
       // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft
@@ -2266,141 +2236,115 @@ function drupal_common_theme() {
       // - http://dev.w3.org/html5/spec/Overview.html#alt
       // The title attribute is optional in all cases, so it is omitted by
       // default.
-      'variables' => array('uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => array()),
-      'template' => 'image',
+      'variables' => array('uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => array(), 'sizes' => NULL, 'srcset' => array(), 'style_name' => NULL),
     ),
     'breadcrumb' => array(
       'variables' => array('links' => array()),
-      'template' => 'breadcrumb',
     ),
     'table' => array(
       'variables' => array('header' => NULL, 'rows' => NULL, 'footer' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => FALSE, 'responsive' => TRUE, 'empty' => ''),
-      'template' => 'table',
     ),
     'tablesort_indicator' => array(
       'variables' => array('style' => NULL),
-      'template' => 'tablesort-indicator',
     ),
     'mark' => array(
       'variables' => array('status' => MARK_NEW),
-      'template' => 'mark',
     ),
     'item_list' => array(
       'variables' => array('items' => array(), 'title' => '', 'list_type' => 'ul', 'attributes' => array(), 'empty' => NULL),
-      'template' => 'item-list',
     ),
     'feed_icon' => array(
       'variables' => array('url' => NULL, 'title' => NULL),
-      'template' => 'feed-icon',
     ),
     'progress_bar' => array(
       'variables' => array('label' => NULL, 'percent' => NULL, 'message' => NULL),
-      'template' => 'progress-bar',
     ),
     'indentation' => array(
       'variables' => array('size' => 1),
+      'function' => 'theme_indentation',
     ),
     // From theme.maintenance.inc.
     'maintenance_page' => array(
       'render element' => 'page',
-      'template' => 'maintenance-page',
     ),
     'install_page' => array(
       'render element' => 'page',
-      'template' => 'install-page',
     ),
-    'task_list' => array(
+    'maintenance_task_list' => array(
       'variables' => array('items' => NULL, 'active' => NULL,  'variant' => NULL),
-      'template' => 'task-list',
     ),
     'authorize_message' => array(
       'variables' => array('message' => NULL, 'success' => TRUE),
+      'function' => 'theme_authorize_message',
+      'path' => 'core/includes',
+      'file' => 'theme.maintenance.inc',
     ),
     'authorize_report' => array(
       'variables' => array('messages' => array()),
+      'function' => 'theme_authorize_report',
+      'path' => 'core/includes',
+      'file' => 'theme.maintenance.inc',
     ),
     // From pager.inc.
     'pager' => array(
       'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),
-      'template' => 'pager',
     ),
     // From menu.inc.
-    'menu_link' => array(
-      'render element' => 'element',
-    ),
-    'menu_tree' => array(
-      'render element' => 'tree',
-      'template' => 'menu-tree',
+    'menu' => array(
+      'variables' => array('items' => array(), 'attributes' => array()),
     ),
     'menu_local_task' => array(
       'render element' => 'element',
-      'template' => 'menu-local-task',
     ),
     'menu_local_action' => array(
       'render element' => 'element',
-      'template' => 'menu-local-action',
     ),
     'menu_local_tasks' => array(
       'variables' => array('primary' => array(), 'secondary' => array()),
-      'template' => 'menu-local-tasks',
     ),
     // From form.inc.
     'input' => array(
       'render element' => 'element',
-      'template' => 'input',
     ),
     'select' => array(
       'render element' => 'element',
-      'template' => 'select',
     ),
     'fieldset' => array(
       'render element' => 'element',
-      'template' => 'fieldset',
     ),
     'details' => array(
       'render element' => 'element',
-      'template' => 'details',
     ),
     'radios' => array(
       'render element' => 'element',
-      'template' => 'radios',
     ),
     'checkboxes' => array(
       'render element' => 'element',
-      'template' => 'checkboxes',
     ),
     'form' => array(
       'render element' => 'element',
-      'template' => 'form',
     ),
     'textarea' => array(
       'render element' => 'element',
-      'template' => 'textarea',
     ),
     'form_element' => array(
       'render element' => 'element',
-      'template' => 'form-element',
     ),
     'form_element_label' => array(
       'render element' => 'element',
-      'template' => 'form-element-label',
     ),
     'vertical_tabs' => array(
       'render element' => 'element',
-      'template' => 'vertical-tabs',
     ),
     'container' => array(
       'render element' => 'element',
-      'template' => 'container',
     ),
     // From field system.
     'field' => array(
       'render element' => 'element',
-      'template' => 'field',
     ),
     'field_multiple_value_form' => array(
       'render element' => 'element',
-      'template' => 'field-multiple-value-form',
     ),
   );
 }

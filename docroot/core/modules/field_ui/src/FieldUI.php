@@ -51,15 +51,17 @@ class FieldUI {
       $next_destination += array(
         'route_parameters' => array(),
       );
-      $next_destination = new Url($next_destination['route_name'], $next_destination['route_parameters'], $next_destination['options']);
+      $next_destination = Url::fromRoute($next_destination['route_name'], $next_destination['route_parameters'], $next_destination['options']);
     }
     else {
       $options = UrlHelper::parse($next_destination);
       if ($destinations) {
         $options['query']['destinations'] = $destinations;
       }
-      $next_destination = Url::createFromPath($options['path']);
-      $next_destination->setOptions($options);
+      // Redirect to any given path within the same domain.
+      // @todo Use Url::fromPath() once https://www.drupal.org/node/2351379 is
+      //   resolved.
+      $next_destination = Url::fromUri('base://' . $options['path']);
     }
     return $next_destination;
   }

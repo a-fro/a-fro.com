@@ -12,6 +12,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\simpletest\TestDiscovery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -113,7 +114,7 @@ class SimpletestResultsForm extends FormBase {
 
     if (is_numeric($test_id) && !$results = $this->getResults($test_id)) {
       drupal_set_message($this->t('No test results to display.'), 'error');
-      return new RedirectResponse(url('admin/config/development/testing', array('absolute' => TRUE)));
+      return new RedirectResponse($this->url('simpletest.test_form', array(), array('absolute' => TRUE)));
     }
 
     // Load all classes and include CSS.
@@ -201,7 +202,7 @@ class SimpletestResultsForm extends FormBase {
     $form['result']['summary']['#ok'] = $form['result']['summary']['#fail'] + $form['result']['summary']['#exception'] == 0;
 
     // Actions.
-    $form['#action'] = url('admin/config/development/testing/results/re-run');
+    $form['#action'] = \Drupal::url('simpletest.result_form', array('test_id' => 're-run'));
     $form['action'] = array(
       '#type' => 'fieldset',
       '#title' => $this->t('Actions'),
@@ -238,7 +239,7 @@ class SimpletestResultsForm extends FormBase {
     $form['action']['return'] = array(
       '#type' => 'link',
       '#title' => $this->t('Return to list'),
-      '#href' => 'admin/config/development/testing',
+      '#url' => Url::fromRoute('simpletest.test_form'),
     );
 
     if (is_numeric($test_id)) {

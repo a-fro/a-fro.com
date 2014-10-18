@@ -59,7 +59,7 @@ class ContactSitewideTest extends WebTestBase {
     // field_ui enabled admin/structure/contact/manage/personal/fields exists.
     // @todo: See https://drupal.org/node/2031223 for the above
     $edit_link = $this->xpath('//a[@href=:href]', array(
-      ':href' => url('admin/structure/contact/manage/personal')
+      ':href' => \Drupal::url('entity.contact_form.edit_form', array('contact_form' => 'personal'))
     ));
     $this->assertTrue(empty($edit_link), format_string('No link containing href %href found.',
       array('%href' => 'admin/structure/contact/manage/personal')
@@ -118,7 +118,7 @@ class ContactSitewideTest extends WebTestBase {
 
     // Check that the form was created in site default language.
     $langcode = \Drupal::config('contact.form.' . $id)->get('langcode');
-    $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
+    $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $this->assertEqual($langcode, $default_langcode);
 
     // Make sure the newly created form is included in the list of forms.
@@ -331,14 +331,17 @@ class ContactSitewideTest extends WebTestBase {
    *   form.
    * @param boolean $selected
    *   A Boolean indicating whether the form should be selected by default.
+   * @param array $third_party_settings
+   *   Array of third party settings to be added to the posted form data.
    */
-  function addContactForm($id, $label, $recipients, $reply, $selected) {
+  function addContactForm($id, $label, $recipients, $reply, $selected, $third_party_settings = []) {
     $edit = array();
     $edit['label'] = $label;
     $edit['id'] = $id;
     $edit['recipients'] = $recipients;
     $edit['reply'] = $reply;
     $edit['selected'] = ($selected ? TRUE : FALSE);
+    $edit += $third_party_settings;
     $this->drupalPostForm('admin/structure/contact/add', $edit, t('Save'));
   }
 

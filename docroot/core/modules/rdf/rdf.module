@@ -250,7 +250,6 @@ function rdf_theme() {
   return array(
     'rdf_metadata' => array(
       'variables' => array('metadata' => array()),
-      'template' => 'rdf-metadata',
     ),
   );
 }
@@ -367,7 +366,7 @@ function rdf_preprocess_user(&$variables) {
           'lang' => '',
         ),
       );
-      drupal_add_html_head($username_meta, 'rdf_user_username');
+      $variables['#attached']['html_head'][] = [$username_meta, 'rdf_user_username'];
     }
   }
 }
@@ -393,7 +392,7 @@ function rdf_preprocess_username(&$variables) {
   // a user profile URI for it (only a homepage which cannot be used as user
   // profile in RDF.)
   if ($variables['uid'] > 0) {
-    $variables['attributes']['about'] = url('user/' . $variables['uid']);
+    $variables['attributes']['about'] = \Drupal::url('entity.user.canonical', ['user' => $variables['uid']]);
   }
 
   // Add RDF type of user.

@@ -9,8 +9,7 @@ namespace Drupal\contact\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\contact\ContactFormInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\contact\CategoryInterface;
+use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
 
 /**
  * Defines the contact form entity.
@@ -41,6 +40,8 @@ use Drupal\contact\CategoryInterface;
  * )
  */
 class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface {
+
+  use ThirdPartySettingsTrait;
 
   /**
    * The form ID.
@@ -81,14 +82,14 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
    * {@inheritdoc}
    */
   public function getRecipients() {
-    return $this->get('recipients');
+    return $this->recipients;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setRecipients($recipients) {
-    $this->set('recipients', $recipients);
+    $this->recipients = $recipients;
     return $this;
   }
 
@@ -96,14 +97,14 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
    * {@inheritdoc}
    */
   public function getReply() {
-    return $this->get('reply');
+    return $this->reply;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setReply($reply) {
-    $this->set('reply', $reply);
+    $this->reply = $reply;
     return $this;
   }
 
@@ -111,14 +112,14 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
    * {@inheritdoc}
    */
   public function getWeight() {
-    return $this->get('weight');
+    return $this->weight;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setWeight($weight) {
-    $this->set('weight', $weight);
+    $this->weight = $weight;
     return $this;
   }
 
