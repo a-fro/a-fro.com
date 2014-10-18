@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Url;
 
 /**
  * API No action on entity delete.
@@ -101,7 +100,7 @@ function disqus_node_links_alter(array &$node_links, \Drupal\node\NodeInterface 
         );
 
         // Attach disqus.js to load the Disqus comment count JavaScript.
-        $node_links['disqus']['#attached']['js'][] = drupal_get_path('module', 'disqus') . '/disqus.js';
+        $node_links['#attached']['library'][] = 'disqus/disqus';
         $node_links['disqus']['#attached']['js'][] = array(
           'data' => array('disqusComments' => \Drupal::config('disqus.settings')->get('disqus_domain')),
           'type' => 'setting',
@@ -234,9 +233,8 @@ function disqus_theme() {
  * Prepares the noscript tag which is used when JavaScript is not available.
  */
 function theme_disqus_noscript() {
-  $url = Url::fromUri('http://' . \Drupal::config('disqus.settings')->get('disqus_domain') . '.disqus.com/');
   $return = array(
-    '#markup' => '<noscript><p>' . \Drupal::l(t('View the discussion thread.'), $url) . '</p></noscript>'
+    '#markup' => '<noscript><p>' . l(t('View the discussion thread.'), 'http://' . \Drupal::config('disqus.settings')->get('disqus_domain') . '.disqus.com/') . '</p></noscript>'
   );
   return drupal_render($return);
 }
