@@ -45,12 +45,13 @@ p.large {
   // @include typecsset-space(margin-bottom);
 }
 
-.content ul {
+.region-content ul {
 @include unordered;
 }
 
-.content ol {
+.region-content ol {
   @include ordered;
+  margin: 0 0 1em 1em;
 }
 
 strong, b   {
