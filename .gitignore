@@ -5,6 +5,9 @@
 *.sass-cache
 docroot/.drupal_streamline_guard_running
 
+# Ignore the files
+docroot/sites/default/
+
 # Ignore the stylesheets
 docroot/themes/afro/css/
 

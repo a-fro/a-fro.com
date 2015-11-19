@@ -724,3 +724,7 @@ $databases['default']['default'] = array (
 );
 $settings['install_profile'] = 'standard';
 $config_directories['sync'] = 'sites/default/files/config_mpAOlsCwnjlxpH43grAsYijEEqfPcWP_tPIFBqbcNb2ih5PnfOH7-PdfJinkQc-NlhEIZos0xA/sync';
+
+if (file_exists(__DIR__ . '/settings.local.php')) {
+  include __DIR__ . '/settings.local.php';
+}

@@ -3,202 +3,212 @@
  * Design elements.
  */
 
-header {
-  .branding {
-    padding: .5em 1em;
+.branding {
+    padding: 1em;
     @include breakpoint($break-medium) {
-      padding: .5em 10%;
+        padding: 3em 2em;
     }
-  }
+}
 
-  .logo {
-    color: darken($white, 5%);
-    @include typecsset-font-size(22px);
+.logo {
+    color: $white;
+    @include typecsset-font-size(30px);
     font-weight: $bold;
     font-family: $title-font;
-    // text-transform: uppercase;
+    text-transform: uppercase;
     &:hover {
-      color:  $white;
+        color: darken($belize-hole, 20%);
     }
-  }
+}
 
-  .slogan {
-    color:  darken($belize-hole, 10%);
-    @include typecsset-font-size(16px);
+.slogan {
+    color: darken($belize-hole, 10%);
+    @include typecsset-font-size(18px);
     line-height: 1;
     font-weight: $light;
-  }
 }
 
 .views-row {
-  padding: .5em 0;
-  border-bottom: solid 1px $clouds;
-  .views-field-title {
-    margin: 0;
-    @include typecsset-font-size(22px);
-  }
+    padding: .5em 0;
+    border-bottom: solid 1px $clouds;
+    .views-field-title {
+        margin: 0;
+        @include typecsset-font-size(22px);
+    }
 }
 
 a {
-  color: $linkColor;
-  text-decoration: none;
-  &:hover {
-    color: darken($linkColor, 5%);
-  }
+    color: $linkColor;
+    text-decoration: none;
+    &:hover {
+        color: darken($linkColor, 5%);
+    }
 }
 
 .button {
-  text-align: center;
-  @include sassy-button("flat", 2px, 14px, $belize-hole);
-  color: $white;
-  font-family: $title-font;
-  &:hover {
+    text-align: center;
+    @include sassy-button("flat", 2px, 14px, $belize-hole);
     color: $white;
-  }
+    font-family: $title-font;
+    &:hover {
+        color: $white;
+    }
+}
+
+.social-links {
+    display: none;
+    @include breakpoint($break-medium) {
+        display: block;
+        position: absolute;
+        bottom: 0;
+        padding: 2em;
+        .fa {
+            margin: 0 .33em 0 0;
+            @include typecsset-font-size(36px);
+        }
+    }
 }
 
 // Page Scroll Up
 #scrollUp {
-  bottom: 20px;
-  right: 20px;
-  height: 38px;
-  width: 38px;
-  background: url(../images/top.png) no-repeat;
+    display: none;
+    @include breakpoint($break-medium) {
+        display: block;
+        bottom: 20px;
+        right: 20px;
+        height: 38px;
+        width: 38px;
+        background: url(../img/top.png) no-repeat;
+    }
 }
-
 
 // Overrides
 .tabs {
-  margin: 0 0 2em 0;
-  @include typecsset-font-size(14px);
+    margin: 0 0 2em 0;
+    @include typecsset-font-size(14px);
+    li {
+      display: inline;
+      margin: 0 1em 0 0;
+    }
 }
+
 .messages {
-  margin-bottom: 1em;
+    margin-bottom: 1em;
 }
 
 .link-wrapper ul,
 ul.inline li {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
+// Code Highligting
 
-/**
- * GitHub theme
- *
- * @author Craig Campbell
- * @version 1.0.4
- */
 pre {
-    border: 1px solid #ccc;
+    background: $wet-asphalt;
     word-wrap: break-word;
-    padding: 6px 10px;
-    line-height: 19px;
-    margin-bottom: 20px;
-}
-
-code {
-    border: 1px solid #eaeaea;
-    margin: 0px 2px;
-    padding: 0px 5px;
-    font-size: 12px;
-}
-
-pre code {
-    border: 0px;
-    padding: 0px;
-    margin: 0px;
-    -moz-border-radius: 0px;
-    -webkit-border-radius: 0px;
-    border-radius: 0px;
+    color: $white;
+    overflow: scroll;
+    @include typecsset-font-size(12px);
+    @include typecsset-space(margin-bottom);
+    table {
+        margin: 0;
+    }
+    th,
+    td {
+        padding: 0;
+    }
 }
 
 pre, code {
-    font-family: Consolas, 'Liberation Mono', Courier, monospace;
-    color: #333;
-    background: #f8f8f8;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-}
-
-pre, pre code {
-    font-size: 13px;
+    font-family: 'Monaco', courier, monospace;
 }
 
 pre .comment {
-    color: #998;
+    color: #75715E;
 }
 
-pre .support {
-    color: #0086B3;
+pre .constant {
+    color: #AE81FF;
 }
 
-pre .tag, pre .tag-name {
-    color: navy;
+pre .storage {
+    color: #66D9EF;
 }
 
-pre .keyword, pre .css-property, pre .vendor-prefix, pre .sass, pre .class, pre .id, pre .css-value, pre .entity.function, pre .storage.function {
-    font-weight: bold;
+pre .string, pre .comment.docstring {
+    color: #E6DB74;
 }
 
-pre .css-property, pre .css-value, pre .vendor-prefix, pre .support.namespace {
-    color: #333;
+pre .support.tag {
+    color: #fff;
 }
 
-pre .constant.numeric, pre .keyword.unit, pre .hex-color {
-    font-weight: normal;
-    color: #099;
+pre .keyword {
+    color: #F92672;
 }
 
-pre .entity.class {
-    color: #458;
+pre .selector {
+    color: #F92672;
 }
 
-pre .entity.id, pre .entity.function {
-    color: #900;
+pre .inherited-class {
+    font-style: italic;
 }
 
-pre .attribute, pre .variable {
-    color: teal;
+pre .operator, pre .support.tag-name, pre .entity.tag {
+    color: #F92672;
 }
 
-pre .string, pre .support.value  {
-    font-weight: normal;
-    color: #d14;
+pre .entity, pre .support.attribute, pre .entity.attribute {
+    color: #A6E22E;
 }
 
-pre .regexp {
-    color: #009926;
+pre .support, *[data-language="c"] .function.call {
+    color: #66D9EF;
 }
 
+*[data-language="html"] .support.operator {
+    color: #fff;
+}
 
+pre .css-property, pre .storage.function {
+    font-style: italic;
+}
 
+pre .variable.global, pre .variable.class, pre .variable.instance {
+    color: #A6E22E;
+}
 
 // Line Numbers
+
 .rainbow {
-  border-spacing: 0;
-  border-collapse: collapse;
-  margin: 0;
+    border-spacing: 0;
+    border-collapse: collapse;
 }
+
+.rainbow .line:hover {
+    background-color: #171b1c;
+}
+
+.rainbow .line:hover .line-number {
+    background-color: #101313;
+}
+
 .rainbow .line .line-number {
-  text-align: right;
-  padding-left: 0.8em;
-  padding-right: 0.8em;
-  color: $silver;
-  border-right: 1px solid $silver;
+    text-align: right;
+    background-color: #1b2022;
+    padding-left: 0.8em;
+    padding-right: 0.8em;
+    color: $silver;
 }
+
 .rainbow .line .line-number:before {
-  content: attr(data-line-number);
+    content: attr(data-line-number);
 }
-.rainbow .line td {
-  &.line-number {
-    padding: 0 .7em 0 .5em;
-  }
-  &.line-code {
-    padding: .2em 1em;
+
+.rainbow .line .line-code {
     width: 100%;
-  }
 }
 
 // Html5 inputs
@@ -215,9 +225,10 @@ input[type="file"],
 input[type="password"],
 textarea,
 select {
-  @include input();
-  padding: 7px 4px 7px 10px;
+    @include input;
+    padding: 7px 4px 7px 10px;
 }
+
 input[type="text"]:focus,
 input[type="tel"]:focus,
 input[type="email"]:focus,
@@ -229,5 +240,5 @@ input[type="file"]:focus,
 input[type="password"]:focus,
 textarea:focus,
 select:focus {
-  @include input-focus();
+    @include input-focus;
 }
