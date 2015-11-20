@@ -7,7 +7,7 @@ screenshot: images/screenshot.png
 engine: twig
 
 libraries:
-  - formata/formata.corescripts
+  - afro/afro.corescripts
 
 # Remove a CSS file:
 stylesheets-remove:

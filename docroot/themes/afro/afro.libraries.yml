@@ -1,5 +1,8 @@
 afro.corescripts:
   version: 1.0
+  css:
+    theme:
+      css/style.css: {}
   js:
     js/jquery.scrollUp.min.js: {}
     js/jquery.fs.naver.min.js: {}
@@ -9,7 +12,6 @@ afro.corescripts:
     js/rainbow/language/javascript.js: {}
     js/rainbow/language/css.js: {}
     js/rainbow/language/php.js: {}
-    js/rainbow/language/shell.js: {}
     js/script.js: {}
   dependencies:
     - core/jquery
