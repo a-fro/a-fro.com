@@ -28,7 +28,7 @@ main h1 {
   color: white;
   span {
     display: block;
-    max-width: $break-large;
+    max-width: $break-medium;
     margin: 0 auto;
   }
   .front & {
@@ -84,7 +84,7 @@ main h1 {
 }
 
 div.views-element-container {
-  max-width: $break-large;
+  max-width: $break-medium;
   margin: 0 auto;
 }
 
@@ -92,7 +92,7 @@ div.content {
   padding-bottom: 80px;
   margin: 0 auto;
   padding: 3em;
-  max-width: $break-large;
+  max-width: $break-medium;
   .front & {
     padding: 1em 0;
   }

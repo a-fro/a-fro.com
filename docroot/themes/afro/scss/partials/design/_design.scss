@@ -86,14 +86,17 @@ a {
 }
 
 // Overrides
-.tabs {
-  margin: 0 0 2em 0;
-  @include typecsset-font-size(14px);
-  li {
-    display: inline;
-    margin: 0 1em 0 0;
-  }
-}
+// .tabs {
+//   margin: 0 0 2em 0;
+//   @include typecsset-font-size(14px);
+//   li {
+//     display: inline;
+//     margin: 0 1em 0 0;
+//     a {
+//       display: inline;
+//     }
+//   }
+// }
 
 .messages {
   margin-bottom: 1em;
