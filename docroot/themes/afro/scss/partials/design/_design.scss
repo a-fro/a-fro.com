@@ -36,6 +36,9 @@
       margin: 0;
       @include typecsset-font-size(22px);
   }
+  .front & {
+    margin-top: 3em;
+  }
 }
 
 a {
@@ -72,6 +75,17 @@ a {
   }
 }
 
+.node__meta {
+  margin-bottom: 2em;
+  .views-row & {
+    display: none;
+  }
+}
+
+ul.inline li.disqus-comments-num {
+  margin-left: 2em;
+}
+
 // Page Scroll Up
 #scrollUp {
   display: none;
@@ -81,7 +95,7 @@ a {
     right: 20px;
     height: 38px;
     width: 38px;
-    background: url(../img/top.png) no-repeat;
+    background: url(../images/top.png) no-repeat;
   }
 }
 
