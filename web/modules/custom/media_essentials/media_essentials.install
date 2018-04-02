@@ -1,0 +1,26 @@
+<?php
+
+use Symfony\Component\Yaml\Yaml;
+
+/**
+ * Implements hook_install().
+ */
+function media_essentials_install() {
+  $overridden_config = [
+    'core.entity_form_display.media.image.default',
+    'core.entity_view_display.media.image.default',
+    'field.field.media.image.field_media_image',
+    'field.storage.media.field_media_image',
+    'media.type.image'
+  ];
+
+  $config_path = \Drupal::root() . '/' . drupal_get_path('module', 'media_essentials') . '/config/optional/';
+
+  foreach ($overridden_config as $config) {
+    $editable_config = Drupal::configFactory()->getEditable($config);
+    $new_config_file = $config_path . $config . '.yml';
+    $new_config_content = file_get_contents($new_config_file);
+    $new_config = (array) Yaml::parse($new_config_content);
+    $editable_config->setData($new_config)->save();
+  }
+}
