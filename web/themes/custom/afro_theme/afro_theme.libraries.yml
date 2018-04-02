@@ -1,0 +1,34 @@
+global:
+  css:
+    theme:
+      dist/style.css: {}
+  js:
+    dist/scripts.js: {}
+  dependencies:
+    - core/jquery
+    - core/modernizr
+
+# Examples of Library syntax
+# typekit:
+#   header: true
+#   js:
+#     //use.typekit.net/TYPEKIT_ID.js: { every_page: true }
+
+main_menu:
+  js:
+    components/_patterns/02-molecules/menus/main-menu/main-menu.js: {}
+  dependencies:
+    - core/drupal
+
+rainbow:
+  css:
+    theme:
+      js/rainbow/themes/css/github.css: {}
+  js:
+    js/rainbow/dist/rainbow.min.js: {}
+    js/rainbow/dist/rainbow.linenumbers.min.js: {}
+    js/rainbow/src/language/generic.js: {}
+    js/rainbow/src/language/javascript.js: {}
+    js/rainbow/src/language/css.js: {}
+    js/rainbow/src/language/php.js: {}
+

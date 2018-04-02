@@ -1,0 +1,16 @@
+# Breakpoints - change based on site need
+afro_theme.large:
+  label: large
+  mediaQuery: 'all and (min-width: 61.25em)'
+afro_theme.medium:
+  label: medium
+  mediaQuery: 'all and (min-width: 48em)'
+afro_theme.small-large:
+  label: small-large
+  mediaQuery: 'all and (min-width: 41em)'
+afro_theme.small-med:
+  label: small-med
+  mediaQuery: 'all and (min-width: 26em)'
+afro_theme.small:
+  label: small
+  mediaQuery: 'all and (min-width: 25em)'
