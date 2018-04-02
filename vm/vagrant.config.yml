@@ -14,6 +14,7 @@ vagrant_synced_folders:
 drupal_account_pass: admin
 drupal_db_password: drupal
 mysql_root_password: root
+drupal_install_site: false
 
 php_sendmail_path: "/usr/sbin/sendmail -t -i"
 installed_extras:
@@ -30,6 +31,7 @@ firewall_allowed_tcp_ports:
   - "80"
   - "81"
   - "443"
+  - "3306"
   - "8025"
 firewall_log_dropped_packets: false
 
