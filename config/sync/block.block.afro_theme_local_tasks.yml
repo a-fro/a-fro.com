@@ -1,0 +1,22 @@
+uuid: bc020ad4-4aee-4049-97aa-974004228a81
+langcode: en
+status: true
+dependencies:
+  theme:
+    - afro_theme
+_core:
+  default_config_hash: X9I1OB0W3WlWtrK-CNcg6hNWwa8wficanpH8pYnDZDE
+id: afro_theme_local_tasks
+theme: afro_theme
+region: content
+weight: -40
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Tabs
+  provider: core
+  label_display: '0'
+  primary: true
+  secondary: true
+visibility: {  }

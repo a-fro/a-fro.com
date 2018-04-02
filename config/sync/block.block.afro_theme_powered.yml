@@ -1,0 +1,22 @@
+uuid: 5034b54e-6491-4f39-8262-61c5b37af459
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - afro_theme
+_core:
+  default_config_hash: jQQUUWN2Uxr5qZtc9zcJKBCxpKY8orN1u2HPqYYRQDI
+id: afro_theme_powered
+theme: afro_theme
+region: header
+weight: 10
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Drupal'
+  provider: system
+  label_display: '0'
+visibility: {  }

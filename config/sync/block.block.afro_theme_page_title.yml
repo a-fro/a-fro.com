@@ -1,0 +1,20 @@
+uuid: c74da394-0e55-4957-84f3-bbb667c3c0e6
+langcode: en
+status: true
+dependencies:
+  theme:
+    - afro_theme
+_core:
+  default_config_hash: 7rR9chwXvdM2H8OYMAYx9Zj3GGlPMrZp_M3ZA4thYTk
+id: afro_theme_page_title
+theme: afro_theme
+region: content
+weight: -50
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  provider: core
+  label_display: '0'
+visibility: {  }

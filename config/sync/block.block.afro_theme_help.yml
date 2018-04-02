@@ -1,0 +1,22 @@
+uuid: 31d12e6d-abc0-4147-b1f6-3c37581a2f45
+langcode: en
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - afro_theme
+_core:
+  default_config_hash: 8I8iACSa0sKO3k3jlvUG1ge52rfcKX7USJAQYnzuBgg
+id: afro_theme_help
+theme: afro_theme
+region: content
+weight: -30
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  provider: help
+  label_display: '0'
+visibility: {  }

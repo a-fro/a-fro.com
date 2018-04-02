@@ -1,0 +1,22 @@
+uuid: bd795d4b-b4d9-404b-83f3-ad11ae4f3239
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - afro_theme
+_core:
+  default_config_hash: 9EoWV2Lot6FVSr50t4hoKgiz1LIXYWNG-IIPYsWxBqo
+id: afro_theme_content
+theme: afro_theme
+region: content
+weight: 0
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  provider: system
+  label_display: '0'
+visibility: {  }
