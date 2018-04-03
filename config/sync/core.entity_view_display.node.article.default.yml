@@ -4,11 +4,13 @@ status: true
 dependencies:
   config:
     - field.field.node.article.field_components
+    - field.field.node.article.field_disqus_comment
     - field.field.node.article.field_primary_image
     - field.field.node.article.field_tags
     - field.field.node.article.field_teaser_text
     - node.type.article
   module:
+    - disqus
     - entity_reference_revisions
     - user
 _core:
@@ -26,6 +28,13 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    region: content
+  field_disqus_comment:
+    weight: 3
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: disqus_comment
     region: content
   field_primary_image:
     weight: 0

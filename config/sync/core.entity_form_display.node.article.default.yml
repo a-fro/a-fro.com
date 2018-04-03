@@ -5,11 +5,13 @@ dependencies:
   config:
     - entity_browser.browser.image_browser
     - field.field.node.article.field_components
+    - field.field.node.article.field_disqus_comment
     - field.field.node.article.field_primary_image
     - field.field.node.article.field_tags
     - field.field.node.article.field_teaser_text
     - node.type.article
   module:
+    - disqus
     - entity_browser
     - paragraphs
     - path
@@ -39,6 +41,12 @@ content:
       form_display_mode: default
       default_paragraph_type: text
     third_party_settings: {  }
+    region: content
+  field_disqus_comment:
+    weight: 26
+    settings: {  }
+    third_party_settings: {  }
+    type: disqus_comment
     region: content
   field_primary_image:
     weight: 1
