@@ -33,6 +33,8 @@
         "drupal/paragraphs": "^1.2",
         "drupal/pathauto": "^1.1",
         "drupal/redirect": "^1.1",
+        "drupal/twig_field_value": "^1.1",
+        "drupal/twig_tweak": "^1.9",
         "enyo/dropzone": "^5.1",
         "fourkitchens/emulsify": "^2.2",
         "oomphinc/composer-installers-extender": "^1.1",
@@ -41,6 +43,7 @@
         "webmozart/path-util": "^2.3"
     },
     "require-dev": {
+        "drupal/devel": "^1.2",
         "geerlingguy/drupal-vm": "^4.8",
         "webflo/drupal-core-require-dev": "~8.5.1"
     },
