@@ -1,20 +1,20 @@
 <article {{ bem("node", ["teaser"]) }}>
-  {% if content.field_primary_image %}
+  {% include "@atoms/02-text/00-headings/_heading.twig" with {
+    "heading_level": 2,
+    "heading": label,
+    "heading_url": url,
+    "heading_link_attributes": {
+      'rel': 'bookmark'
+    },
+  } %}
+
+  {% if primary_image %}
     <div class="teaser teaser__image">
-      {{ content.field_primary_image }}
-    </div>
-    <div class="teaser teaser__text">
-      {% include "@atoms/02-text/00-headings/_heading.twig" with {
-        "heading_level": 2,
-        "heading": label,
-        "heading_url": url,
-        "heading_link_attributes": {
-          'rel': 'bookmark'
-        },
-      } %}
-      {{ teaser_text|raw }}
-      {{ content.links }}
+      {{ primary_image }}
     </div>
   {% endif %}
-
+  <div class="teaser teaser__text">
+    {{ teaser_text|raw }}
+    {{ content.links }}
+  </div>
 </article>

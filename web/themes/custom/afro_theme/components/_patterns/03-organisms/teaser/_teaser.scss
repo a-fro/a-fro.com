@@ -1,26 +1,4 @@
 .node--teaser {
   padding: $space 0;
   border-bottom: 1px solid $color-border;
-
-  @include large {
-    @include clearfix;
-    @include add-grid(12);
-  }
-}
-
-.teaser__image {
-  @include large {
-    @include grid-span(4);
-    @include clearfix;
-  }
-}
-
-.teaser__text {
-  // font-size: 1.1rem;
-  // line-height: 1.6rem;
-
-  @include large {
-    @include grid-span(8,5);
-    @include clearfix;
-  }
 }

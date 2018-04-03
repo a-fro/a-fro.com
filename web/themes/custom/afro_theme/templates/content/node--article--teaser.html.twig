@@ -1,6 +1,17 @@
 {% set paragraph = content.field_teaser_text|field_target_entity%}
 {% set teaser = (paragraph) ? paragraph.get('field_text').value : 'Read more' %}
 
+{% set primary_image %}
+  {% include "@molecules/components/_image.twig" with {
+      "img_src": img.uri|image_style('teaser'),
+      "img_alt": img.alt
+    }
+  %}
+{% endset %}
+
 {% include "@organisms/teaser/teaser.twig" with {
-  "teaser_text": teaser
+  "teaser_text": teaser,
+  "primary_image": primary_image
 } %}
+
+

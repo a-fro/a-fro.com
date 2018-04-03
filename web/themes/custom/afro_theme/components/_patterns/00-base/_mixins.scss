@@ -38,10 +38,6 @@
   max-width: $max-width;
 
   @include clearfix;
-
-  .front & {
-    max-width: $xl;
-  }
 }
 
 /// Mixin - More Link
