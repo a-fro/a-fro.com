@@ -1,0 +1,22 @@
+.component {
+  @include clearfix;
+
+  margin-bottom: $space-triple;
+  position: relative;
+}
+
+.component__image,
+.component__video {
+  @include large {
+    margin-left: -2rem;
+    margin-right: -2rem;
+  }
+
+  .img {
+    @include fill-parent;
+  }
+}
+
+.component__text__heading {
+  @include heading-medium;
+}

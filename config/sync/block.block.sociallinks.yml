@@ -1,0 +1,24 @@
+uuid: 632beb73-4b47-478e-bf2b-c93be2ef5c0a
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.social-links
+  module:
+    - system
+  theme:
+    - afro_theme
+id: sociallinks
+theme: afro_theme
+region: footer
+weight: 0
+provider: null
+plugin: 'system_menu_block:social-links'
+settings:
+  id: 'system_menu_block:social-links'
+  label: 'Social links'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+visibility: {  }

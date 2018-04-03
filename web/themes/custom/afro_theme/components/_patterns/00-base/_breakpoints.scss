@@ -14,10 +14,10 @@
 // Breakpoints variables
 $xs: 25em;
 $small: 26em;
-$medium: 41em;
-$large: 48em;
+$medium: 38em;
+$large: 44rem;
 $xl: 75em;
-$max-width: $xl;
+$max-width: $large;
 
 /// Mixin - xs Breakpoint
 /// Allows easier @include xs {} syntax

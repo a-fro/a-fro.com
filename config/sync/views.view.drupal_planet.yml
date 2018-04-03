@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.teaser
     - node.type.article
     - taxonomy.vocabulary.tags
   content:
@@ -279,7 +280,9 @@ display:
       display_extenders: {  }
       row:
         type: node_rss
-        options: {  }
+        options:
+          relationship: none
+          view_mode: teaser
       path: drupal-planet.xml
       sitename_title: true
     cache_metadata:

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.paragraph.preview
+    - field.field.paragraph.text.field_heading
     - field.field.paragraph.text.field_text
     - paragraphs.paragraphs_type.text
   module:
@@ -13,8 +14,16 @@ targetEntityType: paragraph
 bundle: text
 mode: preview
 content:
-  field_text:
+  field_heading:
+    type: string
     weight: 0
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_text:
+    weight: 1
     label: hidden
     settings:
       trim_length: 600

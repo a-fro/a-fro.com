@@ -1,6 +1,70 @@
 <?php
 
+use Drupal\Component\Utility\Html;
+use Drupal\media_entity\entity\Media;
+use Drupal\node\Entity\Node;
+
 /**
  * @file
  * Functions to support theming in the Pattern Lab theme.
  */
+
+function afro_theme_css_alter(&$css) {
+  // Add googlefonts.
+  $googlefonts = '//fonts.googleapis.com/css?family=Merriweather:300,300italic,700,700italic,400,400italic|Merriweather+Sans:400,400italic,700,700italic,300italic,300';
+  $css[$googlefonts] = array(
+    'data' => $googlefonts,
+    'type' => 'external',
+    'every_page' => TRUE,
+    'media' => 'all',
+    'preprocess' => FALSE,
+    'group' => CSS_AGGREGATE_THEME,
+    'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+    'weight' => -1,
+  );
+
+   // Add FontAwesome.
+  $fontawesome = '//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css';
+  $css[$fontawesome] = array(
+    'data' => $fontawesome,
+    'type' => 'external',
+    'every_page' => TRUE,
+    'media' => 'all',
+    'preprocess' => FALSE,
+    'group' => CSS_AGGREGATE_THEME,
+    'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+    'weight' => -2,
+  );
+}
+
+function afro_theme_preprocess_html(&$variables) {
+  if (\Drupal::service('path.matcher')->isFrontPage()) {
+    $variables['attributes']['class'][] = 'front';
+  }
+}
+
+/**
+ * Implements template_preprocess_node().
+ * Pepares the image entity for theming
+ */
+function afro_theme_preprocess_node(&$variables) {
+  /** @var \Drupal\node\Entity\Node $node */
+  $node = &$variables['node'];
+  if ($node->hasField('field_primary_image')) {
+    $variables['img'] = media_essentials_get_image_properties_from_entity_reference_field($node, 'field_primary_image');
+  }
+}
+
+function afro_theme_preprocess_media(&$variables) {
+  $variables['img'] = media_essentials_get_image_properties_from_media_entity($variables['media']);
+}
+
+/**
+ * Implements hook_preprocess_entity().
+ */
+function afro_theme_preprocess_paragraph(&$variables) {
+  $paragraph = &$variables['paragraph'];
+  if ($paragraph->hasField('field_image')) {
+    $variables['img'] = media_essentials_get_image_properties_from_paragraph_field($paragraph, 'field_image');
+  }
+}

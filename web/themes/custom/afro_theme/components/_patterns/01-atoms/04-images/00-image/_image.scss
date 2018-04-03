@@ -3,6 +3,11 @@
   max-width: 100%;
 }
 
+@mixin fill-parent {
+  display: block;
+  width: 100%;
+}
+
 .img,
 .image__img {
   @include img;

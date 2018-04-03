@@ -9,7 +9,7 @@ _core:
 id: afro_theme_local_actions
 theme: afro_theme
 region: content
-weight: -20
+weight: 1
 provider: null
 plugin: local_actions_block
 settings:

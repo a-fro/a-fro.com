@@ -1,5 +1,14 @@
-$color-border: $gray-light;
-$color-link: $gray-darker;
-$color-link--hover: $gray-light;
+$color-border: lighten($belize-hole, 45%);
+$color-heading: $belize-hole;
+$color-heading-link: $color-heading;
 
-$color-heading: $gray-darker;
+$color-header-bg: $blue-dark;
+$color-footer-bg: $orange;
+$color-footer: $asbestos;
+
+// Links
+$color-link: $belize-hole;
+$color-link--hover: darken($color-link, 5%);
+$color-link--visited: darken($color-link, 15%);
+$color-link--focus: $color-link--hover;
+$color-link--active: $color-link--focus;

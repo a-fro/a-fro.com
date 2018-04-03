@@ -1,1 +1,12 @@
 // Empty
+.footer {
+  margin: -80px 0 0 0;
+  min-height: 60px;
+  padding: 1em 0;
+  color: $color-footer;
+  background: $color-footer-bg;
+
+  a {
+    color: white;
+  }
+}

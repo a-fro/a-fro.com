@@ -1,12 +1,15 @@
 /// Link
 @mixin link {
   color: $color-link;
+  text-decoration: none;
 
   &:hover {
     color: $color-link--hover;
+    text-decoration: underline;
   }
 }
 
+a,
 .link {
   @include link;
 }

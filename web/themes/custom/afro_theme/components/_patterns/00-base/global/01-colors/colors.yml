@@ -17,6 +17,14 @@ items:
     value: '#333'
   - name: $black
     value: black
+  - name: $belize-hole
+    value: '#2980b9'
+  - name: $blue-dark
+    value: '#233140'
+  - name: $asbestos
+    value: '#7f8c8d'
+  - name: $orange
+    value: '#f39c12'
 meta:
   description: >-
     To add to these items, use Sass variables that start with <code>$</code> in

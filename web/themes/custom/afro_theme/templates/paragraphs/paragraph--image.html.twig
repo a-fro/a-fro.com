@@ -1,0 +1,7 @@
+{% set img_display = (content.field_display|field_value) ? content.field_display|field_raw('value') : 'full_content' %}
+{% set img_src = (img_display == 'original') ? file_url(img.uri) : img.uri|image_style(img_display) %}
+
+{% include "@molecules/components/_image.twig" with {
+  "img_src": img_src,
+  "img_alt": img.alt
+} %}

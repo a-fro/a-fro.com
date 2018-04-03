@@ -1,0 +1,13 @@
+{% if _context.view_mode == 'thumbnail' %}
+  {% set img_src = img.uri|image_style('teaser') %}
+  {% include "@atoms/04-images/00-image/image.twig" with {
+    "img_src": img_src,
+    "img_alt": img_alt,
+  } %}
+{% else %}
+  {% set img_src = img.uri|image_style('full_content') %}
+  {% include "@molecules/components/_image.twig" with {
+    "img_src": img_src,
+    "img_alt": img.alt
+  } %}
+{% endif %}

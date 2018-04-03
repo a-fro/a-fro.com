@@ -1,13 +1,11 @@
-uuid: 07ebdcd1-d83d-4d34-99ca-8fd21922b9d9
+uuid: 746e0c78-8c41-4181-945d-d50fbd1fb8b1
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_primary_image
+    - media.type.image
     - node.type.article
-    - paragraphs.paragraphs_type.image
-  module:
-    - entity_reference_revisions
 id: node.article.field_primary_image
 field_name: field_primary_image
 entity_type: node
@@ -19,16 +17,12 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:paragraph'
+  handler: 'default:media'
   handler_settings:
-    negate: 0
     target_bundles:
       image: image
-    target_bundles_drag_drop:
-      image:
-        enabled: true
-        weight: 3
-      text:
-        weight: 4
-        enabled: false
-field_type: entity_reference_revisions
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

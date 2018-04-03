@@ -1,1 +1,21 @@
 //  Empty
+
+.header {
+  @include full-width;
+
+  padding: 0.5rem 2rem;
+  color: white;
+  background: $color-header-bg;
+
+  .header-content {
+    // @include wrapper;
+
+    .site-branding {
+      font-family: $font-heading;
+    }
+  }
+
+  .front & {
+    margin-bottom: 3rem;
+  }
+}

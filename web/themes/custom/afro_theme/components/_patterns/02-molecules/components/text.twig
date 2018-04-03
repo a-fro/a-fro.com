@@ -1,0 +1,16 @@
+<div class="component component__text">
+  {{ content.contextual_links }}
+  {% if heading %}
+    {# Note that BEM is tied to the TOC js #}
+    {% include "@atoms/02-text/00-headings/_heading.twig" with {
+      "heading_level": 2,
+      "heading": heading,
+      'heading_blockname': 'component__text',
+      'heading_base_class': 'heading',
+      'heading_modifiers': ['alt'],
+    } %}
+  {% endif %}
+  <div class="component__text__text">
+    {{ text }}
+  </div>
+</div><!-- /component__text -->

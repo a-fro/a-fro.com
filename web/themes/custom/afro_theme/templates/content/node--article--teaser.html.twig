@@ -1,0 +1,6 @@
+{% set paragraph = content.field_teaser_text|field_target_entity%}
+{% set teaser = (paragraph) ? paragraph.get('field_text').value : 'Read more' %}
+
+{% include "@organisms/teaser/teaser.twig" with {
+  "teaser_text": teaser
+} %}
