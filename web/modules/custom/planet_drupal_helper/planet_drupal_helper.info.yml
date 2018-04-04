@@ -1,0 +1,5 @@
+name: 'Planet Drupal Helper'
+type: module
+description: 'Prepares content for the Planet Drupal RSS Feed'
+core: 8.x
+package: 'Custom'

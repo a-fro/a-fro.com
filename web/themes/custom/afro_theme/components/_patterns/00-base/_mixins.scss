@@ -74,8 +74,9 @@
 /// Mixin - Body Copy
 @mixin body-copy {
   font-family: $font-body;
-  font-size: 0.9rem;
+  font-size: 1rem;
   line-height: 1.6em;
+  font-weight: 300;
 }
 
 /// Mixin - Transition

@@ -1,0 +1,26 @@
+.links.inline {
+  list-style-type: none;
+  padding: 0;
+  margin: $space-double 0 $space/3;
+
+  li {
+    float: left;
+    margin-right: 2rem;
+  }
+
+  @include clearfix;
+}
+
+.social-links {
+  float: right;
+  margin-right: 2rem;
+  font-size: 2rem;
+
+  .social-link {
+    margin-left: 0.5rem;
+  }
+}
+
+.feed-icon {
+  display: none;
+}

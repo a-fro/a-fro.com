@@ -1,4 +1,5 @@
+{% set img_style = (_context.view_mode == 'teaser') ? 'teaser' : 'full_content' %}
 {% include "@molecules/components/_image.twig" with {
-  "img_src": img.uri|image_style('full_content'),
+  "img_src": img.uri|image_style(img_style),
   "img_alt": img.alt
 } %}

@@ -1,4 +1,8 @@
 .node--teaser {
-  padding: $space 0;
+  padding: $space-quadruple 0 0;
   border-bottom: 1px solid $color-border;
+
+  .h2 {
+    font-size: 2.1rem;
+  }
 }

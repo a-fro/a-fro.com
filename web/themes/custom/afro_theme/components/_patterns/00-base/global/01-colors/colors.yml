@@ -21,6 +21,8 @@ items:
     value: '#2980b9'
   - name: $blue-dark
     value: '#233140'
+  - name: $blue-wood
+    value: '#2c3e50'
   - name: $asbestos
     value: '#7f8c8d'
   - name: $orange

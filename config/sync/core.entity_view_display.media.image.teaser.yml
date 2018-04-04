@@ -1,17 +1,18 @@
-uuid: null
+uuid: e424c8f5-3d44-466a-9bfd-716df4ab7255
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.media.teaser
     - field.field.media.image.field_media_image
-    - image.style.full_content
+    - image.style.teaser
     - media.type.image
   module:
     - image
-id: media.image.default
+id: media.image.teaser
 targetEntityType: media
 bundle: image
-mode: default
+mode: teaser
 content:
   field_display:
     weight: 2
@@ -23,7 +24,7 @@ content:
   field_media_image:
     label: hidden
     settings:
-      image_style: full_content
+      image_style: teaser
       image_link: content
     third_party_settings: {  }
     type: image

@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Contains planet_drupal_helper.module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+
+/**
+ * Removes extraneous elements from the RSS Feed
+ */
+function planet_drupal_helper_node_view_alter(&$build, Drupal\Core\Entity\EntityInterface $node, Drupal\Core\Entity\Entity\EntityViewDisplay $display) {
+  if ($build['#view_mode'] == 'rss') {
+    unset($build['uid']);
+    unset($build['created']);
+    unset($build['title']);
+  }
+}

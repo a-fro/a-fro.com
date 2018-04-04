@@ -9,7 +9,7 @@
 }
 
 body {
-  color: $gray;
+  color: $color-body-text;
 
   @include body-copy;
 }
