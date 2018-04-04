@@ -9,7 +9,7 @@ _core:
 id: afro_theme_page_title
 theme: afro_theme
 region: content
-weight: -2
+weight: -3
 provider: null
 plugin: page_title_block
 settings:

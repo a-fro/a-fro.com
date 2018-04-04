@@ -8,10 +8,16 @@
   background: $color-header-bg;
 
   .header-content {
-    // @include wrapper;
-
     .site-branding {
       font-family: $font-heading;
+
+      a {
+        color: white;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
     }
   }
 
