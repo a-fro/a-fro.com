@@ -18,7 +18,10 @@ drupalvm_cron_jobs:
 php_version: "7.1"
 installed_extras:
   - drush
-  - varnish
+  # - varnish
+  #
+
+# post_provision_scripts: "{{ config_dir }}/post-provision/compile.sh"
 
 # Other secure defaults.
 dashboard_install_dir: ''
@@ -30,11 +33,6 @@ firewall_allowed_tcp_ports:
   - "80"
   - "443"
 firewall_log_dropped_packets: true
-
-# Set Apache to listen on port 81 (internal only), and Varnish on 80.
-apache_listen_port: "81"
-varnish_listen_port: "80"
-varnish_default_backend_port: "81"
 
 drupal_enable_modules:
   - admin_toolbar
