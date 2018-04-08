@@ -31,4 +31,5 @@ rainbow:
     js/rainbow/src/language/javascript.js: {}
     js/rainbow/src/language/css.js: {}
     js/rainbow/src/language/php.js: {}
+    js/rainbow/src/language/shell.js: {}
 

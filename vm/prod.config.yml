@@ -1,0 +1,55 @@
+---
+# Deploy from the project's Git repository.
+drupal_deploy: true
+drupal_deploy_repo: "https://github.com/a-fro/a-fro.com.git"
+drupal_deploy_dir: /var/www/a-fro.com
+drupal_deploy_version: prod
+
+drupal_install_site: true
+drupal_install_profile: 'config_installer'
+drupal_db_name: "a-fro"
+
+# Normally, this would be set to the hostname of your DigitalOcean Droplet.
+drupal_domain: "a-fro.com"
+vagrant_hostname: "{{ drupal_domain }}"
+
+# Add only the `apache_vhosts` or `nginx_vhosts` you need. If installing a
+# single Drupal site, the variable should look like this (Apache):
+apache_vhosts:
+  - servername: "{{ drupal_domain }}"
+    documentroot: "{{ drupal_core_path }}"
+    extra_parameters: "{{ apache_vhost_php_fpm_parameters }}"
+
+# Only install extras that you will need/use on your site, and don't install
+# development-related software on production environments!
+installed_extras:
+  - drush
+  - nodejs
+  # - memcached
+  # - redis
+  # - solr
+  # - varnish
+
+
+# Disable Apache package upgrades.
+apache_packages_state: installed
+
+# Disable the dashboard page. Also remove any unneeded virtualhosts.
+dashboard_install_dir: ''
+
+# Enable a more hardened security configuration.
+extra_security_enabled: true
+
+# Restrict the firewall to only ports that are required for external services.
+firewall_allowed_tcp_ports:
+  - "22"
+  - "80"
+  - "443"
+firewall_log_dropped_packets: true
+
+# Set Apache to listen on port 81 (internal only), and Varnish on 80.
+apache_listen_port: "80"
+varnish_listen_port: "80"
+varnish_default_backend_port: "81"
+
+post_provision_scripts: "../scripts/compile.sh"
