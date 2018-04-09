@@ -6,6 +6,11 @@ use Symfony\Component\Yaml\Yaml;
  * Implements hook_install().
  */
 function media_essentials_install() {
+  // Don't do anything during config sync.
+  if (\Drupal::isConfigSyncing()) {
+    return;
+  }
+
   $overridden_config = [
     'core.entity_form_display.media.image.default',
     'core.entity_view_display.media.image.default',
@@ -21,6 +26,9 @@ function media_essentials_install() {
     $new_config_file = $config_path . $config . '.yml';
     $new_config_content = file_get_contents($new_config_file);
     $new_config = (array) Yaml::parse($new_config_content);
+    if ($uuid = $editable_config->get('uuid')) {
+      $new_config['uuid'] = $uuid;
+    }
     $editable_config->setData($new_config)->save();
   }
 }

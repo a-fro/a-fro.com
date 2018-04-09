@@ -1,4 +1,4 @@
-uuid: null
+uuid: 3028d579-4870-4b83-869b-dd4929763391
 langcode: en
 status: true
 dependencies:
@@ -13,13 +13,6 @@ targetEntityType: media
 bundle: image
 mode: default
 content:
-  field_display:
-    weight: 2
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: list_default
-    region: content
   field_media_image:
     label: hidden
     settings:

@@ -1,9 +1,8 @@
-uuid: null
+uuid: b4c59f40-f7c7-4e32-85af-4787c56dc33e
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.media.image.field_display
     - field.field.media.image.field_media_image
     - image.style.thumbnail
     - media.type.image
@@ -21,12 +20,6 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_display:
-    weight: 101
-    settings: {  }
-    third_party_settings: {  }
-    type: options_select
-    region: content
   field_media_image:
     settings:
       progress_indicator: throbber
