@@ -84,10 +84,9 @@
     } %}
   {% endif %}
   {{ title_suffix }}
-
   {% if display_submitted %}
     <div class="article__date">
-      {{ date(node.date)|date("F j, Y") }}
+      {{ date(created)|date("F j, Y") }}
     </div>
   {% endif %}
 
