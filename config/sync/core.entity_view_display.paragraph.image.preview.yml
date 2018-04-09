@@ -12,4 +12,5 @@ bundle: image
 mode: preview
 content: {  }
 hidden:
+  field_display: true
   field_image: true

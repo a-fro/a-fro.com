@@ -44,4 +44,5 @@ content:
     third_party_settings: {  }
 hidden:
   field_components: true
+  field_disqus_comment: true
   field_tags: true
