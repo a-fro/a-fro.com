@@ -70,4 +70,8 @@
  *   in different view modes.
  */
 #}
-{% include "@organisms/_node.twig" %}
+
+{% include "@organisms/_node.twig" with {
+  'created': node.getCreatedTime()
+}
+%}
