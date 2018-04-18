@@ -6,6 +6,7 @@ id: local
 label: Local
 folder: ../config/local
 module:
+  stage_file_proxy: 0
   devel: 0
   kint: 0
 theme: {  }
