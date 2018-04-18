@@ -1,0 +1,18 @@
+test:
+  host: a-fro.test
+  options: {  }
+  paths:
+    drush-script: /var/www/a-fro.com/vendor/drush/drush/drush
+  root: /var/www/a-fro.com/web
+  uri: a-fro.test
+  user: vagrant
+  ssh:
+    options: '-o "SendEnv PHP_IDE_CONFIG PHP_OPTIONS XDEBUG_CONFIG" -o PasswordAuthentication=no -i "${env.home}/.vagrant.d/insecure_private_key"'
+
+live:
+  host: a-fro.com
+  options: {  }
+  paths:
+    drush-script: /var/www/a-fro.com/vendor/drush/drush/drush
+  root: /var/www/a-fro.com/web
+  uri: a-fro.com
