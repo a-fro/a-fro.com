@@ -37,5 +37,13 @@ firewall_log_dropped_packets: false
 
 # Set Apache to listen on port 80, and Varnish on 81.
 apache_listen_port: "80"
+
+apache_vhosts_ssl:
+  - servername: "{{ drupal_domain }}"
+    documentroot: "{{ drupal_core_path }}"
+    certificate_file: "/etc/ssl/certs/ssl-cert-snakeoil.pem"
+    certificate_key_file: "/etc/ssl/private/ssl-cert-snakeoil.key"
+    extra_parameters: "{{ apache_vhost_php_fpm_parameters }}"
+
 varnish_listen_port: "81"
 varnish_default_backend_port: "80"
