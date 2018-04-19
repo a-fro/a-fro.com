@@ -1,0 +1,21 @@
+---
+- hosts: a-fro.com
+  gather_facts: yes
+  become: yes
+
+  vars:
+    certbot_create_if_missing: yes
+    certbot_admin_email: aaronfroehlich@gmail.com
+    certbot_auto_renew_user: "{{ ansible_user }}"
+    certbot_auto_renew_minute: 20
+    certbot_auto_renew_hour: 5
+    certbot_certs:
+      - email: "{{ certbot_admin_email }}"
+        domains:
+           - a-fro.com
+           - www.a-fro.com
+    certbot_create_standalone_stop_services:
+      - apache2
+
+  roles:
+    - geerlingguy.certbot

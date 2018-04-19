@@ -20,6 +20,13 @@ apache_vhosts:
     documentroot: "{{ drupal_core_path }}"
     extra_parameters: "{{ apache_vhost_php_fpm_parameters }}"
 
+apache_vhosts_ssl:
+  - servername: "{{ drupal_domain }}"
+    documentroot: "{{ drupal_core_path }}"
+    certificate_file: "/etc/letsencrypt/live/a-fro.com/fullchain.pem"
+    certificate_key_file: "/etc/letsencrypt/live/a-fro.com/privkey.pem"
+    extra_parameters: "{{ apache_vhost_php_fpm_parameters }}"
+
 # Only install extras that you will need/use on your site, and don't install
 # development-related software on production environments!
 installed_extras:
