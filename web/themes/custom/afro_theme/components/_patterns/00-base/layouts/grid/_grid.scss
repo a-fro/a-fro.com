@@ -1,6 +1,10 @@
 @mixin grid {
   display: flex;
   flex-wrap: wrap;
+
+  h2 {
+    width: 100%;
+  }
 }
 
 .grid {

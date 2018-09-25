@@ -1,6 +1,28 @@
+.grid__wrapper {
+  @include full-width;
+
+  article & {
+    background: $gray-dark;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+
+    h2 {
+      @include wrapper(75rem);
+
+      margin-bottom: 1rem;
+      color: $white;
+    }
+  }
+}
+
 .card__grid {
   @include grid;
   @include margin;
+  @include wrapper($xl);
+
+  .card {
+    @include grid-item(3);
+  }
 }
 
 .card--grid-item {

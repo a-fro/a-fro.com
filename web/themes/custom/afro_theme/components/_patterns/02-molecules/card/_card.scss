@@ -1,3 +1,7 @@
+.card {
+  background: white;
+}
+
 .card__title {
   @include heading-large($font-size: 1.3rem);
   @include no-bottom;
@@ -5,6 +9,18 @@
   &-link {
     @include link;
   }
+}
+
+.card__image {
+  display: block;
+
+  img {
+    @include img;
+  }
+}
+
+.card__copy {
+  padding: 1rem;
 }
 
 .card__subtitle {

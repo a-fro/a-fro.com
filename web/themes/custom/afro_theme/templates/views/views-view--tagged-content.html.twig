@@ -1,0 +1,8 @@
+{% set heading = view.args.3 %}
+
+{% include '@organisms/card-grid/card-grid.twig' with {
+  grid_content: rows,
+  grid_blockname: 'card',
+  grid_label: heading
+} %}
+

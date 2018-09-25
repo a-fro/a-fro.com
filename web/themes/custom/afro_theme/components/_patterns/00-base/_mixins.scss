@@ -33,9 +33,10 @@
 
 /// Mixin - Wrapper
 /// Outer container mixin for large screens
-@mixin wrapper {
+@mixin wrapper($max: $max-width) {
   margin: 0 auto;
-  max-width: $max-width;
+  max-width: $max;
+  padding: 0 1rem;
 
   @include clearfix;
 }

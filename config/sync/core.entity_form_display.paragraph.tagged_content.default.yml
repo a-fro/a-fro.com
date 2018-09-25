@@ -1,0 +1,42 @@
+uuid: db096d46-0014-46da-b80c-d9776ec69012
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.tagged_content.field_heading
+    - field.field.paragraph.tagged_content.field_number_of_items
+    - field.field.paragraph.tagged_content.field_referenced_tags
+    - paragraphs.paragraphs_type.tagged_content
+id: paragraph.tagged_content.default
+targetEntityType: paragraph
+bundle: tagged_content
+mode: default
+content:
+  field_heading:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_number_of_items:
+    weight: 2
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_referenced_tags:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden:
+  created: true
+  status: true
+  uid: true

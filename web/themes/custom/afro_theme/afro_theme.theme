@@ -5,6 +5,20 @@ use Drupal\media_entity\entity\Media;
 use Drupal\node\Entity\Node;
 
 /**
+ * Preprocess variables for html templates.
+ * @param $variables
+ */
+function afro_theme_preprocess(&$variables) {
+  try {
+    $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
+  }
+  catch (Exception $e) {
+    $variables['is_front'] = FALSE;
+  }
+  $variables['#cache']['contexts'][] = 'url.path.is_front';
+}
+
+/**
  * @file
  * Functions to support theming in the Pattern Lab theme.
  */
@@ -68,3 +82,4 @@ function afro_theme_preprocess_paragraph(&$variables) {
     $variables['img'] = media_essentials_get_image_properties_from_paragraph_field($paragraph, 'field_image');
   }
 }
+

@@ -1,19 +1,28 @@
-{% set paragraph = content.field_teaser_text|field_target_entity%}
-{% set teaser = (paragraph) ? paragraph.get('field_text').value : 'Read more' %}
-
 {% if content.field_primary_image|field_target_entity|length %}
-{% set primary_image %}
-  {% include "@molecules/components/_image.twig" with {
-      "img_src": img.uri|image_style('teaser'),
-      "img_alt": img.alt
-    }
-  %}
-{% endset %}
+  {% set primary_image %}
+    {% include "@molecules/components/_image.twig" with {
+        "img_src": img.uri|image_style('teaser'),
+        "img_alt": img.alt
+    } %}
+  {% endset %}
 {% endif %}
 
-{% include "@organisms/teaser/teaser.twig" with {
-  "teaser_text": teaser,
-  "primary_image": primary_image
-} %}
+{% if is_front %}
+  {% set paragraph = content.field_teaser_text|field_target_entity %}
+  {% set teaser = (paragraph) ? paragraph.get('field_text').value : 'Read more' %}
 
+  {% include "@organisms/teaser/teaser.twig" with {
+    "teaser_text": teaser,
+    "primary_image": primary_image
+  } %}
 
+{% else %}
+  {% set img_src = (img) ? img.uri|image_style('teaser') : null %}
+  {% include "@molecules/card/01-card.twig" with {
+    "card_modifiers": 'grid-item',
+    "card_img_src": img_src,
+    "card_title": label,
+    "card_link_url": url,
+  } %}
+
+{% endif %}
