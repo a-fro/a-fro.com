@@ -1,0 +1,29 @@
+uuid: 80fce401-9fac-4b09-9c63-88509be9817c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_referenced_tags
+    - paragraphs.paragraphs_type.tagged_content
+    - taxonomy.vocabulary.tags
+id: paragraph.tagged_content.field_referenced_tags
+field_name: field_referenced_tags
+entity_type: paragraph
+bundle: tagged_content
+label: 'Limit to following tag(s)'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      tags: tags
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,12 @@
+{% set tids = content.field_referenced_tags['#items'] is not empty
+  ? content.field_referenced_tags|field_raw('target_id')|safe_join(',')
+  : 'all' %}
+
+{% set limit = content.field_number_of_items|field_raw('value') %}
+
+{% set heading = content.field_heading|field_raw('value') %}
+
+{# Leverage twig_tweak to create the render array #}
+{% set view = drupal_view('tagged_content', 'block_1', tids, nid, limit, heading) %}
+
+{{ view }}

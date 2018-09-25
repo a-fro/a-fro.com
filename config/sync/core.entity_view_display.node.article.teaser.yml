@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.article.field_components
+    - field.field.node.article.field_disqus_comment
     - field.field.node.article.field_primary_image
     - field.field.node.article.field_tags
     - field.field.node.article.field_teaser_text
