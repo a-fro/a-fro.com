@@ -1,6 +1,12 @@
-<div class="component component__image">
+{% set component_base_class = component_base_class|default('image') %}
+{% set component_blockname = component_blockname|default('component') %}
+{% set image_modifiers = image_modifiers|default([]) %}
+{% set component_modifiers = image_modifiers %}
+
+<div {{ bem(component_base_class, (component_modifiers), component_blockname, ['component']) }}>
   {% include "@atoms/04-images/00-image/image.twig" with {
     "img_src": img_src,
     "img_alt": img_alt,
+    "image_modifiers": image_modifiers,
   } %}
 </div>
