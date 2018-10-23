@@ -1,5 +1,5 @@
 .component {
-  @include clearfix;
+  // @include clearfix;
 
   margin-bottom: $space-triple;
   position: relative;
@@ -30,11 +30,11 @@
     @include large {
       float: right;
       margin-left: 2rem;
-      margin-right: -25%;
+      margin-right: -10%;
     }
 
     @include xl {
-      margin-right: -50%;
+      margin-right: -20%;
     }
   }
 }
