@@ -68,6 +68,8 @@ function media_essentials_get_image_properties_from_media_entity($media_entity, 
 function media_essentials_image_display_options(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
   return [
     'full_content' => 'Full content',
+    'full_width' => 'Full width',
+    'focussed_portrait' => "Portrait",
     'original' => 'Original',
   ];
 }

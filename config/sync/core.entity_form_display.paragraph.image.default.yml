@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - entity_browser.browser.image_browser
+    - field.field.paragraph.image.field_display
     - field.field.paragraph.image.field_image
     - paragraphs.paragraphs_type.image
   module:
@@ -13,6 +14,12 @@ targetEntityType: paragraph
 bundle: image
 mode: default
 content:
+  field_display:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_image:
     weight: 0
     settings:
@@ -30,6 +37,5 @@ content:
     region: content
 hidden:
   created: true
-  field_display: true
   status: true
   uid: true
