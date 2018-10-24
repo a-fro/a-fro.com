@@ -33,6 +33,7 @@
         "drupal/focal_point": "^1.0@beta",
         "drupal/google_analytics": "^2.2",
         "drupal/inline_entity_form": "^1.0@beta",
+        "drupal/metatag": "^1.7",
         "drupal/paragraphs": "^1.2",
         "drupal/pathauto": "^1.1",
         "drupal/redirect": "^1.1",
