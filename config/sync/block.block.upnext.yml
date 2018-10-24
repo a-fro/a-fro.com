@@ -6,7 +6,6 @@ dependencies:
     - 'block_content:component_block:53048669-75f9-4840-aee0-bf0d2375e597'
   module:
     - block_content
-    - block_visibility_groups
     - ctools
   theme:
     - afro_theme
