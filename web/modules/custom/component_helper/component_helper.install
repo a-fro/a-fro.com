@@ -31,6 +31,6 @@ function component_helper_update_8001() {
   ]);
 
   $paragraph->save();
-  $block->field_paragraph_reference->appendItem($paragraph);
+  $block->field_component_reference->appendItem($paragraph);
   $block->save();
 }
