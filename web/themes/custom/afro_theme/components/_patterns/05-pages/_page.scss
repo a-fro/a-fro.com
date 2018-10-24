@@ -4,8 +4,6 @@
 
 .main {
   @include wrapper;
-
-  margin-bottom: 4em;
 }
 
 .main-sidebar {
@@ -15,10 +13,10 @@
 }
 
 .main-content {
-  padding: 0 1em 80px;
+  padding: 0 1em 28px;
 
   @include xl {
-    padding: 0 0 80px;
+    padding: 0 0 28px;
 
     &--with-sidebar {
       @include grid-span(9,4);
