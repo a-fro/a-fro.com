@@ -1,0 +1,37 @@
+<?php
+use \Drupal\Core\Render\Element;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\field\Entity\FieldStorageConfig;
+
+// Add metatag key/value categories here to be preserved.
+const ALLOWED_METATAGS = array(
+  'basic' => array('title', 'description'),
+  // 'advanced' => array(),
+  'open_graph' => array('og_title', 'og_description', 'og_image'),
+  'twitter_cards' => array('twitter_cards_description', 'twitter_cards_title', 'twitter_cards_image')
+);
+
+/**
+ * Implements hook_form_FORMID_alter
+ *
+ * Remove extraneous metatags from the node form.
+ */
+function admin_tweaks_form_node_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if (!empty($form['field_meta_tags']['widget'][0])) {
+    $el =& $form['field_meta_tags']['widget'][0];
+    foreach (Element::children($el) as $tag_type_name) {
+      if (!isset(ALLOWED_METATAGS[$tag_type_name])) {
+        $el[$tag_type_name]['#access'] = FALSE;
+        continue;
+      }
+      if (isset($el[$tag_type_name])) {
+        foreach (Element::children($el[$tag_type_name]) as $tag_name) {
+          if (!in_array($tag_name, ALLOWED_METATAGS[$tag_type_name])) {
+            $el[$tag_type_name][$tag_name]['#access'] = FALSE;
+          }
+        }
+      }
+    }
+  }
+}

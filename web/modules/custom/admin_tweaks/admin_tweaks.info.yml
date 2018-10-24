@@ -1,0 +1,8 @@
+name: A-fro.com Administration tweaks
+type: module
+description: 'Module for modifying the administration of the site.'
+package: Administration
+core: 8.x
+
+dependencies:
+  - metatag
