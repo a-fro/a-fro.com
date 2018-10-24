@@ -6,5 +6,6 @@
 function component_helper_preprocess_paragraph__tagged_content(&$variables) {
   if ($current_node = \Drupal::request()->attributes->get('node')) {
     $variables['nid'] = $current_node->id();
+    $variables['primary_tag'] = $current_node->field_tags->target_id;
   }
 }

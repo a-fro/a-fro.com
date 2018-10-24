@@ -9,7 +9,7 @@ _core:
 id: afro_theme_local_tasks
 theme: afro_theme
 region: content
-weight: -1
+weight: -2
 provider: null
 plugin: local_tasks_block
 settings:

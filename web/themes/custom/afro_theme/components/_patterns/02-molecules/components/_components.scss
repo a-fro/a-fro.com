@@ -1,6 +1,4 @@
 .component {
-  // @include clearfix;
-
   margin-bottom: $space-triple;
   position: relative;
 }
@@ -41,4 +39,8 @@
 
 .component__text__heading {
   @include heading-medium;
+}
+
+#disqus_thread {
+  margin-bottom: $space-triple;
 }

@@ -1,6 +1,10 @@
-{% set tids = content.field_referenced_tags['#items'] is not empty
-  ? content.field_referenced_tags|field_raw('target_id')|safe_join(',')
-  : 'all' %}
+{% if primary_tag %}
+  {% set tids = primary_tag %}
+{% else %}
+  {% set tids = content.field_referenced_tags['#items'] is not empty
+    ? content.field_referenced_tags|field_raw('target_id')|safe_join(',')
+    : 'all' %}
+{% endif %}
 
 {% set limit = content.field_number_of_items|field_raw('value') %}
 

@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Installation and uninstallation functions.
+ */
+
+/**
+ * Adds the "up next" block for posts.
+ */
+function component_helper_update_8001() {
+  $blockEntityManager = \Drupal::service('entity.manager')
+    ->getStorage('block_content');
+
+  $block = $blockEntityManager->create(array(
+    'type' => 'component_block',
+    'uuid' => '50badec5-3df5-4483-a785-3ee398e018dd',
+    'label_display' => 0,
+  ));
+
+  $block->info = "Up next block";
+
+  $paragraph = Drupal\paragraphs\Entity\Paragraph::create([
+    'type' => 'tagged_content',
+    'field_heading' => [
+      'value' => 'Up next'
+    ],
+    'field_number_of_items' => [
+      'value' => '3'
+    ],
+  ]);
+
+  $paragraph->save();
+  $block->field_paragraph_reference->appendItem($paragraph);
+  $block->save();
+}
