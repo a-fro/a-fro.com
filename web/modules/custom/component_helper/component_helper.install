@@ -14,7 +14,6 @@ function component_helper_update_8001() {
 
   $block = $blockEntityManager->create(array(
     'type' => 'component_block',
-    'uuid' => '50badec5-3df5-4483-a785-3ee398e018dd',
     'label_display' => 0,
   ));
 
@@ -28,6 +27,9 @@ function component_helper_update_8001() {
     'field_number_of_items' => [
       'value' => '3'
     ],
+    'field_referenced_tags' => [
+      'target_id' => 1,
+    ]
   ]);
 
   $paragraph->save();
