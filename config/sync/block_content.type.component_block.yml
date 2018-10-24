@@ -1,0 +1,8 @@
+uuid: dc562156-004c-48b8-907d-172e1a46416b
+langcode: en
+status: true
+dependencies: {  }
+id: component_block
+label: 'Component block'
+revision: 0
+description: ''

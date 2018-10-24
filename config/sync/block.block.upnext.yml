@@ -1,0 +1,39 @@
+uuid: 50badec5-3df5-4483-a785-3ee398e018dd
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:component_block:53048669-75f9-4840-aee0-bf0d2375e597'
+  module:
+    - block_content
+    - block_visibility_groups
+    - ctools
+  theme:
+    - afro_theme
+id: upnext
+theme: afro_theme
+region: content
+weight: 2
+provider: null
+plugin: 'block_content:53048669-75f9-4840-aee0-bf0d2375e597'
+settings:
+  id: 'block_content:53048669-75f9-4840-aee0-bf0d2375e597'
+  label: 'Up next'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      article: article
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+  condition_group:
+    id: condition_group
+    negate: false
+    block_visibility_group: ''
+    context_mapping: {  }

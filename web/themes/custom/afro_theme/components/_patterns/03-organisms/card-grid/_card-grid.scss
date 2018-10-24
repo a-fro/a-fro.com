@@ -1,7 +1,7 @@
 .grid__wrapper {
   @include full-width;
 
-  article & {
+  .main-content & {
     background: $gray-dark;
     padding: 2rem 0;
     margin-bottom: 2rem;
