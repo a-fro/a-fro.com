@@ -1,12 +1,18 @@
 // Empty
 .footer {
-  margin: -80px 0 0 0;
-  min-height: 60px;
   padding: 1em 0;
   color: $color-footer;
   background: $color-footer-bg;
 
-  a {
+  h2,
+  a,
+  .form-item__label {
     color: white;
+    font-weight: 300;
+  }
+
+  h2 {
+    margin: 0;
+    color: lighten($blue-wood, 10%);
   }
 }

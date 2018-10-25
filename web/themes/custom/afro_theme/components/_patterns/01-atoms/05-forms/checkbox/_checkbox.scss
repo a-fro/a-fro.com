@@ -1,4 +1,15 @@
 .form-item--checkboxes,
 .form-item--checkbox__item {
   @include list-reset;
+
+  .form-item {
+    margin: 0;
+    display: inline-block;
+    min-width: 120px;
+
+    .form-item__label {
+      display: inline-block;
+      padding: 0;
+    }
+  }
 }

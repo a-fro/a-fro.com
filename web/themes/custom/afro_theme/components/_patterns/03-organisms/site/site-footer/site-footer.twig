@@ -1,3 +1,8 @@
+{% if pl %}
+  {% set content %}
+    {% include "@molecules/signup-form/signup-form.twig" %}
+  {% endset %}
+{% endif %}
 <footer class="footer">
   {{ content }}
 </footer>
