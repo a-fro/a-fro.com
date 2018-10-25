@@ -1,23 +1,24 @@
-uuid: ed2b3829-69e7-46f6-8962-78d643634ec3
+uuid: 4c14efbe-fea3-41b7-9e86-08fcd427b6a3
 langcode: en
 status: true
 dependencies:
   content:
-    - 'block_content:component_block:74ac6880-6e5e-48d8-ae7c-92d3955708fe'
+    - 'block_content:component_block:b0dd7f75-a7aa-420f-bc86-eb5778dc3a54'
   module:
     - block_content
     - ctools
+    - system
   theme:
     - afro_theme
-id: upnext
+id: upnextblock
 theme: afro_theme
 region: content
 weight: 2
 provider: null
-plugin: 'block_content:74ac6880-6e5e-48d8-ae7c-92d3955708fe'
+plugin: 'block_content:b0dd7f75-a7aa-420f-bc86-eb5778dc3a54'
 settings:
-  id: 'block_content:74ac6880-6e5e-48d8-ae7c-92d3955708fe'
-  label: 'Up next'
+  id: 'block_content:b0dd7f75-a7aa-420f-bc86-eb5778dc3a54'
+  label: 'Up next block'
   provider: block_content
   label_display: '0'
   status: true
@@ -31,3 +32,8 @@ visibility:
     negate: false
     context_mapping:
       node: '@node.node_route_context:node'
+  request_path:
+    id: request_path
+    pages: /blog/from-ux-to-youx
+    negate: true
+    context_mapping: {  }
