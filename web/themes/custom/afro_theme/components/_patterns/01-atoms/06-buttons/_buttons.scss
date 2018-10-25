@@ -1,4 +1,4 @@
-@mixin button($bg:$black, $color:$white, $hoverBg: $gray, $hoverColor: $white) {
+@mixin button($bg:$color-link, $color:$white, $hoverBg: lighten($color-link, 10%), $hoverColor: $white) {
   background-color: $bg;
   border: none;
   color: $color;
@@ -8,7 +8,7 @@
   display: inline-block;
   text-decoration: none;
   text-align: center;
-  text-transform: uppercase;
+  border-radius: 2px;
 
   &:visited {
     color: $color;

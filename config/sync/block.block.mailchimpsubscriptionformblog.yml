@@ -1,0 +1,20 @@
+uuid: 16766fa8-2e94-440c-a375-e81cff1b8d39
+langcode: en
+status: true
+dependencies:
+  module:
+    - mailchimp_signup
+  theme:
+    - afro_theme
+id: mailchimpsubscriptionformblog
+theme: afro_theme
+region: footer
+weight: -3
+provider: null
+plugin: 'mailchimp_signup_subscribe_block:blog'
+settings:
+  id: 'mailchimp_signup_subscribe_block:blog'
+  label: 'Stay in touch'
+  provider: mailchimp_signup
+  label_display: visible
+visibility: {  }

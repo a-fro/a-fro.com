@@ -11,7 +11,7 @@ dependencies:
 id: sociallinks
 theme: afro_theme
 region: footer
-weight: 0
+weight: -4
 provider: null
 plugin: 'system_menu_block:social-links'
 settings:

@@ -1,6 +1,6 @@
 .form-item {
   color: $gray;
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
   max-width: 32em;
 
   @include clearfix;
@@ -20,6 +20,7 @@
 .form-item__textfield {
   border: 1px solid $gray-lightest;
   padding: 0.6em;
+  color: $color-footer;
 
   &:focus {
     border-color: $black;
@@ -48,11 +49,6 @@
 
 .form-fieldset {
   border: none;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   padding: 0;
-
-  .form-item {
-    margin-left: 1em;
-    max-width: 31em;
-  }
 }
