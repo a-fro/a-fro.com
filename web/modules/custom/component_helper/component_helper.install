@@ -14,6 +14,7 @@ function component_helper_update_8001() {
 
   $block = $blockEntityManager->create(array(
     'type' => 'component_block',
+    'uuid' => 'b0dd7f75-a7aa-420f-bc86-eb5778dc3a54',
     'label_display' => 0,
   ));
 
