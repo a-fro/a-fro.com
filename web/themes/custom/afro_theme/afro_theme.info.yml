@@ -8,6 +8,7 @@ core: 8.x
 libraries:
   - 'afro_theme/global'
   - 'afro_theme/rainbow'
+  - 'afro_theme/pullquote'
 
 # Libraries override allows you to remove libraries added by other projects.
 # libraries-override:
