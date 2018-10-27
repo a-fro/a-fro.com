@@ -20,6 +20,10 @@ main_menu:
   dependencies:
     - core/drupal
 
+pullquote:
+  js:
+    components/_patterns/01-atoms/pullquote/pullquote.js: {}
+
 rainbow:
   css:
     theme:
