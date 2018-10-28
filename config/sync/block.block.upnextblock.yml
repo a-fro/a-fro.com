@@ -1,4 +1,4 @@
-uuid: 4c14efbe-fea3-41b7-9e86-08fcd427b6a3
+uuid: bd5afea9-647e-4e2e-a6c2-169fff56e629
 langcode: en
 status: true
 dependencies:
@@ -7,7 +7,6 @@ dependencies:
   module:
     - block_content
     - ctools
-    - system
   theme:
     - afro_theme
 id: upnextblock
@@ -32,8 +31,3 @@ visibility:
     negate: false
     context_mapping:
       node: '@node.node_route_context:node'
-  request_path:
-    id: request_path
-    pages: /blog/from-ux-to-youx
-    negate: true
-    context_mapping: {  }
