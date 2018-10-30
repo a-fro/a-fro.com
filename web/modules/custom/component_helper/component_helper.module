@@ -6,6 +6,19 @@
 function component_helper_preprocess_paragraph__tagged_content(&$variables) {
   if ($current_node = \Drupal::request()->attributes->get('node')) {
     $variables['nid'] = $current_node->id();
+  }
+}
+
+
+/**
+ * Implements hook_preprocess_entity().
+ */
+function component_helper_preprocess_block__upnextblock(&$variables) {
+  if ($current_node = \Drupal::request()->attributes->get('node')) {
     $variables['primary_tag'] = $current_node->field_tags->target_id;
+    $variables['nid'] = $current_node->id();
+    $paragraph = $variables['content']['field_component_reference'][0]['#paragraph'];
+    $variables['limit'] = $paragraph->field_number_of_items->getValue()[0]['value'];
+    $variables['heading'] = $paragraph->field_heading->getValue()[0]['value'];
   }
 }
