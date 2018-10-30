@@ -19,6 +19,7 @@ settings:
           items:
             - Bold
             - Italic
+            - Pullquote
         -
           name: Linking
           items:
@@ -43,10 +44,10 @@ settings:
           items:
             - Source
   plugins:
-    stylescombo:
-      styles: ''
     language:
       language_list: un
+    stylescombo:
+      styles: ''
 image_upload:
   status: true
   scheme: public
