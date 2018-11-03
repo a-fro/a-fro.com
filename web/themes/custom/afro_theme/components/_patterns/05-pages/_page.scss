@@ -48,6 +48,13 @@
     color: white;
   }
 
+  .article__date {
+    @include wrapper;
+
+    margin-top: $space-double;
+    color: white;
+  }
+
   .front & {
     display: none;
   }

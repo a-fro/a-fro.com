@@ -84,11 +84,6 @@
     } %}
   {% endif %}
   {{ title_suffix }}
-  {% if display_submitted %}
-    <div class="article__date">
-      {{ date(created)|date("F j, Y") }}
-    </div>
-  {% endif %}
 
   <div{{ content_attributes }}>
     {{ content }}
