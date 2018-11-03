@@ -6,6 +6,7 @@ dependencies:
     - entity_browser.browser.image_browser
     - field.field.node.article.field_components
     - field.field.node.article.field_disqus_comment
+    - field.field.node.article.field_hide_primary_image
     - field.field.node.article.field_primary_image
     - field.field.node.article.field_tags
     - field.field.node.article.field_teaser_text
@@ -24,13 +25,13 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 6
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
   field_components:
     type: paragraphs
-    weight: 3
+    weight: 4
     settings:
       title: Component
       title_plural: Components
@@ -40,13 +41,24 @@ content:
       add_mode: dropdown
       form_display_mode: default
       default_paragraph_type: text
+      closed_mode_threshold: 0
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
     third_party_settings: {  }
     region: content
   field_disqus_comment:
-    weight: 26
+    weight: 13
     settings: {  }
     third_party_settings: {  }
     type: disqus_comment
+    region: content
+  field_hide_primary_image:
+    weight: 2
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
     region: content
   field_primary_image:
     weight: 1
@@ -65,7 +77,7 @@ content:
     region: content
   field_tags:
     type: entity_reference_autocomplete_tags
-    weight: 4
+    weight: 5
     region: content
     settings:
       match_operator: CONTAINS
@@ -74,7 +86,7 @@ content:
     third_party_settings: {  }
   field_teaser_text:
     type: paragraphs
-    weight: 2
+    weight: 3
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -84,11 +96,15 @@ content:
       add_mode: dropdown
       form_display_mode: default
       default_paragraph_type: text
+      closed_mode_threshold: 0
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
     third_party_settings: {  }
     region: content
   path:
     type: path
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -96,21 +112,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 7
+    weight: 8
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 11
+    weight: 12
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 8
+    weight: 9
     region: content
     third_party_settings: {  }
   title:
@@ -123,7 +139,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 5
+    weight: 6
     region: content
     settings:
       match_operator: CONTAINS
@@ -131,7 +147,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   url_redirects:
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
