@@ -57,6 +57,14 @@ function afro_theme_preprocess_html(&$variables) {
   }
 }
 
+function afro_theme_preprocess_page_title(&$variables) {
+  if ($node = \Drupal::request()->attributes->get('node')) {
+    if($node->bundle() == 'article') {
+      $variables['publish_date'] = $node->getCreatedTime();
+    }
+  }
+}
+
 /**
  * Implements template_preprocess_node().
  * Pepares the image entity for theming
@@ -65,6 +73,11 @@ function afro_theme_preprocess_node(&$variables) {
   /** @var \Drupal\node\Entity\Node $node */
   $node = &$variables['node'];
   if ($node->hasField('field_primary_image')) {
+    if ($variables['view_mode'] == 'full' && $node->hasField('field_hide_primary_image')) {
+      if ($node->get('field_hide_primary_image')->getValue()) {
+        $variables['content']['field_primary_image'] = NULL;
+      }
+    }
     $variables['img'] = media_essentials_get_image_properties_from_entity_reference_field($node, 'field_primary_image');
   }
 }

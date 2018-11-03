@@ -21,3 +21,8 @@
   } %}
 {% endif %}
 {{ title_suffix }}
+{% if publish_date %}
+  <div class="article__date">
+    {{ date(publish_date)|date("F j, Y") }}
+  </div>
+{% endif %}
