@@ -74,7 +74,7 @@ function afro_theme_preprocess_node(&$variables) {
   $node = &$variables['node'];
   if ($node->hasField('field_primary_image')) {
     if ($variables['view_mode'] == 'full' && $node->hasField('field_hide_primary_image')) {
-      if ($node->get('field_hide_primary_image')->getValue()) {
+      if ($node->get('field_hide_primary_image')->getString() == "1") {
         $variables['content']['field_primary_image'] = NULL;
       }
     }
