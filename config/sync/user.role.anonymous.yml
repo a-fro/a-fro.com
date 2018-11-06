@@ -15,4 +15,5 @@ permissions:
   - 'access_unpublished node article'
   - 'search content'
   - 'use text format restricted_html'
+  - 'view disqus comments'
   - 'view media'
