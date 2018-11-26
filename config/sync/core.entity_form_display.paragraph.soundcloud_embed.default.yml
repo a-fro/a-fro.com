@@ -1,0 +1,25 @@
+uuid: 96e144c1-4aa9-4e2c-bc95-a018e433a740
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.soundcloud_embed.field_media_soundcloud
+    - paragraphs.paragraphs_type.soundcloud_embed
+id: paragraph.soundcloud_embed.default
+targetEntityType: paragraph
+bundle: soundcloud_embed
+mode: default
+content:
+  field_media_soundcloud:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden:
+  created: true
+  status: true
+  uid: true
