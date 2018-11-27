@@ -45,6 +45,7 @@ function media_essentials_get_media_entity_from_reference($media_reference=NULL)
 
 /**
  * Takes a media entity and returns a keyed array of entities: file, image, and media.
+ * Refactor soon since this is kinda broken now that there are additional media entities
  *
  * @param $media_entity
  *
@@ -52,6 +53,7 @@ function media_essentials_get_media_entity_from_reference($media_reference=NULL)
  */
 function media_essentials_get_image_properties_from_media_entity($media_entity, $field_name='field_media_image') {
   if ($media_entity) {
+    if (method_exists($media_entity, 'bundle') && $media_entity->bundle() == 'image' || !method_exists($media_entity, 'bundle'))
     if ($img_entity = $media_entity->get($field_name)->first()) {
       if ($file_entity = $img_entity->get('entity')->getTarget()) {
         return [
