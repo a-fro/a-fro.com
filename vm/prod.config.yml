@@ -17,6 +17,7 @@ vagrant_hostname: "{{ drupal_domain }}"
 # single Drupal site, the variable should look like this (Apache):
 apache_vhosts:
   - servername: "{{ drupal_domain }}"
+    serveralias: "www.{{ drupal_domain }}"
     documentroot: "{{ drupal_core_path }}"
     extra_parameters: "{{ apache_vhost_php_fpm_parameters }}"
 
