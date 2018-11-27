@@ -1,0 +1,30 @@
+uuid: 5cc1ae06-78bc-4c7b-b2a8-b4d64e0838c3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.media.soundcloud.field_media_soundcloud
+    - media.type.soundcloud
+  module:
+    - media_entity_soundcloud
+id: media.soundcloud.default
+targetEntityType: media
+bundle: soundcloud
+mode: default
+content:
+  field_media_soundcloud:
+    weight: 0
+    label: hidden
+    settings:
+      type: visual
+      width: 100%
+      height: '450'
+      options: {  }
+    third_party_settings: {  }
+    type: soundcloud_embed
+    region: content
+hidden:
+  created: true
+  name: true
+  thumbnail: true
+  uid: true

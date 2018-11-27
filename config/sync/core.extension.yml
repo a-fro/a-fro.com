@@ -44,6 +44,7 @@ module:
   mailchimp: 0
   mailchimp_signup: 0
   media: 0
+  media_entity_soundcloud: 0
   media_essentials: 0
   menu_ui: 0
   metatag: 0

@@ -1,0 +1,9 @@
+uuid: cb0f84df-1e19-4099-ab1e-4215dfc314ce
+langcode: en
+status: true
+dependencies: {  }
+id: soundcloud_embed
+label: 'Soundcloud embed'
+icon_uuid: null
+description: ''
+behavior_plugins: {  }
