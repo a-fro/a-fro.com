@@ -4,7 +4,7 @@
 drush sql-drop -y
 
 # download the prod db
-drush sql:sync @a-fro.live @self
+drush sql:sync @a-fro.live @self -y
 
 drush cr
 
