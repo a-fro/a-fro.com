@@ -5,8 +5,12 @@ dependencies:
   config:
     - core.entity_view_mode.node.rss
     - core.entity_view_mode.node.teaser
+    - taxonomy.vocabulary.tags
+  content:
+    - 'taxonomy_term:tags:02d6a54a-8866-4e1f-81d8-a967be88dbae'
   module:
     - node
+    - taxonomy
     - user
 _core:
   default_config_hash: ezK5Dw8P_4bqJdDQIiecSAJak9p1Wf1yDwHzTutGFuQ
@@ -163,6 +167,50 @@ display:
           plugin_id: language
           entity_type: node
           entity_field: langcode
+        field_tags_target_id:
+          id: field_tags_target_id
+          table: node__field_tags
+          field: field_tags_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: not
+          value:
+            - 3
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: textfield
+          limit: true
+          vid: tags
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
       pager:
         type: full
         options:
@@ -248,6 +296,7 @@ display:
       contexts:
         - 'languages:language_interface'
         - url.query_args
+        - user
         - 'user.node_grants:view'
         - user.permissions
       max-age: -1
@@ -283,6 +332,7 @@ display:
     cache_metadata:
       contexts:
         - 'languages:language_interface'
+        - user
         - 'user.node_grants:view'
         - user.permissions
       max-age: -1
@@ -299,6 +349,7 @@ display:
       contexts:
         - 'languages:language_interface'
         - url.query_args
+        - user
         - 'user.node_grants:view'
         - user.permissions
       max-age: -1
