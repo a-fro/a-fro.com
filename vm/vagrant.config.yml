@@ -16,6 +16,7 @@ drupal_db_password: drupal
 mysql_root_password: root
 drupal_install_site: false
 
+php_memory_limit: "512M"
 php_sendmail_path: "/usr/sbin/sendmail -t -i"
 installed_extras:
   - drush
