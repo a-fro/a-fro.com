@@ -1,0 +1,8 @@
+name: Claro Overrides
+type: theme
+description: 'Overrides to the claro base theme'
+package: Custom
+core_version_requirement: ^9
+libraries:
+  - claro_overrides/global
+base theme: claro

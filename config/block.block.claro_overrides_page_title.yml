@@ -1,0 +1,20 @@
+uuid: 8c53eefc-ebe0-471b-b4f0-0e59b3f8fec2
+langcode: en
+status: true
+dependencies:
+  theme:
+    - claro_overrides
+_core:
+  default_config_hash: Oh72CHUkp6cj6dbrXMK2hzCsM05w9cHVoD22rMLQUfk
+id: claro_overrides_page_title
+theme: claro_overrides
+region: highlighted
+weight: -3
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  label_display: '0'
+  provider: core
+visibility: {  }

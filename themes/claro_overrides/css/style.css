@@ -1,0 +1,4 @@
+.node-post-edit-form .form-item--body-0-value,
+.node-post-edit-form #edit-body-0-format {
+  display: none;
+}

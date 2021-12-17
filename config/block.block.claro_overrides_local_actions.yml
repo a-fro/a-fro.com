@@ -1,0 +1,20 @@
+uuid: 60252dc6-85a7-48ea-bb30-594ed1fa8e52
+langcode: en
+status: true
+dependencies:
+  theme:
+    - claro_overrides
+_core:
+  default_config_hash: ABoKnlk20KHqZRw_2Qr4EvaFvH4lnQ2nuhunHeE1JIU
+id: claro_overrides_local_actions
+theme: claro_overrides
+region: content
+weight: 0
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  label_display: '0'
+  provider: core
+visibility: {  }
