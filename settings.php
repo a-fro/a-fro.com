@@ -88,7 +88,16 @@
  * );
  * @endcode
  */
-$databases = array();
+// $databases['default']['default'] = [
+//   'database' => $_ENV['MYSQL_DATABASE'],
+//   'driver' => 'mysql',
+//   'host' => $_ENV['MYSQL_HOSTNAME'],
+//   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+//   'password' => $_ENV['MYSQL_PASSWORD'],
+//   'port' => $_ENV['MYSQL_PORT'],
+//   'prefix' => '',
+//   'username' => $_ENV['MYSQL_USER'],
+// ];
 
 /**
  * Customizing database settings.
@@ -297,7 +306,7 @@ $config_directories = array();
  *   $settings['hash_salt'] = file_get_contents('/home/example/salt.txt');
  * @endcode
  */
-$settings['hash_salt'] = '';
+$settings['hash_salt'] = 'GZVGFe1cqVFJMdCiaSIsK5zLjgLC_sFerh2zXC0iYxIZNcoj_LtO6FSMeZNQqrKK6UxU-awlYQ';
 
 /**
  * Deployment identifier.
@@ -793,3 +802,9 @@ $databases['default']['default'] = array (
 );
 
 $settings['config_sync_directory'] = '../config';
+$databases['default']['default'] = array (
+  'database' => 'sites/default/files/.ht.sqlite',
+  'prefix' => '',
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\sqlite',
+  'driver' => 'sqlite',
+);
