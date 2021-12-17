@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.post.body
+    - field.field.node.post.field_components
     - field.field.node.post.field_representative_image
     - field.field.node.post.field_tags
     - node.type.post
@@ -32,17 +33,11 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
-  field_tags:
-    type: entity_reference_label
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 3
-    region: content
   links:
     settings: {  }
     third_party_settings: {  }
     weight: 0
     region: content
-hidden: {  }
+hidden:
+  field_components: true
+  field_tags: true
