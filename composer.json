@@ -24,11 +24,12 @@
   ],
   "require": {
     "composer/installers": "^1.9",
+    "drupal-tome/tome_drush": "dev-master",
     "drupal/core-composer-scaffold": "^9",
     "drupal/core-recommended": "^9",
-    "drush/drush": "^10",
+    "drupal/paragraphs": "^1.12",
     "drupal/tome": "^1.0",
-    "drupal-tome/tome_drush": "dev-master",
+    "drush/drush": "^10",
     "symfony/dotenv": "^5.3"
   },
   "conflict": {

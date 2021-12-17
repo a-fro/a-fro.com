@@ -1,0 +1,10 @@
+uuid: f2ed9114-1f64-4c56-b001-dfd41e975252
+langcode: en
+status: true
+dependencies: {  }
+id: rich_text
+label: 'Rich text'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }
