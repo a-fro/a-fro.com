@@ -2,8 +2,8 @@ _core:
   default_config_hash: l58O_yEXSo-SeJi19LXdzTU1tNJG3lmnIhCitRkM1tk
 langcode: en
 uuid: e5affbf9-ac58-4011-8914-f2c31ddf53c3
-name: 'Drush Site-Install'
-mail: admin@example.com
+name: a-fro.com
+mail: aaron@ikondigitalstudio.com
 slogan: ''
 page:
   403: ''

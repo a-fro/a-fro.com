@@ -1,0 +1,64 @@
+.cu-input--submit,
+.cu-button {
+  --cu-current-link-color: var(--color-black);
+
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--color-cornell-red);
+  padding: var(--cu-vr-4) var(--cu-ps-1);
+  background: white;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.cu-fieldset {
+  border: none;
+  background: var(--color-gray-lightest);
+  border: 1px solid var(--color-gray-medium);
+  border-radius: 3px;
+  margin: 0 0 var(--cu-vr1);
+}
+
+details {
+  display: block;
+  margin-top: 1.125rem;
+  margin-bottom: 1.125rem;
+  color: inherit;
+}
+
+details > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  font-weight: bold;
+  list-style: none;
+  line-height: 1;
+  padding: 0.75em var(--cu-ps-1);
+  background-color: var(--color-cornell-red-bg);
+}
+
+details > summary::before {
+  display: inline-block;
+  width: 0.625rem;
+  height: 0.625rem;
+  content: "";
+  transform: rotate(45deg);
+  transition: transform 0.25s;
+  border-top: solid 2px currentColor;
+  border-right: solid 2px currentColor;
+}
+
+details[open] > summary::before {
+  transform: rotate(135deg);
+}
+
+details > summary::marker,
+details > summary::-webkit-details-marker {
+  display: none;
+  content: '';
+}
+
+.details__wrapper {
+  margin-left: calc(var(--cu-ps-1) + 0.625rem + 10px);
+}

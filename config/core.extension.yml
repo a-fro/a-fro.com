@@ -33,4 +33,5 @@ module:
 theme:
   stark: 0
   claro: 0
+  simple_base: 0
 profile: minimal

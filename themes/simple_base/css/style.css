@@ -1,0 +1,40 @@
+@import url('global/modern-normalize.css');
+@import url('layout/default.css');
+@import url('global/modular-scale.css');
+@import url('global/proportional-scale.css');
+@import url('global/ratios.css');
+@import url('global/regions.css');
+@import url('global/text.css');
+@import url('global/vertical-rhythm.css');
+@import url('components/breadcrumbs.css');
+@import url('components/misc.css');
+@import url('components/tabs.css');
+
+:root {
+  /* Color vars */
+  --color-black: #222;
+  --color-navy: #233140;
+  --color-orange: #f39c12;
+  --color-gray-lightest: #fbfbfb;
+  --color-gray-medium: #ccc;
+  --color-border: var(--color-gray-medium);
+  --color-link: var(--color-navy);
+  --color-breadcrumbs: var(--color-link);
+
+  /* Layout vars */
+  --layout-display: block;
+  --layout-max-width: 800px;
+  --layout-grid-column-gap: 2rem;
+  --layout-grid-template-columns: 12fr;
+  --layout-grid-template-rows: auto 1fr auto;
+}
+
+@media (min-width: 44rem) {
+  :root {
+    --layout-display: grid;
+  }
+}
+
+a {
+  color: var(--color-link);
+}

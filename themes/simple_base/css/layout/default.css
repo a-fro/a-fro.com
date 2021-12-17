@@ -1,0 +1,46 @@
+body {
+  margin: 0 auto;
+}
+
+.layout-container {
+  display: var(--layout-display);
+  width: 100%;
+  min-height: 100vh;
+  height: 100%;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: 0 var(--cu-ps1);
+  grid-column-gap: var(--layout-grid-column-gap);
+  grid-template-columns: var(--layout-grid-template-columns);
+  grid-template-rows: var(--layout-grid-template-rows);
+}
+
+/* Partial fix for logged in users with the toolbar. A padding gets
+dynamically added to the top of the page. */
+.toolbar-tray-open.toolbar-horizontal .layout-container {
+  min-height: calc(100vh - 100px);
+}
+
+.layout-header,
+.layout-footer {
+  grid-column: 1/-1;
+}
+
+.layout-main {
+  grid-column: 1/-1;
+}
+
+.full-width {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+.content__container {
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: 0 var(--cu-ps1);
+}

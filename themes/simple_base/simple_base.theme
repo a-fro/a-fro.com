@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file Theme file for the simple_base.theme.
+ */
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function simple_base_preprocess_page(array &$variables) {
+  if ($_ENV['LIVERELOAD']) {
+    $variables['#attached']['library'][] = 'simple_base/livereload';
+  }
+}
+
+/**
+ * @file
+ * Functions to support theming in the Pattern Lab theme.
+ */
+
+function simple_base_css_alter(&$css) {
+  // Add googlefonts.
+  $googlefonts = '//fonts.googleapis.com/css?family=Merriweather:300,300italic,700,700italic,400,400italic|Merriweather+Sans:400,400italic,700,700italic,300italic,300';
+  $css[$googlefonts] = array(
+    'data' => $googlefonts,
+    'type' => 'external',
+    'every_page' => TRUE,
+    'media' => 'all',
+    'preprocess' => FALSE,
+    'group' => CSS_AGGREGATE_THEME,
+    'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+    'weight' => -1,
+  );
+
+   // Add FontAwesome.
+  $fontawesome = '//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css';
+  $css[$fontawesome] = array(
+    'data' => $fontawesome,
+    'type' => 'external',
+    'every_page' => TRUE,
+    'media' => 'all',
+    'preprocess' => FALSE,
+    'group' => CSS_AGGREGATE_THEME,
+    'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+    'weight' => -2,
+  );
+}

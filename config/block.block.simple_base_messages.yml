@@ -1,0 +1,22 @@
+uuid: b2395c3a-6f72-423f-8d26-d4f1401c6433
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - simple_base
+_core:
+  default_config_hash: aeqlWs7HwctZeZC7ADcbxfqehJzBRfZKmuZz3DsH3_4
+id: simple_base_messages
+theme: simple_base
+region: content
+weight: -2
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  label_display: '0'
+  provider: system
+visibility: {  }

@@ -1,0 +1,8 @@
+#block-simple-base-branding {
+  margin: 0 0 1em 2.5%;
+  font-size: var(--cu-ms3);
+}
+
+#block-simple-base-branding a {
+  text-decoration: none;
+}

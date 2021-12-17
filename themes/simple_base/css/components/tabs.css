@@ -1,0 +1,27 @@
+#block-simple-base-local-tasks ul {
+  display: flex;
+  list-style-type: none;
+  border-bottom: 1px solid var(--color-border);
+  padding: 0;
+}
+
+#block-simple-base-local-tasks li {
+  display: block;
+  padding-right: 0;
+}
+
+#block-simple-base-local-tasks li + li {
+  padding-left: 0.5rem;
+}
+
+#block-simple-base-local-tasks a {
+  display: block;
+  color: var(--color-link);
+  text-decoration: none;
+  padding: 0 0.75rem 0.5rem;
+}
+
+#block-simple-base-local-tasks a.is-active,
+#block-simple-base-local-tasks a:hover {
+  border-bottom: 1px solid var(--color-link);
+}

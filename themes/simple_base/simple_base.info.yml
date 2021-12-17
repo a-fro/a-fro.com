@@ -1,0 +1,14 @@
+name: Simple Base Theme
+type: theme
+description: 'A simple custom base theme'
+package: Custom
+core_version_requirement: ^9
+libraries:
+  - simple_base/global
+base theme: false
+regions:
+    header: Header
+    highlighted: Highlighted
+    help: Help
+    content: Content
+    footer: Footer

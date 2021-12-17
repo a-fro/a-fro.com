@@ -1,0 +1,13 @@
+.field__label {
+  margin: var(--cu-vr1) 0 0;
+  font-weight: 400;
+}
+
+.field__item {
+  max-width: 800px;
+}
+
+.paragraph--type--counsel .field--name-field-attorneys {
+  margin-left: 1em;
+  font-size: 0.9em;
+}

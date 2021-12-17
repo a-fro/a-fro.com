@@ -1,0 +1,26 @@
+.layout-main {
+  margin-bottom: var(--cu-vr1);
+}
+
+.layout-header {
+  background: var(--color-navy);
+  padding: 1em 0 0;
+}
+
+.region--highlighted {
+  background: #2c3e50;
+  border-top: 1px solid #354a61;
+  padding: 4rem 0 5rem;
+}
+
+.layout-footer {
+  background: var(--color-orange);
+  padding: 1em 0;
+}
+
+.layout-header,
+.layout-header a,
+.layout-footer,
+.layout-footer a {
+  color: white;
+}

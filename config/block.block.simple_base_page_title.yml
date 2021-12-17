@@ -1,0 +1,20 @@
+uuid: 0eca7531-20cf-4047-8a37-4b8cdb9e20c4
+langcode: en
+status: true
+dependencies:
+  theme:
+    - simple_base
+_core:
+  default_config_hash: Oh72CHUkp6cj6dbrXMK2hzCsM05w9cHVoD22rMLQUfk
+id: simple_base_page_title
+theme: simple_base
+region: highlighted
+weight: -3
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  label_display: '0'
+  provider: core
+visibility: {  }
