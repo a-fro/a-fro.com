@@ -1,0 +1,67 @@
+{
+  "name": "a-fro/drupal-tome",
+  "description": "The Tome starter project for a-fro.com.",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Aaron Froelich",
+      "email": "aaronf@cornell.edu",
+      "role": "Developer"
+    },
+    {
+      "name": "Samuel Mortenson",
+      "email": "samuel@mortenson.coffee"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    }
+  ],
+  "require": {
+    "composer/installers": "^1.9",
+    "drupal/core-composer-scaffold": "^9",
+    "drupal/core-recommended": "^9",
+    "drush/drush": "^10",
+    "drupal/tome": "^1.0",
+    "drupal-tome/tome_drush": "dev-master",
+    "symfony/dotenv": "^5.3"
+  },
+  "conflict": {
+    "drupal/drupal": "*"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "autoload": {
+    "files": ["load.environment.php"]
+  },
+  "scripts": {
+    "symlink": "./scripts/symlink.sh",
+    "post-install-cmd": [
+      "@symlink"
+    ],
+    "post-update-cmd": [
+      "@symlink"
+    ]
+  },
+  "extra": {
+    "drupal-scaffold": {
+      "locations": {
+        "web-root": "web/"
+      }
+    },
+    "installer-paths": {
+      "web/core": ["type:drupal-core"],
+      "web/libraries/{$name}": ["type:drupal-library"],
+      "web/modules/contrib/{$name}": ["type:drupal-module"],
+      "web/profiles/contrib/{$name}": ["type:drupal-profile"],
+      "web/themes/contrib/{$name}": ["type:drupal-theme"],
+      "drush/Commands/{$name}": ["type:drupal-drush"]
+    }
+  }
+}
