@@ -5,7 +5,7 @@ package: Custom
 core_version_requirement: ^9
 libraries:
   - simple_base/global
-base theme: false
+base theme: classy
 regions:
     header: Header
     highlighted: Highlighted
