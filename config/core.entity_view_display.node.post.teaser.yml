@@ -6,6 +6,7 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.post.body
     - field.field.node.post.field_components
+    - field.field.node.post.field_published_date
     - field.field.node.post.field_representative_image
     - field.field.node.post.field_tags
     - node.type.post
@@ -40,4 +41,5 @@ content:
     region: content
 hidden:
   field_components: true
+  field_published_date: true
   field_tags: true

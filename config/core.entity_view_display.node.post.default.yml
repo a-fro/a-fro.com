@@ -5,10 +5,12 @@ dependencies:
   config:
     - field.field.node.post.body
     - field.field.node.post.field_components
+    - field.field.node.post.field_published_date
     - field.field.node.post.field_representative_image
     - field.field.node.post.field_tags
     - node.type.post
   module:
+    - datetime
     - entity_reference_revisions
     - user
 id: node.post.default
@@ -22,6 +24,15 @@ content:
     settings:
       view_mode: default
       link: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_published_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: full_date
     third_party_settings: {  }
     weight: 2
     region: content
@@ -40,7 +51,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 3
+    weight: 4
     region: content
   links:
     settings: {  }
