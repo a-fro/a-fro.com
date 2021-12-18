@@ -1,0 +1,17 @@
+uuid: c90fa54c-531b-4332-860c-46f860ea17d8
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: large_21_9
+label: 'Large 21:9 (1596x684)'
+effects:
+  b77d3d73-651d-4e87-9efe-09970a388fbc:
+    uuid: b77d3d73-651d-4e87-9efe-09970a388fbc
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: 1596
+      height: 684
+      crop_type: focal_point

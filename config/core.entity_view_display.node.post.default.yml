@@ -8,10 +8,12 @@ dependencies:
     - field.field.node.post.field_published_date
     - field.field.node.post.field_representative_image
     - field.field.node.post.field_tags
+    - image.style.large_21_9
     - node.type.post
   module:
     - datetime
     - entity_reference_revisions
+    - media
     - user
 id: node.post.default
 targetEntityType: node
@@ -37,11 +39,11 @@ content:
     weight: 2
     region: content
   field_representative_image:
-    type: entity_reference_entity_view
+    type: media_thumbnail
     label: hidden
     settings:
-      view_mode: default
-      link: false
+      image_link: ''
+      image_style: large_21_9
     third_party_settings: {  }
     weight: 1
     region: content

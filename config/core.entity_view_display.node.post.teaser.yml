@@ -9,8 +9,10 @@ dependencies:
     - field.field.node.post.field_published_date
     - field.field.node.post.field_representative_image
     - field.field.node.post.field_tags
+    - image.style.medium_21_9
     - node.type.post
   module:
+    - media
     - text
     - user
 id: node.post.teaser
@@ -27,10 +29,11 @@ content:
     weight: 2
     region: content
   field_representative_image:
-    type: entity_reference_label
+    type: media_thumbnail
     label: hidden
     settings:
-      link: true
+      image_link: content
+      image_style: medium_21_9
     third_party_settings: {  }
     weight: 1
     region: content

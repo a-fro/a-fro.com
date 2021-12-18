@@ -1,0 +1,17 @@
+uuid: 1dfdc3ce-7dda-43c0-b12a-c01fbc8b67e9
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: medium_21_9
+label: 'Medium 21:9 (798x342) '
+effects:
+  1646162e-321f-4c0b-b375-56de3d781691:
+    uuid: 1646162e-321f-4c0b-b375-56de3d781691
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: 798
+      height: 342
+      crop_type: focal_point

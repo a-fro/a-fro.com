@@ -3,7 +3,7 @@
   margin-bottom: var(--cu-vr2);
 }
 
-.field--type-image img {
+.field--type-entity-reference img {
   width: 100%;
   height: auto;
 }

@@ -27,6 +27,7 @@
     "drupal-tome/tome_drush": "dev-master",
     "drupal/core-composer-scaffold": "^9",
     "drupal/core-recommended": "^9",
+    "drupal/focal_point": "^1.5",
     "drupal/paragraphs": "^1.12",
     "drupal/tome": "^1.0",
     "drush/drush": "^10",
