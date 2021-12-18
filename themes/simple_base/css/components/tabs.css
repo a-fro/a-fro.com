@@ -1,24 +1,29 @@
+#block-simple-base-local-tasks {
+  position: fixed;
+  top: 79px;
+  left: 0;
+  z-index: 10;
+}
+
 #block-simple-base-local-tasks ul {
   display: flex;
   list-style-type: none;
   border-bottom: 1px solid var(--color-border);
   padding: 0;
+  background: white;
 }
 
 #block-simple-base-local-tasks li {
   display: block;
   padding-right: 0;
-}
-
-#block-simple-base-local-tasks li + li {
-  padding-left: 0.5rem;
+  margin-right: 1px;
 }
 
 #block-simple-base-local-tasks a {
   display: block;
   color: var(--color-link);
   text-decoration: none;
-  padding: 0 0.75rem 0.5rem;
+  padding: 0.5rem 0.75rem 0.5rem;
 }
 
 #block-simple-base-local-tasks a.is-active,
