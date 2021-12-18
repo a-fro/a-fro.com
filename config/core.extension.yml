@@ -33,8 +33,10 @@ module:
   paragraphs: 11
   minimal: 1000
 theme:
+  stable: 0
   stark: 0
   claro: 0
+  classy: 0
   simple_base: 0
   claro_overrides: 0
 profile: minimal
