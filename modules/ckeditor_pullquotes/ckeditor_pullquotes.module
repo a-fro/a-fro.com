@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Contains simple_columns.module.
+ */
+
+use Drupal\editor\Entity\Editor;
+
+/**
+ * Implements hook_ckeditor_css_alter().
+ */
+function ckeditor_pullquotes_ckeditor_css_alter(array &$css, Editor $editor) {
+  $editor_settings = $editor->getSettings();
+
+  foreach ($editor_settings['toolbar']['rows'] as $row) {
+    $all_items = array_merge(...array_column($row, 'items'));
+    if (in_array('Pullquote', $all_items)) {
+      $css[] = drupal_get_path('module', 'ckeditor_pullquotes') . '/css/pullquote.css';
+      $css[] = drupal_get_path('module', 'ckeditor_pullquotes') . '/css/pullquote-editor.css';
+      return;
+    }
+  }
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function ckeditor_pullquotes_element_info_alter(array &$types) {
+  if (isset($types['processed_text'])) {
+    $types['processed_text']['#attached']['library'][] = 'ckeditor_pullquotes/pullquote';
+  }
+}

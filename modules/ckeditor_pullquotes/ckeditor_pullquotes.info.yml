@@ -1,0 +1,9 @@
+name: CKEditor Pullquotes
+type: module
+description: 'Module for modifying the administration of the site.'
+package: Administration
+core_version_requirement: ^8 || ^9
+libraries:
+  - ckeditor_pullquotes.pullquote
+dependencies:
+  - drupal:ckeditor

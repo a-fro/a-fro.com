@@ -17,6 +17,7 @@ settings:
           items:
             - Bold
             - Italic
+            - Pullquote
         -
           name: Links
           items:

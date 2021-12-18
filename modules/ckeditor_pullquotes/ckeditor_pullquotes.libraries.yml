@@ -1,0 +1,7 @@
+pullquote:
+  version: 1.x
+  css:
+    theme:
+      css/pullquote.css: {}
+  js:
+    js/pullquote.js: {}

@@ -1,0 +1,50 @@
+.cke_editable_themed span.pullquote {
+  background: yellow;
+}
+span.pullquote::selection {
+    background: pink;
+}
+
+aside.pullquote {
+  font-size: 1.1rem;
+  font-weight: 300;
+  line-height: 1.4rem;
+  margin-bottom: 2em;
+  padding: 1.75em 2em 0;
+  font-style: italic;
+  position: relative;
+  border-top: 1px solid #efefef;
+  border-bottom: 1px solid #efefef;
+}
+
+@media (min-width: 44rem) {
+  aside.pullquote {
+    float: right;
+    max-width: 33%;
+    min-width: 300px;
+    margin-left: 2em;
+    border: none;
+    margin-bottom: 0;
+  }
+
+  aside.pullquote--left {
+    float: left;
+    margin-right: 2em;
+    margin-left: 0;
+  }
+}
+
+aside.pullquote::before,
+aside.pullquote::after {
+  color: rgb(102, 116, 129);
+  display: block;
+  font-size: 4rem;
+  position: absolute;
+  line-height: 1;
+}
+
+aside.pullquote::before {
+  content: "\201C";
+  left: 0;
+  top: 10px;
+}
