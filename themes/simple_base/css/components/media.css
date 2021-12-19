@@ -1,0 +1,18 @@
+.component--portrait {
+  --media-component-margin: var(--cu-ps2);
+  --media-component-pullout: 100px;
+  max-width: calc(400px + var(--media-component-margin) + var(--media-component-pullout));
+  float: left;
+  margin-right: var(--media-component-margin);
+  margin-left: calc(-1 * var(--media-component-pullout));
+}
+
+.component--portrait-right {
+  float: right;
+  margin-left: var(--media-component-margin);
+  margin-right: calc(-1 * var(--media-component-pullout));
+}
+
+.component--portrait img {
+  /* max-width: 500px; */
+}

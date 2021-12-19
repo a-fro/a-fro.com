@@ -1,7 +1,12 @@
 uuid: ff21d575-4be7-4831-92c9-eebbc2bcffd7
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - core.entity_view_mode.media.embedded
+  module:
+    - editor
+    - media
 name: HTML
 format: html
 weight: 0
@@ -10,8 +15,67 @@ filters:
     id: filter_html
     provider: filter
     status: false
-    weight: -10
+    weight: -48
     settings:
-      allowed_html: '<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol type start> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <img src alt data-entity-type data-entity-uuid> <span>'
+      allowed_html: '<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol type start> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <span> <img src alt data-entity-type data-entity-uuid data-align data-caption>'
       filter_html_help: true
       filter_html_nofollow: false
+  editor_file_reference:
+    id: editor_file_reference
+    provider: editor
+    status: false
+    weight: -45
+    settings: {  }
+  filter_html_image_secure:
+    id: filter_html_image_secure
+    provider: filter
+    status: false
+    weight: -41
+    settings: {  }
+  filter_url:
+    id: filter_url
+    provider: filter
+    status: false
+    weight: -42
+    settings:
+      filter_url_length: 72
+  filter_autop:
+    id: filter_autop
+    provider: filter
+    status: false
+    weight: -44
+    settings: {  }
+  filter_align:
+    id: filter_align
+    provider: filter
+    status: true
+    weight: -50
+    settings: {  }
+  filter_caption:
+    id: filter_caption
+    provider: filter
+    status: false
+    weight: -43
+    settings: {  }
+  filter_htmlcorrector:
+    id: filter_htmlcorrector
+    provider: filter
+    status: true
+    weight: -46
+    settings: {  }
+  filter_html_escape:
+    id: filter_html_escape
+    provider: filter
+    status: false
+    weight: -47
+    settings: {  }
+  media_embed:
+    id: media_embed
+    provider: media
+    status: true
+    weight: -49
+    settings:
+      default_view_mode: default
+      allowed_view_modes:
+        embedded: embedded
+      allowed_media_types: {  }

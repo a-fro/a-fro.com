@@ -1,0 +1,7 @@
+name: 'a-fro.com custom code'
+type: module
+description: ''
+core_version_requirement: ^9
+package: 'custom'
+dependencies:
+  - paragraphs

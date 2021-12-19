@@ -1,0 +1,15 @@
+uuid: 297cbbdf-5e93-4385-91c8-02453170229a
+langcode: en
+status: true
+dependencies: {  }
+name: full_max
+label: 'Full (1600 x 1000 max)'
+effects:
+  6c5d52ed-c861-4ce0-8476-5dfac4b2ebc9:
+    uuid: 6c5d52ed-c861-4ce0-8476-5dfac4b2ebc9
+    id: image_scale
+    weight: 1
+    data:
+      width: 1600
+      height: 1000
+      upscale: false

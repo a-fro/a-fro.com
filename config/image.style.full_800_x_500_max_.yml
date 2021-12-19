@@ -1,0 +1,15 @@
+uuid: f4c72db3-99cb-4f3e-bda5-e64e4287b70c
+langcode: en
+status: true
+dependencies: {  }
+name: full_800_x_500_max_
+label: 'Full embedded (800 x 500 max)'
+effects:
+  042a4c7d-b601-4775-8787-35cc369570d5:
+    uuid: 042a4c7d-b601-4775-8787-35cc369570d5
+    id: image_scale
+    weight: 1
+    data:
+      width: 800
+      height: 500
+      upscale: false
