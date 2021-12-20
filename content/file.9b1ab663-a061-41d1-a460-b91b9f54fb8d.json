@@ -1,0 +1,55 @@
+{
+    "uuid": [
+        {
+            "value": "9b1ab663-a061-41d1-a460-b91b9f54fb8d"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "filename": [
+        {
+            "value": "img_0530.jpg"
+        }
+    ],
+    "uri": [
+        {
+            "value": "public:\/\/2021-12\/img_0530.jpg"
+        }
+    ],
+    "filemime": [
+        {
+            "value": "image\/jpeg"
+        }
+    ],
+    "filesize": [
+        {
+            "value": 3343314
+        }
+    ],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:45:33+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:45:36+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ]
+}

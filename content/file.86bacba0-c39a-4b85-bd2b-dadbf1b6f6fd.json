@@ -1,0 +1,55 @@
+{
+    "uuid": [
+        {
+            "value": "86bacba0-c39a-4b85-bd2b-dadbf1b6f6fd"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "filename": [
+        {
+            "value": "wire.jpg"
+        }
+    ],
+    "uri": [
+        {
+            "value": "public:\/\/2021-12\/wire.jpg"
+        }
+    ],
+    "filemime": [
+        {
+            "value": "image\/jpeg"
+        }
+    ],
+    "filesize": [
+        {
+            "value": 2353261
+        }
+    ],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:59:00+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:59:02+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ]
+}

@@ -1,0 +1,85 @@
+{
+    "uuid": [
+        {
+            "value": "967df490-d401-4e79-9a7c-97d8a2f3c45a"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "bundle": [
+        {
+            "target_id": "image",
+            "target_type": "media_type",
+            "target_uuid": "d804351d-f26b-4fb5-bc6b-e2aab5ca04c4"
+        }
+    ],
+    "revision_created": [
+        {
+            "value": "2021-12-20T18:02:56+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "revision_user": [],
+    "revision_log_message": [],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "name": [
+        {
+            "value": "night sky"
+        }
+    ],
+    "thumbnail": [
+        {
+            "alt": "Blues and purples of the boundless sky and stars above the dark horizon line",
+            "title": null,
+            "width": 3800,
+            "height": 1400,
+            "target_type": "file",
+            "target_uuid": "36e92014-6b80-46d5-aab2-cfa855a8676a"
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T18:01:53+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T18:02:58+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "default_langcode": [
+        {
+            "value": true
+        }
+    ],
+    "revision_translation_affected": [
+        {
+            "value": true
+        }
+    ],
+    "field_media_image": [
+        {
+            "alt": "Blues and purples of the boundless sky and stars above the dark horizon line",
+            "title": "",
+            "width": 3800,
+            "height": 1400,
+            "target_type": "file",
+            "target_uuid": "36e92014-6b80-46d5-aab2-cfa855a8676a"
+        }
+    ]
+}

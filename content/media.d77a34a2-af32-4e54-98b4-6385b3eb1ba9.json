@@ -1,0 +1,93 @@
+{
+    "uuid": [
+        {
+            "value": "d77a34a2-af32-4e54-98b4-6385b3eb1ba9"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "bundle": [
+        {
+            "target_id": "image",
+            "target_type": "media_type",
+            "target_uuid": "d804351d-f26b-4fb5-bc6b-e2aab5ca04c4"
+        }
+    ],
+    "revision_created": [
+        {
+            "value": "2021-12-20T17:40:43+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "revision_user": [],
+    "revision_log_message": [],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "name": [
+        {
+            "value": "Office renovation"
+        }
+    ],
+    "thumbnail": [
+        {
+            "alt": "Transforming a cubicle of sadness into a space of joy",
+            "title": null,
+            "width": 4032,
+            "height": 3024,
+            "target_type": "file",
+            "target_uuid": "d49bbc62-60ad-4409-baa3-03fb6d7556ac"
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:40:15+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:40:54+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "default_langcode": [
+        {
+            "value": true
+        }
+    ],
+    "revision_translation_affected": [
+        {
+            "value": true
+        }
+    ],
+    "path": [
+        {
+            "alias": "",
+            "pid": null,
+            "langcode": "en",
+            "pathauto": 0
+        }
+    ],
+    "field_media_image": [
+        {
+            "alt": "Transforming a cubicle of sadness into a space of joy",
+            "title": "",
+            "width": 4032,
+            "height": 3024,
+            "target_type": "file",
+            "target_uuid": "d49bbc62-60ad-4409-baa3-03fb6d7556ac"
+        }
+    ]
+}

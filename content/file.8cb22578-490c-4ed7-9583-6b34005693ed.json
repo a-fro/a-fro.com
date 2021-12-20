@@ -1,0 +1,55 @@
+{
+    "uuid": [
+        {
+            "value": "8cb22578-490c-4ed7-9583-6b34005693ed"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "filename": [
+        {
+            "value": "mc-account-select-notice-fixed_0.jpg"
+        }
+    ],
+    "uri": [
+        {
+            "value": "public:\/\/2021-12\/mc-account-select-notice-fixed_0.jpg"
+        }
+    ],
+    "filemime": [
+        {
+            "value": "image\/jpeg"
+        }
+    ],
+    "filesize": [
+        {
+            "value": 69700
+        }
+    ],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:38:11+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:38:20+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ]
+}

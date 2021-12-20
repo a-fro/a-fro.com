@@ -1,0 +1,85 @@
+{
+    "uuid": [
+        {
+            "value": "758308f7-6b9b-4665-8edb-c485a6a615d8"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "bundle": [
+        {
+            "target_id": "image",
+            "target_type": "media_type",
+            "target_uuid": "d804351d-f26b-4fb5-bc6b-e2aab5ca04c4"
+        }
+    ],
+    "revision_created": [
+        {
+            "value": "2021-12-20T17:50:34+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "revision_user": [],
+    "revision_log_message": [],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "name": [
+        {
+            "value": "Calligraphy"
+        }
+    ],
+    "thumbnail": [
+        {
+            "alt": "Calligraph reading: There is no doer, nothing to be done, nothing to be lost, nothing to be won",
+            "title": null,
+            "width": 2000,
+            "height": 1500,
+            "target_type": "file",
+            "target_uuid": "f04be27a-d64c-4c47-9d41-f72be5f91ece"
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:50:29+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:50:40+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "default_langcode": [
+        {
+            "value": true
+        }
+    ],
+    "revision_translation_affected": [
+        {
+            "value": true
+        }
+    ],
+    "field_media_image": [
+        {
+            "alt": "Calligraph reading: There is no doer, nothing to be done, nothing to be lost, nothing to be won",
+            "title": "",
+            "width": 2000,
+            "height": 1500,
+            "target_type": "file",
+            "target_uuid": "f04be27a-d64c-4c47-9d41-f72be5f91ece"
+        }
+    ]
+}

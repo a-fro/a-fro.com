@@ -1,0 +1,85 @@
+{
+    "uuid": [
+        {
+            "value": "7695dcf7-1244-4fac-b939-d77400bf8862"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "bundle": [
+        {
+            "target_id": "image",
+            "target_type": "media_type",
+            "target_uuid": "d804351d-f26b-4fb5-bc6b-e2aab5ca04c4"
+        }
+    ],
+    "revision_created": [
+        {
+            "value": "2021-12-20T17:57:22+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "revision_user": [],
+    "revision_log_message": [],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "name": [
+        {
+            "value": "office-before-after"
+        }
+    ],
+    "thumbnail": [
+        {
+            "alt": "On the left, the lifeless cubicle experience from before, on the right, a vibrant and life giving space filled with natural beauty.",
+            "title": null,
+            "width": 3800,
+            "height": 1400,
+            "target_type": "file",
+            "target_uuid": "ca38bb0e-becd-4f20-9021-814033c7e501"
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:57:03+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:57:29+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "default_langcode": [
+        {
+            "value": true
+        }
+    ],
+    "revision_translation_affected": [
+        {
+            "value": true
+        }
+    ],
+    "field_media_image": [
+        {
+            "alt": "On the left, the lifeless cubicle experience from before, on the right, a vibrant and life giving space filled with natural beauty.",
+            "title": "",
+            "width": 3800,
+            "height": 1400,
+            "target_type": "file",
+            "target_uuid": "ca38bb0e-becd-4f20-9021-814033c7e501"
+        }
+    ]
+}

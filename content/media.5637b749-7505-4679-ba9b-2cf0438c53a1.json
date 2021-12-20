@@ -1,0 +1,85 @@
+{
+    "uuid": [
+        {
+            "value": "5637b749-7505-4679-ba9b-2cf0438c53a1"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "bundle": [
+        {
+            "target_id": "image",
+            "target_type": "media_type",
+            "target_uuid": "d804351d-f26b-4fb5-bc6b-e2aab5ca04c4"
+        }
+    ],
+    "revision_created": [
+        {
+            "value": "2021-12-20T17:54:05+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "revision_user": [],
+    "revision_log_message": [],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "name": [
+        {
+            "value": "Stars silhouette"
+        }
+    ],
+    "thumbnail": [
+        {
+            "alt": "Silhouette of a young man looking at the starry sky",
+            "title": null,
+            "width": 2000,
+            "height": 1544,
+            "target_type": "file",
+            "target_uuid": "826d7981-f7a4-4049-8cb2-12321f765d54"
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:53:45+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:55:08+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "default_langcode": [
+        {
+            "value": true
+        }
+    ],
+    "revision_translation_affected": [
+        {
+            "value": true
+        }
+    ],
+    "field_media_image": [
+        {
+            "alt": "Silhouette of a young man looking at the starry sky",
+            "title": "",
+            "width": 2000,
+            "height": 1544,
+            "target_type": "file",
+            "target_uuid": "826d7981-f7a4-4049-8cb2-12321f765d54"
+        }
+    ]
+}

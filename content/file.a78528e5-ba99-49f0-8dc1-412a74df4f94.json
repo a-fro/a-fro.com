@@ -1,0 +1,55 @@
+{
+    "uuid": [
+        {
+            "value": "a78528e5-ba99-49f0-8dc1-412a74df4f94"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "filename": [
+        {
+            "value": "dsc_0080_0.jpg"
+        }
+    ],
+    "uri": [
+        {
+            "value": "public:\/\/2021-12\/dsc_0080_0.jpg"
+        }
+    ],
+    "filemime": [
+        {
+            "value": "image\/jpeg"
+        }
+    ],
+    "filesize": [
+        {
+            "value": 632669
+        }
+    ],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:51:54+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:51:57+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ]
+}

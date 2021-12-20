@@ -1,0 +1,85 @@
+{
+    "uuid": [
+        {
+            "value": "67d36135-bc44-4f0d-9788-90beb26f684f"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "bundle": [
+        {
+            "target_id": "image",
+            "target_type": "media_type",
+            "target_uuid": "d804351d-f26b-4fb5-bc6b-e2aab5ca04c4"
+        }
+    ],
+    "revision_created": [
+        {
+            "value": "2021-12-20T17:56:05+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "revision_user": [],
+    "revision_log_message": [],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "name": [
+        {
+            "value": "embrace-space1"
+        }
+    ],
+    "thumbnail": [
+        {
+            "alt": "In the process of building my barn wood wall to cover the ugly cubicle walls and hang a mirror and whiteboard",
+            "title": null,
+            "width": 2000,
+            "height": 1126,
+            "target_type": "file",
+            "target_uuid": "6649c7ba-8695-4702-9513-e5e9225fb36b"
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:55:41+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:56:46+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "default_langcode": [
+        {
+            "value": true
+        }
+    ],
+    "revision_translation_affected": [
+        {
+            "value": true
+        }
+    ],
+    "field_media_image": [
+        {
+            "alt": "In the process of building my barn wood wall to cover the ugly cubicle walls and hang a mirror and whiteboard",
+            "title": "",
+            "width": 2000,
+            "height": 1126,
+            "target_type": "file",
+            "target_uuid": "6649c7ba-8695-4702-9513-e5e9225fb36b"
+        }
+    ]
+}

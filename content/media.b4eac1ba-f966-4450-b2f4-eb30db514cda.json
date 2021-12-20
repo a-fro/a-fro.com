@@ -1,0 +1,93 @@
+{
+    "uuid": [
+        {
+            "value": "b4eac1ba-f966-4450-b2f4-eb30db514cda"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "bundle": [
+        {
+            "target_id": "image",
+            "target_type": "media_type",
+            "target_uuid": "d804351d-f26b-4fb5-bc6b-e2aab5ca04c4"
+        }
+    ],
+    "revision_created": [
+        {
+            "value": "2021-12-20T17:35:03+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "revision_user": [],
+    "revision_log_message": [],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "name": [
+        {
+            "value": "MC Account callback"
+        }
+    ],
+    "thumbnail": [
+        {
+            "alt": "MailChimp Account info callback page",
+            "title": null,
+            "width": 607,
+            "height": 509,
+            "target_type": "file",
+            "target_uuid": "b680867f-201e-420c-9c86-73f029e109e7"
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:34:36+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:35:10+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "default_langcode": [
+        {
+            "value": true
+        }
+    ],
+    "revision_translation_affected": [
+        {
+            "value": true
+        }
+    ],
+    "path": [
+        {
+            "alias": "",
+            "pid": null,
+            "langcode": "en",
+            "pathauto": 0
+        }
+    ],
+    "field_media_image": [
+        {
+            "alt": "MailChimp Account info callback page",
+            "title": "",
+            "width": 607,
+            "height": 509,
+            "target_type": "file",
+            "target_uuid": "b680867f-201e-420c-9c86-73f029e109e7"
+        }
+    ]
+}

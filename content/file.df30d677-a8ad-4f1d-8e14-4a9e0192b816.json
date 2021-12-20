@@ -1,0 +1,55 @@
+{
+    "uuid": [
+        {
+            "value": "df30d677-a8ad-4f1d-8e14-4a9e0192b816"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "filename": [
+        {
+            "value": "mastering-mailchimp-large.jpeg"
+        }
+    ],
+    "uri": [
+        {
+            "value": "public:\/\/2021-12\/mastering-mailchimp-large.jpeg"
+        }
+    ],
+    "filemime": [
+        {
+            "value": "image\/jpeg"
+        }
+    ],
+    "filesize": [
+        {
+            "value": 27256
+        }
+    ],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:39:31+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:39:39+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ]
+}

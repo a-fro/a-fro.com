@@ -1,0 +1,85 @@
+{
+    "uuid": [
+        {
+            "value": "ee7d8265-ef84-4b56-adb4-5f879eb8e89e"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "bundle": [
+        {
+            "target_id": "image",
+            "target_type": "media_type",
+            "target_uuid": "d804351d-f26b-4fb5-bc6b-e2aab5ca04c4"
+        }
+    ],
+    "revision_created": [
+        {
+            "value": "2021-12-20T17:59:28+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "revision_user": [],
+    "revision_log_message": [],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "name": [
+        {
+            "value": "2018 camping fire"
+        }
+    ],
+    "thumbnail": [
+        {
+            "alt": "Two figures sit by the fire with the moon rising and the year 2018 written in light",
+            "title": null,
+            "width": 1000,
+            "height": 1000,
+            "target_type": "file",
+            "target_uuid": "e6896ab8-4a11-44ea-a963-6668a5c38f62"
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:59:20+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:59:30+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "default_langcode": [
+        {
+            "value": true
+        }
+    ],
+    "revision_translation_affected": [
+        {
+            "value": true
+        }
+    ],
+    "field_media_image": [
+        {
+            "alt": "Two figures sit by the fire with the moon rising and the year 2018 written in light",
+            "title": "",
+            "width": 1000,
+            "height": 1000,
+            "target_type": "file",
+            "target_uuid": "e6896ab8-4a11-44ea-a963-6668a5c38f62"
+        }
+    ]
+}

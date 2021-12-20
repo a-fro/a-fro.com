@@ -1,0 +1,85 @@
+{
+    "uuid": [
+        {
+            "value": "f328c4ff-456a-4082-85a6-0c5df42f7ca6"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "bundle": [
+        {
+            "target_id": "image",
+            "target_type": "media_type",
+            "target_uuid": "d804351d-f26b-4fb5-bc6b-e2aab5ca04c4"
+        }
+    ],
+    "revision_created": [
+        {
+            "value": "2021-12-20T17:58:27+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "revision_user": [],
+    "revision_log_message": [],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "name": [
+        {
+            "value": "office collage final"
+        }
+    ],
+    "thumbnail": [
+        {
+            "alt": "Final images of the project demonstrating the beauty and tranquility of the barn wood filled space.",
+            "title": null,
+            "width": 3800,
+            "height": 1400,
+            "target_type": "file",
+            "target_uuid": "d6343210-6134-4d11-82da-e6f6947c6256"
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:58:05+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:58:30+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "default_langcode": [
+        {
+            "value": true
+        }
+    ],
+    "revision_translation_affected": [
+        {
+            "value": true
+        }
+    ],
+    "field_media_image": [
+        {
+            "alt": "Final images of the project demonstrating the beauty and tranquility of the barn wood filled space.",
+            "title": "",
+            "width": 3800,
+            "height": 1400,
+            "target_type": "file",
+            "target_uuid": "d6343210-6134-4d11-82da-e6f6947c6256"
+        }
+    ]
+}

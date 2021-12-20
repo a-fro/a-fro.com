@@ -1,0 +1,55 @@
+{
+    "uuid": [
+        {
+            "value": "c4cdcb72-a541-43d7-a1ba-e2e8aa9bda03"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "filename": [
+        {
+            "value": "IMG_1729.png"
+        }
+    ],
+    "uri": [
+        {
+            "value": "public:\/\/2021-12\/IMG_1729.png"
+        }
+    ],
+    "filemime": [
+        {
+            "value": "image\/png"
+        }
+    ],
+    "filesize": [
+        {
+            "value": 2882135
+        }
+    ],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:49:40+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:49:43+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ]
+}

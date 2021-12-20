@@ -1,0 +1,85 @@
+{
+    "uuid": [
+        {
+            "value": "78b8e262-77c6-4a4c-830e-a36737558cd2"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "bundle": [
+        {
+            "target_id": "image",
+            "target_type": "media_type",
+            "target_uuid": "d804351d-f26b-4fb5-bc6b-e2aab5ca04c4"
+        }
+    ],
+    "revision_created": [
+        {
+            "value": "2021-12-20T17:54:34+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "revision_user": [],
+    "revision_log_message": [],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "name": [
+        {
+            "value": "stars-tree-silhouette"
+        }
+    ],
+    "thumbnail": [
+        {
+            "alt": "Greens, deep blues and purples of the night sky shine behind branches of a crooked tree",
+            "title": null,
+            "width": 2000,
+            "height": 852,
+            "target_type": "file",
+            "target_uuid": "b62688fd-8eeb-4508-9892-6165f046a03c"
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:54:09+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:54:52+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "default_langcode": [
+        {
+            "value": true
+        }
+    ],
+    "revision_translation_affected": [
+        {
+            "value": true
+        }
+    ],
+    "field_media_image": [
+        {
+            "alt": "Greens, deep blues and purples of the night sky shine behind branches of a crooked tree",
+            "title": "",
+            "width": 2000,
+            "height": 852,
+            "target_type": "file",
+            "target_uuid": "b62688fd-8eeb-4508-9892-6165f046a03c"
+        }
+    ]
+}

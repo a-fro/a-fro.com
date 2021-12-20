@@ -1,0 +1,85 @@
+{
+    "uuid": [
+        {
+            "value": "0441030b-fbf3-4c90-9889-e156fc1904fe"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "bundle": [
+        {
+            "target_id": "image",
+            "target_type": "media_type",
+            "target_uuid": "d804351d-f26b-4fb5-bc6b-e2aab5ca04c4"
+        }
+    ],
+    "revision_created": [
+        {
+            "value": "2021-12-20T17:47:13+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "revision_user": [],
+    "revision_log_message": [],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "name": [
+        {
+            "value": "gazebo"
+        }
+    ],
+    "thumbnail": [
+        {
+            "alt": "Black locust posts and timbers support the living reciprocal roof",
+            "title": null,
+            "width": 3024,
+            "height": 4032,
+            "target_type": "file",
+            "target_uuid": "726452dd-0233-4eef-b9ce-58bfe2e870de"
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:46:51+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:47:15+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "default_langcode": [
+        {
+            "value": true
+        }
+    ],
+    "revision_translation_affected": [
+        {
+            "value": true
+        }
+    ],
+    "field_media_image": [
+        {
+            "alt": "Black locust posts and timbers support the living reciprocal roof",
+            "title": "",
+            "width": 3024,
+            "height": 4032,
+            "target_type": "file",
+            "target_uuid": "726452dd-0233-4eef-b9ce-58bfe2e870de"
+        }
+    ]
+}

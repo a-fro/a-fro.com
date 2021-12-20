@@ -1,0 +1,85 @@
+{
+    "uuid": [
+        {
+            "value": "64f7b3e0-7ba2-4ffb-8ff2-f8075288ed84"
+        }
+    ],
+    "langcode": [
+        {
+            "value": "en"
+        }
+    ],
+    "bundle": [
+        {
+            "target_id": "image",
+            "target_type": "media_type",
+            "target_uuid": "d804351d-f26b-4fb5-bc6b-e2aab5ca04c4"
+        }
+    ],
+    "revision_created": [
+        {
+            "value": "2021-12-20T17:51:04+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "revision_user": [],
+    "revision_log_message": [],
+    "status": [
+        {
+            "value": true
+        }
+    ],
+    "uid": [
+        {
+            "target_type": "user",
+            "target_uuid": "2f1d8340-8b1e-4065-89eb-ed179b103e00"
+        }
+    ],
+    "name": [
+        {
+            "value": "Fall trees"
+        }
+    ],
+    "thumbnail": [
+        {
+            "alt": "The changing leaves outside my bedroom window",
+            "title": null,
+            "width": 2000,
+            "height": 1500,
+            "target_type": "file",
+            "target_uuid": "80d771f3-2160-497a-a6c3-4d52ae89569a"
+        }
+    ],
+    "created": [
+        {
+            "value": "2021-12-20T17:50:46+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "changed": [
+        {
+            "value": "2021-12-20T17:51:06+00:00",
+            "format": "Y-m-d\\TH:i:sP"
+        }
+    ],
+    "default_langcode": [
+        {
+            "value": true
+        }
+    ],
+    "revision_translation_affected": [
+        {
+            "value": true
+        }
+    ],
+    "field_media_image": [
+        {
+            "alt": "The changing leaves outside my bedroom window",
+            "title": "",
+            "width": 2000,
+            "height": 1500,
+            "target_type": "file",
+            "target_uuid": "80d771f3-2160-497a-a6c3-4d52ae89569a"
+        }
+    ]
+}
