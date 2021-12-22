@@ -88,16 +88,16 @@
  * );
  * @endcode
  */
-// $databases['default']['default'] = [
-//   'database' => $_ENV['MYSQL_DATABASE'],
-//   'driver' => 'mysql',
-//   'host' => $_ENV['MYSQL_HOSTNAME'],
-//   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
-//   'password' => $_ENV['MYSQL_PASSWORD'],
-//   'port' => $_ENV['MYSQL_PORT'],
-//   'prefix' => '',
-//   'username' => $_ENV['MYSQL_USER'],
-// ];
+$databases['default']['default'] = [
+  'database' => $_ENV['MYSQL_DATABASE'],
+  'driver' => 'mysql',
+  'host' => $_ENV['MYSQL_HOSTNAME'],
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+  'password' => $_ENV['MYSQL_PASSWORD'],
+  'port' => $_ENV['MYSQL_PORT'],
+  'prefix' => '',
+  'username' => $_ENV['MYSQL_USER'],
+];
 
 /**
  * Customizing database settings.
@@ -795,17 +795,11 @@ if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
   include $app_root . '/' . $site_path . '/settings.local.php';
 }
 
-$databases['default']['default'] = array (
-  'database' => 'sites/default/files/.ht.sqlite',
-  'prefix' => '',
-  'namespace' => 'Drupal\\Core\\Database\\Driver\\sqlite',
-  'driver' => 'sqlite',
-);
+// $databases['default']['default'] = array (
+//   'database' => 'sites/default/files/.ht.sqlite',
+//   'prefix' => '',
+//   'namespace' => 'Drupal\\Core\\Database\\Driver\\sqlite',
+//   'driver' => 'sqlite',
+// );
 
 $settings['config_sync_directory'] = '../config';
-$databases['default']['default'] = array (
-  'database' => 'sites/default/files/.ht.sqlite',
-  'prefix' => '',
-  'namespace' => 'Drupal\\Core\\Database\\Driver\\sqlite',
-  'driver' => 'sqlite',
-);
