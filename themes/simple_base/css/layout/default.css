@@ -30,7 +30,8 @@ dynamically added to the top of the page. */
   grid-column: 1/-1;
 }
 
-.full-width {
+.full-width,
+.component--full-width {
   width: 100vw;
   position: relative;
   left: 50%;

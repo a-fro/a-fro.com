@@ -13,6 +13,15 @@
   margin-right: calc(-1 * var(--media-component-pullout));
 }
 
-.component--portrait img {
-  /* max-width: 500px; */
+.field--name-field-components .field__item {
+  margin-bottom: var(--cu-vr3);
+}
+
+.paragraph--type--rich-text .field--name-field-body p:last-of-type {
+  margin-bottom: 0;
+}
+
+.component--content-width {
+  margin-left: -50px;
+  margin-right: -50px;
 }
