@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.media.field_media_item
-    - image.style.full_max
+    - image.style.large_21_9
     - paragraphs.paragraphs_type.media
   module:
     - media
@@ -18,7 +18,7 @@ content:
     label: hidden
     settings:
       image_link: ''
-      image_style: full_max
+      image_style: large_21_9
     third_party_settings: {  }
     weight: 0
     region: content

@@ -60,10 +60,11 @@ class MediaSettings extends ParagraphsBehaviorBase {
       if (strpos($media_placement, 'portrait') === 0) {
         $is_promo = FALSE;
         $variables['attributes']['class'][] = 'component--portrait';
+        $variables['content']['field_media_item'][0]['#image_style'] = 'portrait';
+      }
 
-        if ($media_placement) {
-          $variables['content']['field_media_item'][0]['#image_style'] = 'portrait';
-        }
+      if ($media_placement === 'content-width') {
+        $variables['content']['field_media_item'][0]['#image_style'] = 'full_content';
       }
     }
   }
