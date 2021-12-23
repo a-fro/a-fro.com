@@ -1,0 +1,14 @@
+uuid: 06d74cad-b55c-46b7-8c5c-e462da53b3cf
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: taxonomy_terms
+label: 'Taxonomy terms'
+type: 'canonical_entities:taxonomy_term'
+pattern: '/blog/[term:name]'
+selection_criteria: {  }
+selection_logic: and
+weight: 0
+relationships: {  }

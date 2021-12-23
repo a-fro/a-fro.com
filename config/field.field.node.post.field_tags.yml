@@ -1,4 +1,4 @@
-uuid: 8a333b73-0e67-4182-bfbd-3f5f864f45c9
+uuid: f4c265db-f4d5-4c9b-b1d7-d860639599cc
 langcode: en
 status: true
 dependencies:
@@ -12,7 +12,7 @@ entity_type: node
 bundle: post
 label: Tags
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''
@@ -24,6 +24,6 @@ settings:
     sort:
       field: name
       direction: asc
-    auto_create: false
+    auto_create: true
     auto_create_bundle: ''
 field_type: entity_reference
