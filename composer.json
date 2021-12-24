@@ -47,6 +47,7 @@
     "files": ["load.environment.php"]
   },
   "scripts": {
+    "gh-pages": "./scripts/gh-pages.sh",
     "symlink": "./scripts/symlink.sh",
     "post-install-cmd": [
       "@symlink"
