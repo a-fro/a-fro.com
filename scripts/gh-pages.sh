@@ -16,5 +16,6 @@ cd gh-pages
 git add .
 git commit -m 'Updating gh-pages site'
 git push -u origin main
+cd ..
 mv web/sites/default/settings.local-bk.php web/sites/default/settings.local.php
 drush cr
