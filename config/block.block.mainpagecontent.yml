@@ -1,0 +1,20 @@
+uuid: 5ff7455c-5a5e-4358-adf7-559e0c348409
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - simple_base
+id: mainpagecontent
+theme: simple_base
+region: content
+weight: 2
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  label_display: '0'
+  provider: system
+visibility: {  }
