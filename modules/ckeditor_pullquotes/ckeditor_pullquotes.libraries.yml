@@ -5,3 +5,6 @@ pullquote:
       css/pullquote.css: {}
   js:
     js/pullquote.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
