@@ -28,6 +28,7 @@
     "drupal/core-composer-scaffold": "^9",
     "drupal/core-recommended": "^9",
     "drupal/focal_point": "^1.5",
+    "drupal/media_entity_soundcloud": "^3.0",
     "drupal/paragraphs": "^1.12",
     "drupal/pathauto": "^1.8",
     "drupal/tome": "^1.0",

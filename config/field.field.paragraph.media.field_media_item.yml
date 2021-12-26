@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.paragraph.field_media_item
     - media.type.image
+    - media.type.soundcloud
     - paragraphs.paragraphs_type.media
 id: paragraph.media.field_media_item
 field_name: field_media_item
@@ -21,9 +22,10 @@ settings:
   handler_settings:
     target_bundles:
       image: image
+      soundcloud: soundcloud
     sort:
       field: _none
       direction: ASC
     auto_create: false
-    auto_create_bundle: ''
+    auto_create_bundle: image
 field_type: entity_reference

@@ -20,6 +20,7 @@ module:
   focal_point: 0
   image: 0
   media: 0
+  media_entity_soundcloud: 0
   media_library: 0
   node: 0
   page_cache: 0
