@@ -18,11 +18,12 @@
   /* Color vars */
   --color-black: #222;
   --color-navy: #233140;
+  --color-vibrant-blue: #2980b9;
   --color-orange: #f39c12;
   --color-gray-lightest: #fbfbfb;
   --color-gray-medium: #ccc;
   --color-border: var(--color-gray-medium);
-  --color-link: var(--color-navy);
+  --color-link: var(--color-vibrant-blue);
   --color-breadcrumbs: var(--color-link);
 
   /* Layout vars */
@@ -31,12 +32,6 @@
   --layout-grid-column-gap: 2rem;
   --layout-grid-template-columns: 12fr;
   --layout-grid-template-rows: auto 1fr auto;
-}
-
-@media (min-width: 44rem) {
-  :root {
-    --layout-display: grid;
-  }
 }
 
 a {

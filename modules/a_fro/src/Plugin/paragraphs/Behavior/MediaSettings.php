@@ -30,7 +30,8 @@ class MediaSettings extends ParagraphsBehaviorBase {
     'content-width' => 'Content width',
     'full-width' => 'Full-width',
     'portrait-left' => 'Portrait left',
-    'portrait-right' => 'Portrait right'
+    'portrait-right' => 'Portrait right',
+    'original' => 'Original',
   ];
 
   /**
@@ -66,6 +67,10 @@ class MediaSettings extends ParagraphsBehaviorBase {
 
       if ($media_placement === 'content-width') {
         $image_style = 'full_content';
+      }
+
+      if ($media_placement === 'original') {
+        $image_style = 'full_max';
       }
 
       // Render it as a thumbnail with an image style

@@ -31,7 +31,7 @@
 }
 
 .view-related-content .node--view-mode-teaser h2 {
-  margin: calc(var(--cu-vr1) * -1) var(--cu-ps1) var(--cu-vr1);
+  margin: var(--cu-vr1) var(--cu-ps1);
 }
 
 .view-related-content .field--name-body {

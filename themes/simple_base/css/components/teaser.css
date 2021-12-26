@@ -4,9 +4,12 @@
   margin-bottom: var(--cu-vr3);
 }
 
+.node--view-mode-teaser .field--name-field-representative-image {
+  margin-bottom: 0;
+}
+
 .node--view-mode-teaser h2 {
-  order: 2;
-  margin-top: -1rem;
+  order: -1;
 }
 
 .node--view-mode-teaser h2 a {
@@ -22,10 +25,10 @@
 }
 
 .node--view-mode-teaser .field--name-field-representative-image {
-  order: 1;
+  order: -2;
 }
 
-.node--view-mode-teaser .field--name-body {
-  order: 3;
+.node--view-mode-teaser .field--name-field-tags {
+  order: 2;
 }
 
