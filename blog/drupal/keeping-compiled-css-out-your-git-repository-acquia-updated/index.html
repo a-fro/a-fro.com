@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+<meta name="Generator" content="Drupal 9 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="/core/misc/favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="canonical" href="https://www.a-fro.com/blog/drupal/keeping-compiled-css-out-your-git-repository-acquia-updated" />
+<link rel="shortlink" href="https://www.a-fro.com/node/10" />
+
+    <title>Keeping Compiled CSS Out of your Git Repository on Acquia [Updated] | a-fro.com</title>
+    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_Ov6iUDly3SngZgRuyy-vYboSettyRJo1rXFjgCfc1Jo.css" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_PJMDxwkMigKO_2N1HQiw7IqRu5kH5nGq1b5ZNHaXhnc.css" />
+<link rel="stylesheet" media="all" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<link rel="stylesheet" media="all" href="//fonts.googleapis.com/css?family=Merriweather:300,300italic,700,700italic,400,400italic|Merriweather+Sans:400,400italic,700,700italic,300italic,300" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_2ngw7hxQk_KLnBGvR27nQ0tv2gJXNDowjRK29HPdlKk.css" />
+
+    
+  </head>
+  <body class="path-node page-node-type-post">
+        <a href="#main-content" class="visually-hidden focusable skip-link">
+      Skip to main content
+    </a>
+    
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    
+
+<div class="layout-container">
+
+  <header class="layout-header full-width" role="banner">
+      <div class="region region-header">
+    <div id="block-simple-base-branding" class="block block-system block-system-branding-block">
+  
+    
+          <div class="site-name">
+      <a href="/" rel="home">a-fro.com</a>
+    </div>
+    </div>
+
+  </div>
+
+    <div class="region region--highlighted">
+      <div class="content__container">
+          <div class="region region-highlighted">
+    <div id="block-breadcrumbs--4" class="block block-system block-system-breadcrumb-block">
+  
+    
+        <nav class="breadcrumb" role="navigation" aria-labelledby="system-breadcrumb">
+    <h2 id="system-breadcrumb" class="visually-hidden">Breadcrumb</h2>
+    <ol>
+          <li>
+                  <a href="/">Home</a>
+              </li>
+          <li>
+                  <a href="/blog">Blog</a>
+              </li>
+          <li>
+                  <a href="/blog/drupal">Drupal</a>
+              </li>
+        </ol>
+  </nav>
+
+  </div>
+<div id="block-simple-base-page-title--4" class="block block-core block-page-title-block">
+  
+    
+      
+  <h1 class="page-title"><span class="field field--name-title field--type-string field--label-hidden">Keeping Compiled CSS Out of your Git Repository on Acquia [Updated]</span>
+</h1>
+
+
+  </div>
+
+  </div>
+
+      </div>
+    </div>
+  </header>
+
+  <main role="main" class="layout-main">
+    <a id="main-content" tabindex="-1"></a>      <div class="region region-content">
+    <div data-drupal-messages-fallback class="hidden"></div>
+<div id="block-mainpagecontent--4" class="block block-system block-system-main-block">
+  
+    
+      
+<article role="article" class="node node--type-post node--promoted node--view-mode-full">
+
+  
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"><time datetime="2014-10-27T12:00:00Z" class="datetime">October 27, 2014</time>
+</div>
+      
+      <div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--rich-text paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"><p>A couple of months ago, after a harrowing cascade of git merge conflicts involving compiled css, we decided it was time to subscribe to the philosophy that <a href="http://pointnorth.io/#preprocessed-languages">compiled CSS doesn't belong in a git repository</a>. Sure, there are <a href="http://carwinyoung.com/2013/01/23/avoiding-git-conflicts-involving-compiled-sass/">other technical solutions</a> teams are <a href="http://mobileresponse.blogspot.com/2013/11/using-sass-with-compass-and-large.html">tossing around</a> that try to handle merging more gracefully, but I was more intererested in simply keeping the CSS out of the repo in the first place. After <a href="http://stackoverflow.com/questions/1274057/making-git-forget-about-a-file-that-was-tracked-but-is-now-gitignored">removing the CSS from the repo</a>, we suddenly faced two primary technical challenges:</p>
+
+<ul>
+	<li>During development, switching branches will now need to trigger a recompliation of the stylesheets</li>
+	<li>Without the CSS in the repo, it's hard to know how to get the code up to Acquia</li>
+</ul>
+
+<p>In this article, I'll describe the solutions we came up with to handle these challenges, and welcome feedback if you have a different solution.</p>
+
+<h3>Local Development</h3>
+
+<p>If you're new to using tools like Sass, Compass, Guard and LiveReload, I recommend taking a look at a project like <a href="http://singlebrook.com/blog/streamlined-drupal-project-setup-and-theming">Drupal Streamline</a>. For the purpose of this post, I'm going to assume that you're already using Compass in your project. Once the CSS files have been removed, you'll want to <code>compass compile</code> to trigger an initial compilation of the stylesheet. However, having to remember to compile every time you switch to a new branch introduces not only an inconvenience, but also a strong possiblily for human error.</p>
+
+<p>Luckily, we can use git hooks to remove this risk and annoyance. In this case, we'll create a post-checkout hook that triggers compiling every time a new branch is checked out:</p>
+
+<ol>
+	<li>Create a file called <code>post-checkout</code> in the .git/hooks folder</li>
+	<li>Add the following lines to that file:
+	<pre>
+<code data-language="shell">#! /bin/sh
+# Start from the repository root.
+cd ./$(git rev-parse --show-cdup)
+compass compile</code></pre>
+	</li>
+	<li>From the command line in the repository root, type <code>chmod +x .git/hooks/post-checkout</code></li>
+</ol>
+
+<p>Assuming you have compass correctly configured, you should see the stylesheets getting re-compiled the next time you <code>git checkout [branch]</code>, even if you're not already running Guard and LiveReload.</p>
+
+<h3>Deploying to Acquia</h3>
+
+<p>Now that CSS is no longer being deployed when we push our repo up to Acquia, we need to figure out how we're going to get it there. It would be possible to force-add the ignored stylesheets before I push the branch up, but I don't really want all those additional commits on my development branches in particular. Luckily, Acquia has a solution that we can hack which will allow us to push the files up to Dev and Stage (note, we'll handle prod differently).</p>
+
+<h3>Enter LiveDev</h3>
+
+<p>Acquia has a setting that you can toggle on both the dev and test environments that allows you to modify the files on the server. It's called 'livedev', and we're going to exploit its functionality to get our compiled CSS up to those environments. After enabling livedev in the <a href="Get/url/%20and%20image%20here">Acquia workflow interface</a>, you are now able to scp files up to the server during deployment. Because I like to reduce the possibility of human error, I prefer to create a deploy script that handles this part for me. It's basically going to do three things:</p>
+
+<ol>
+	<li>Compile the css</li>
+	<li>scp the css files up to Acquia livedev for the correct environment</li>
+	<li>ssh into Acquia's server and checkout the code branch that we just pushed up.</li>
+</ol>
+
+<p>Here's the basic deploy script that we can use to accomplish these goals:</p>
+
+<pre>
+<code data-language="shell">#!/bin/bash
+
+REPO_BASE='[project foldername here (the folder above docroot)]'
+
+# check running from the repository base
+CURRENT_DIR=${PWD##*/}
+if [ ! "$CURRENT_DIR" = $REPO_BASE ]; then
+  echo 'Please be sure that you are running this command from the root of the repo.'
+  exit 2
+fi
+
+# Figure out which environment to deploy to
+while getopts "e:" var; do
+    case $var in
+        e) ENV="${OPTARG}";;
+    esac
+done
+
+# Set the ENV to dev if 'e' wasn't passed as an argument
+if [ "${#ENV}" -eq "0" ]; then
+  ENV='dev'
+fi
+
+if [ "$ENV" = "dev" ] || [ "$ENV" = "test" ]; then
+  # Set the css_path and livedev path
+  CSS_PATH='docroot/sites/all/themes/theme_name/css/'
+
+  # Replace [user@devcloud.host] with your real Acquia Cloud SSH host
+  # Available in the AC interface under the "Users and keys" tab
+  ACQUIA_LIVEDEV='[user@devcloud.host]:~/$ENV/livedev/'
+
+  # Get the branch name
+  BRANCH_NAME="$(git symbolic-ref HEAD 2&gt;/dev/null)" ||
+  BRANCH_NAME="detached"     # detached HEAD
+  BRANCH_NAME=${BRANCH_NAME##refs/heads/}
+
+  echo "Pushing $BRANCH_NAME to acquia cloud $ENV"
+  git push -f ac $BRANCH_NAME # This assumes you have a git remote called "ac" that points to Acquia
+
+  echo "Compiling css"
+  compass compile
+
+  # Upload to server
+  echo "Uploading styles to server"
+  scp -r $CSS_PATH "$ACQUIA_LIVEDEV~/$ENV/livedev/$CSS_PATH":
+
+  # Pull the updates from the branch to livedev and clear cache
+  echo "Deploying $BRANCH_NAME to livedev on Acquia"
+  ssh $ACQUIA_LIVEDEV "git checkout .; git pull; git checkout $BRANCH_NAME; cd docroot; exit;"
+
+  echo "Clearing cache on $ENV"
+  cd docroot
+  drush [DRUSH_ALIAS].$ENV cc all -y
+
+  echo "Deployment complete"
+  exit
+fi
+
+# If not dev or test, throw an error
+echo 'Error: the deploy script is for the Acquia dev and test environments'
+</code></pre>
+
+<p>Now I don't pretend to be a shell scripting expert and I'm sure this script could be improved; however, it might be helpful to explain a few things. To start with, you will need to <code>chmod +x [path/to/file]</code>. I always put scripts like this in a bin folder at the root of the repo. There are a few other variables that you'll need to change if you want to use this script, such as <code>REPO_BASE, CSS_PATH and ACQUIA_LIVEDEV</code>. Also, the script assumes that you have a git remote called "ac", which should point to your Acquia Cloud instance. Finally, the drush cache clear portion assumes that you have a custom drush alias created for your livedev environment for both dev and test; if not, you can remove those lines. To deploy the site to dev, you would run the command <code>bin/deploy</code>, or <code>bin/deploy -e test</code> to deploy to the staging environment.</p>
+
+<h3>Deploying to Prod</h3>
+
+<p>Wisely, Acquia doesn't provide keys to run livedev on the production environment, and this approach is probably more fragile than we'd like anyway. For the production environment, we're going to use an approach that force-adds the stylesheet when necessary.</p>
+
+<p>To do this, we're again going to rely on a git hook to help reduce the possibility of human error. Because our development philosophy relies on a single branch called "production" that we merge into and tag, we can use git's post-merge hook to handle the necessary force-adding of our stylesheet.</p>
+
+<pre>
+<code data-language="shell">#! /bin/sh
+
+BRANCH_NAME="$(git symbolic-ref HEAD 2&gt;/dev/null)" ||
+BRANCH_NAME="detached"
+BRANCH_NAME=${BRANCH_NAME##refs/heads/}
+CSS_PATH="docroot/sites/all/themes/theme_name/css/"
+
+if [ "$BRANCH_NAME" = "production" ]; then
+  compass compile
+  git add $CSS_PATH -f
+  git diff --cached --exit-code &gt; /dev/null
+  if [ "$?" -eq 1 ]; then
+    git commit -m 'Adding compiled css to production'
+  fi
+fi
+</code></pre>
+
+<p>As with the post-checkout hook, you'll need to make sure this file is executable. Note that after the script stages the css files, git is able to confirm whether there are differences in the current state of the files, and only commit the files when there are changes. After merging a feature branch into the production branch, the post-merge hook gets triggered, and I can then add a git tag, push the code and new tag to the Acquia remote, and then utilize Acquia's cloud interface to deploy the new tag.</p>
+
+<h3>Conclusion</h3>
+
+<p>While this may seem like a lot of hoops to jump through to keep compiled CSS out of the repository, the deploy script actually fits very nicely with my development workflow, because it allows me to easily push up the current branch to dev for acceptance testing. In the future, I'd like to rework this process to utilize Acquia's Cloud API, but frankly, my tests with the API thus far have returned unexpected results, and I haven't wanted to submit one of our coveted support tickets to figure out why the API isn't working correctly. If you're reading this and can offer tips for improving what's here, sharing how you accomplish the same thing, or happen to work at Acquia and want to talk about the bugs I'm seeing in the API, please leave a comment. And thanks for reading!</p>
+
+<h3>Update</h3>
+
+<p>Dave Reid made a comment below about alternatives to LiveDev and the possibility of using tags to accomplish this. As I mentioned above, LiveDev works well for me (on dev and test) because it fits well into my typical deployment workflow. The problem I see with using tags to trigger a hook is that we are in the practice of tagging production releases, but not for dev or test. Thinking through Dave's suggestion, however, led to me to an alternative approach to LiveDev that still keeps the repo clean using Git's "pre-push" hook:</p>
+
+<pre>
+<code data-language="shell">#! /bin/sh
+
+PUSH_REMOTE=$1
+ACQUIA_REMOTE='ac' #put your Acquia remote name here
+
+if [ $PUSH_REMOTE = $ACQUIA_REMOTE ]; then
+  compass compile
+  git add docroot/sites/all/themes/ilr_theme/css/ -f
+  git diff --cached --exit-code &gt; /dev/null
+  if [ "$?" -eq 1 ]; then
+    git commit -m "Adding compiled css"
+  fi
+fi
+
+</code></pre>
+
+<p>The hook receives the remote as the first argument, which allows us to check whether we're pushing to our defined Acquia remote. If we are, the script then checks for CSS changes, and adds the additional commit if necessary. The thing I really like about this approach is that the GitHub repository won't get cluttered with the extra commit, but the CSS files can be deployed to Acquia without livedev.</p>
+</div>
+      
+      </div>
+</div>
+          </div>
+  
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  <div class="field field--name-field-comments field--type-disqus-comment field--label-above">
+    <div class="field__label">Comments</div>
+              <div class="field__item"><div id="disqus_thread"><noscript>
+  <p>
+    <a href="http://a-fro.disqus.com/">View the discussion thread.</a>
+  </p>
+</noscript>
+</div>
+</div>
+          </div>
+
+  </div>
+
+</article>
+
+  </div>
+<div class="views-element-container block block-views block-views-blockrelated-content-block-1" id="block-views-block-related-content-block-1--4">
+  
+      <h2>Up Next</h2>
+    
+      <div><div class="view view-related-content view-id-related_content view-display-id-block_1 js-view-dom-id-337c0b24df6aea05de332b7a4ca3f5e8fa9a8ee5641519fb3a7b24f290e0ca44">
+  
+    
+      
+      <div class="view-content">
+          <div class="views-row">
+<article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
+
+  
+      <h2>
+      <a href="/blog/drupal/creating-reusable-dynamic-content-components" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Creating Reusable Dynamic Content Components</span>
+</a>
+    </h2>
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/creating-reusable-dynamic-content-components" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/reusable-components.jpg?itok=M349LY0e" width="798" height="342" alt="A screenshot showing the &quot;up next&quot; reusable tagged content block " loading="lazy" class="image-style-medium-21-9" />
+
+</a>
+</div>
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">This is part 2 in this series that explores how to use paragraph bundles to store configuration for dynamic content. The example I built in part 1 was a "read next" section, which could then be added as a component within the flow of the page. The strategy makes sense for component-based sites and landing pages, but probably less so for blogs or content heavy sites, since what we really want is for each article to include the read next section at the end of the page. For that, a view that displays as a block would perfectly suffice. In practice, however, it can be really useful to have a single custom block type, which I often call a "component block", that has an entity reference revisions field that we can leverage to create reusable components.</div>
+      
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  </div>
+
+</article>
+</div>
+    <div class="views-row">
+<article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
+
+  
+      <h2>
+      <a href="/blog/drupal/drupal-pullquotes" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Drupal Pullquotes</span>
+</a>
+    </h2>
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/drupal-pullquotes" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/pullqoutes.png?itok=tGjYx72p" width="798" height="342" alt="Several powerful quotes with a pullquote sprinkled off to the side to draw a reader&#039;s attention" loading="lazy" class="image-style-medium-21-9" />
+
+</a>
+</div>
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">"Pullquotes", as described here, differ from blockquotes because they duplicate a section of text within the page, and get styled in a way that draws the reader's attention to the quote. As such, one simple solution that I've been using is to allow content editors to select a section of text while editing and click a button in the interface to designate it as a pullquote.</div>
+      
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  </div>
+
+</article>
+</div>
+    <div class="views-row">
+<article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
+
+  
+      <h2>
+      <a href="/blog/drupal/creating-paragraphs-entities-dynamic-content" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Creating Paragraphs Entities for Dynamic Content</span>
+</a>
+    </h2>
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/creating-paragraphs-entities-dynamic-content" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/dynamic-content-paragraphs.png?itok=vm1bDqAN" width="798" height="342" alt="Logos  with Paragraphs, Drupal and Atomic Design" loading="lazy" class="image-style-medium-21-9" />
+
+</a>
+</div>
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">The paragraphs module has become a central ingredient for many component-based sites in recent years. However, our content strategy also often requires components that display dynamic content (think "Read Next", or "Also of Interest"). In this tutorial, I'll demonstrate how we've been solving this problem, by building paragraph bundles that serve as configuration entities that we can then use as arguments that we pass to a view via the Twig Tweak module. You can see a working version of the dynamic content component we'll be building in the "Up Next" card grid at the bottom of this tutorial. </div>
+      
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  </div>
+
+</article>
+</div>
+
+    </div>
+  
+          </div>
+</div>
+
+  </div>
+
+  </div>
+
+  </main>
+
+  <footer class="layout-footer full-width" role="contentinfo">
+    <div class="content__container">
+      
+      &copy; 2021
+    </div>
+  </footer>
+</div>
+  </div>
+
+    
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","scriptPath":null,"pathPrefix":"","currentPath":"node\/10","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"disqusComments":"a-fro","disqus":{"domain":"a-fro","url":"https:\/\/www.a-fro.com\/blog\/drupal\/keeping-compiled-css-out-your-git-repository-acquia-updated","title":"Keeping Compiled CSS Out of your Git Repository on Acquia [Updated]","identifier":"node\/10","disable_mobile":false},"user":{"uid":0,"permissionsHash":"8b77a53dff4ac7c8a670a08caf2ee2cdd9f11c5ef3ae76b5614326b7beba5016"}}</script>
+<script src="/sites/default/files/js/js_ikHENpTRqIrafEJhhsPgbVHiESl5NhLUshJzb0-uYC4.js"></script>
+
+  </body>
+</html>

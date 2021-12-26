@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+<meta name="Generator" content="Drupal 9 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="/core/misc/favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="canonical" href="https://www.a-fro.com/blog/drupal/ansible-and-drupal-development-part-2" />
+<link rel="shortlink" href="https://www.a-fro.com/node/11" />
+
+    <title>Ansible and Drupal Development - Part 2 | a-fro.com</title>
+    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_Ov6iUDly3SngZgRuyy-vYboSettyRJo1rXFjgCfc1Jo.css" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_PJMDxwkMigKO_2N1HQiw7IqRu5kH5nGq1b5ZNHaXhnc.css" />
+<link rel="stylesheet" media="all" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<link rel="stylesheet" media="all" href="//fonts.googleapis.com/css?family=Merriweather:300,300italic,700,700italic,400,400italic|Merriweather+Sans:400,400italic,700,700italic,300italic,300" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_2ngw7hxQk_KLnBGvR27nQ0tv2gJXNDowjRK29HPdlKk.css" />
+
+    
+  </head>
+  <body class="path-node page-node-type-post">
+        <a href="#main-content" class="visually-hidden focusable skip-link">
+      Skip to main content
+    </a>
+    
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    
+
+<div class="layout-container">
+
+  <header class="layout-header full-width" role="banner">
+      <div class="region region-header">
+    <div id="block-simple-base-branding" class="block block-system block-system-branding-block">
+  
+    
+          <div class="site-name">
+      <a href="/" rel="home">a-fro.com</a>
+    </div>
+    </div>
+
+  </div>
+
+    <div class="region region--highlighted">
+      <div class="content__container">
+          <div class="region region-highlighted">
+    <div id="block-breadcrumbs--3" class="block block-system block-system-breadcrumb-block">
+  
+    
+        <nav class="breadcrumb" role="navigation" aria-labelledby="system-breadcrumb">
+    <h2 id="system-breadcrumb" class="visually-hidden">Breadcrumb</h2>
+    <ol>
+          <li>
+                  <a href="/">Home</a>
+              </li>
+          <li>
+                  <a href="/blog">Blog</a>
+              </li>
+          <li>
+                  <a href="/blog/drupal">Drupal</a>
+              </li>
+        </ol>
+  </nav>
+
+  </div>
+<div id="block-simple-base-page-title--3" class="block block-core block-page-title-block">
+  
+    
+      
+  <h1 class="page-title"><span class="field field--name-title field--type-string field--label-hidden">Ansible and Drupal Development - Part 2</span>
+</h1>
+
+
+  </div>
+
+  </div>
+
+      </div>
+    </div>
+  </header>
+
+  <main role="main" class="layout-main">
+    <a id="main-content" tabindex="-1"></a>      <div class="region region-content">
+    <div data-drupal-messages-fallback class="hidden"></div>
+<div id="block-mainpagecontent--3" class="block block-system block-system-main-block">
+  
+    
+      
+<article role="article" class="node node--type-post node--promoted node--view-mode-full">
+
+  
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"><time datetime="2014-11-03T12:00:00Z" class="datetime">November 3, 2014</time>
+</div>
+      
+      <div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--rich-text paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"><p>In <a href="/ansible-and-drupal-development">part 1</a> of this tutorial, we covered how to configure and use Ansible for local Drupal development. If you didn't have a chance to read that article, you can download <a href="https://github.com/a-fro/drupal-dev-vm/tree/part1">my fork</a> of Jeff Geerling's <a href="https://github.com/geerlingguy/drupal-dev-vm">Drupal Dev VM</a> to see the final, working version from part 1. In this article, we'll be switching things up quite a bit as we take a closer look at the 2nd three requirements, namely:</p>
+
+<ol>
+	<li>Using the same playbook for both local dev and remote administration (on DigitalOcean)</li>
+	<li>Including basic server security</li>
+	<li>Making deployments simple</li>
+</ol>
+
+<p>TL;DR Feel free to download the <a href="https://github.com/a-fro/ansible-drupal-lamp">final, working version</a> of this repo and/or use it to follow along with the article.</p>
+
+<h3 id="caveat-emptor">Caveat Emptor</h3>
+
+<p>Before we dig in, I want to stress that I am not an expert in server administration and am relying heavily on the Ansible roles created by <a href="http://jeffgeerling.com/">Jeff Geerling</a>. The steps outlined in this article come from my own experience of trying use Ansible to launch this site, and I'm not aware of how they stray from best-practices. But if you're feeling adventurous, or like me, foolhardy enough to jump in headfirst and just try to figure it out, then read on.</p>
+
+<h3 id="sharing-playbooks-between-local-and-remote-environments">Sharing Playbooks Between Local and Remote Environments</h3>
+
+<p>One of the features that makes Ansible so incredibly powerful is to be able to run a given task or playbook across a range of hosts. For example, when the Drupal Security team announced the <a href="https://www.drupal.org/SA-CORE-2014-005">SQL injection bug</a> now known as "Drupalgeddon", Jeff Geerling wrote a great post about using <a href="http://www.midwesternmac.com/blogs/jeff-geerling/fixing-drupal-fast-using">Ansible to deploy a security fix on many sites</a>. Given that any site that was not updated within 12 hours is now considered compromised, you can easily see what an important role Ansible can play. Ansible is able to connect to any host that is defined in the default inventory file at <code>/etc/ansible/hosts</code>. However, you can also create a project specific inventory file and put it the git repo, which is what we'll do here.</p>
+
+<p>To start with, we'll add a file called "inventory" and put it in the provisioning folder. <a href="http://docs.ansible.com/intro_inventory.html">Inventories</a> are in ini syntax, and basically allow you to define hosts and groups. For now, simply add the following lines to the inventory:</p>
+
+<pre>
+<code data-language="yml">[dev]
+yourdomain.dev
+</code></pre>
+
+<p>The inventory can define hostnames or IP addresses, so 192.168.88.88 (the IP address from the Vagrantfile) would work fine here as well. Personally, I prefer hostnames because I find them easier to organize and track. It will also help us avoid an issues with Ansible commands on the local VirtualBox. With our dev host defined, we are now able to set any required host-specific variables.</p>
+
+<p>Ansible is extremely flexible in how you create and assign variables. For the most part, we'll be using the same variables for all our environments. But a few of them, such as the Drupal domain, ssh port, etc., will be different. Some of these differences are related to the group (such as the ssh port Ansible connects to), while other's are host-specific (such as the Drupal domain). Let's start by creating a folder called "host_vars" in the provisioning folder with a file in it named with the host name of your dev site (a-fro.dev for me). Add the following lines to it:</p>
+
+<pre>
+<code>---
+drupal_domain: "yourdomain.dev"
+</code></pre>
+
+<p>At this point, we're ready to dig into remote server configuration for the first time. Lately, I've been using DigitalOcean to host my virtual servers because they are inexpensive (starting at $5/month) and they have a plethora of good tutorials that helped me work through the manual configuration workflows I was using. I'm sure there are many other good options, but the only requirement is to have a server to which you have root access and have added your public key. I also prefer to have a staging server where I can test things remotely before deploying to production, so for the sake of this tutorial let's create a server that will host stage.yourdomain.com. If you're using a domain for which DNS is not yet configured, you can just add it to your system's hosts file and point to the server's IP address.</p>
+
+<p>Once you've created your server (I chose the most basic plan at DO and added Ubuntu 12.04 x32), you'll want to add it to your inventory like so:</p>
+
+<pre>
+<code>[staging]
+stage.yourdomain.com
+</code></pre>
+
+<p>Assuming that DNS is either already set up, or that you've added the domain to your hosts file, Ansible is now almost ready to talk to the server for the first time. The last thing Ansible needs is some ssh configuration. If you're used to adding this to your <code>~/.ssh/config</code> file, that's fine. That approach would work fine for now, but we'll see that it will impose some limitations as we move forward, so let's go ahead and add the ssh config to the host file (<code>host_vars/stage.yourdomain.com</code>):</p>
+
+<pre>
+<code>---
+drupal_domain: "stage.yourdomain.com"
+ansible_ssh_user: root
+ansible_ssh_private_key_file: '~/.ssh/id_rsa'
+</code></pre>
+
+<p>At this point, you should have everything you need to connect to your virtual server and configure it via Ansible. You can test this by heading to the provisioning folder of your repo and typing <code>ansible staging -i inventory -m ping</code>, where "staging" is the group name you defined in your inventory file. You should see something like the following output:</p>
+
+<pre>
+<code>stage.yourdomain.com | success &gt;&gt; {
+    "changed": false,
+    "ping": "pong"
+}
+</code></pre>
+
+<p>If that's what you see, then congratulations! Ansible has just talked to your server for the first time. If not, you can try running the same command with <code>-vvvv</code> and check the debug messages. We could run the playbook now from part 1 and it should configure the server, but before doing that, let's take a look at the next requirement.</p>
+
+<h3 id="basic-server-security">Basic Server Security</h3>
+
+<p>Given that the Drupal Dev VM is really set up to support a local environment, it's missing important security features and requirements. Luckily, Jeff comes to the rescue again with a set of <a href="https://github.com/a-fro/ansible-drupal-lamp/blob/master/requirements.txt">additional Ansible roles</a> we can add to the playbook to help fill in the gaps. We'll need the roles installed on our system, which we can do with <code>ansible-galaxy install -r requirements.txt</code> (<a href="http://docs.ansible.com/galaxy.html#installing-multiple-roles-from-a-file">read more about roles and files</a>). If you already have the roles installed, the easiest way to make sure they're up-to-date is with <code>ansible-galaxy install -r requirements.txt --force</code> (since updating a role is not yet supported by Ansible Galaxy).</p>
+
+<p>In this section, we'll focus on the geerlingguy.firewall and geerlingguy.security roles. Jeff uses the same pattern for all his Ansible roles, so it's easy to find the default vars for a given role by replacing the role name (ie: ansible-role-rolename) of the url: <a href="https://github.com/geerlingguy/ansible-role-security/blob/master/defaults/main.yml">https://github.com/geerlingguy/ansible-role-security/blob/master/defaults/main.yml</a>. The two variables that we care about here are <code>security_ssh_port</code> and <code>security_sudoers_passwordless</code>. This role is going to help us remove password authentication, root login, change the ssh port and add a configured user account to the passwordless sudoers group.</p>
+
+<p>You might notice that the role says "configured user accounts", which begs the question: where does the account get configured? This was actually a stumbling block for me for a while, as I had to work through many different issues my attempts to create and configure the role. The approach we'll take here is working, though may not be the most efficient (or best-pratice, see Caveat Emptor above). Yet there is another issue as well, because the first time we connect to the server it will be over the default ssh port (22), but in the future, we want to choose a more secure port. We're also going to need to make sure that port gets opened on the firewall.</p>
+
+<p>Ansible's <a href="http://docs.ansible.com/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable">variable precendence</a> is going to help us work through these issues. To start with, let's take a look at the following example vars file:</p>
+
+<pre>
+<code>---
+ntp_timezone: America/New_York
+
+firewall_allowed_tcp_ports:
+  - "{{ security_ssh_port }}"
+  - "80"
+
+# The core version you want to use (e.g. 6.x, 7.x, 8.0.x).
+# A-fro note: this is slightly deceptive b/c it's really used to check out the correct branch
+drupal_core_version: "master"
+
+# The path where Drupal will be downloaded and installed.
+drupal_core_path: "/var/www/{{ drupal_domain }}/docroot"
+
+# Your drupal site's domain name (e.g. 'example.com').
+# drupal_domain:  moved to group_vars
+
+# Your Drupal site name.
+drupal_site_name: "Aaron Froehlich's Blog"
+drupal_admin_name: admin
+drupal_admin_password: password
+
+# The webserver you're running (e.g. 'apache2', 'httpd', 'nginx').
+drupal_webserver_daemon: apache2
+
+# Drupal MySQL database username and password.
+drupal_mysql_user: drupal
+drupal_mysql_password: password
+drupal_mysql_database: drupal
+
+# The Drupal git url from which Drupal will be cloned.
+drupal_repo_url: "git@github.com:a-fro/a-fro.com.git"
+
+# The Drupal install profile to be used
+drupal_install_profile: standard
+
+# Security specific
+# deploy_user: defined in group_vars for ad-hoc commands
+# security_ssh_port: defined in host_vars and group_vars
+security_sudoers_passwordless:
+  - "{{ deploy_user }}"
+security_autoupdate_enabled: true
+</code></pre>
+
+<p>You'll notice that some of the variables have been moved to host_vars or group_vars files. Our deploy_user, for example, would work just fine for our playbook if we define it here. But since we want to make this user available to Ansible for ad-hoc commands (not in playbooks), it is better to put it in <code>group_vars</code>. This is also why we can't just use our <code>~/.ssh/config</code> file. With Ansible, any variables added to <code>provisioning/group_vars/all</code> are made available by default to all hosts in the inventory, so create that file and add the following lines to it:</p>
+
+<pre>
+<code>---
+deploy_user: deploy
+</code></pre>
+
+<p>For the <code>security_ssh_port</code>, we'll be connecting to our dev environment over the default port 22, but changing the port on our remote servers. I say servers (plural), because eventually we'll have both staging and production environments. We can modify our inventory file to make this a bit easier:</p>
+
+<pre>
+<code>[dev]
+a-fro.dev
+
+[staging]
+stage.a-fro.com
+
+[production]
+a-fro.com
+
+[droplets:children]
+staging
+production
+</code></pre>
+
+<p>This allows us to issue commands to a single host, or to all our droplets. Therefore, we can add a file called "droplets" to the group_vars folder and add the group-specific variables there:</p>
+
+<pre>
+<code>---
+ansible_ssh_user: "{{ deploy_user }}"
+
+security_ssh_port: 4895 # Or whatever you choose
+ansible_ssh_port: "{{ security_ssh_port }}"
+
+ansible_ssh_private_key_file: ~/.ssh/id_rsa # The private key that pairs to the public key on your remote server.
+</code></pre>
+
+<h3 id="configuring-the-deploy-user">Configuring the Deploy User</h3>
+
+<p>There are two additional issues that we need to address if we want our security setup to work. The first is pragmatic: using a string in the <code>security_sudoers_passwordless</code> yaml array above works fine, but Ansible throws an error when we try to use a variable there. I have a pull request issued to Ansible-role-security that resolves this issue, but unless that gets accepted, we can't use the role as is. The easy alternative is to download that role to our local system and add it's contents to a folder named "roles" in provisioning (ie. <code>provisioning/roles/security</code>). You can see the change we need to make to the task <a href="https://github.com/a-fro/ansible-role-security/commit/c46cb58de6f244cc22300e3c1473e3f8af407865">here</a>. Then, we <a href="https://github.com/a-fro/ansible-drupal-lamp/blob/master/provisioning/playbook.yml">modify the playbook</a> to use our local "security" role, rather than geerlingguy.security.</p>
+
+<p>The second issue we face is that the first time we connect to our server, we'll do it as root over port 22, so that we can add the deploy_user account, and update the security configuration. Initially, I was just modifying the variables depending on whether it was the first time I was running the playbook, but that got old really quickly as I created, configured and destroyed my droplets to work through all the issues. And while there may be better ways to do this, what worked for me was to add an additional playbook that handles our initial configuration. So create a <code>provisioning/deploy_config.yml</code> file and add the following lines to it:</p>
+
+<pre>
+<code>---
+
+- hosts: all
+  sudo: yes
+
+  vars_files:
+    - vars/main.yml
+    - vars/deploy_config.yml
+
+  pre_tasks:
+    - include: tasks/deploy_user.yml
+
+  roles:
+    - security
+</code></pre>
+
+<p>Here's the task that configures the deploy_user:</p>
+
+<pre>
+<code>---
+- name: Ensure admin group exists.
+  group: name=admin state=present
+
+- name: Add deployment user
+  user: name='{{ deploy_user }}'
+        state=present
+        groups="sudo,admin"
+        shell=/bin/bash
+
+- name: Create .ssh folder with correct permissions.
+  file: &gt;
+    path="/home/{{ deploy_user }}/.ssh/"
+    state=directory
+    owner="{{ deploy_user }}"
+    group=admin
+    mode=700
+
+- name: Add authorized deploy key
+  authorized_key: user="{{ deploy_user }}"
+                  key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+                  path="/home/{{ deploy_user }}/.ssh/authorized_keys"
+                  manage_dir=no
+  remote_user: "{{ deploy_user }}"
+</code></pre>
+
+<p>The private/public key pair you define in the "Add authorized deploy key" task and in your <code>ansible_ssh_private_key_file</code> variable should have access to both your remote server and your GitHub repository. If you've forked or cloned <a href="https://github.com/a-fro/ansible-drupal-lamp">my version</a>, then you will definitely need to modify the keys.</p>
+
+<p>Our final security configuration prep step is to leverage Ansible's variable precendence to override the ssh settings to use root and the default ssh port with the following lines in <code>provisioning/vars/deploy_config</code>:</p>
+
+<pre>
+<code>---
+ansible_ssh_user: root
+ansible_ssh_port: 22
+</code></pre>
+
+<p>We now have everything in place to configure the basic security we're adding to our server. Remembering that one of we want our playbooks to work both locally over Vagrant and remotely, we can first try to run this playbook in our dev environment. I couldn't find a good way to make this seamless with Vagrant, so I've added a conditional statement to the Vagrantfile:</p>
+
+<pre>
+<code data-language="ruby"># -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # All Vagrant configuration is done here. The most common configuration
+  # options are documented and commented below. For a complete reference,
+  # please see the online documentation at vagrantup.com.
+
+  # Every Vagrant virtual environment requires a box to build off of.
+  config.vm.box = "ubuntu-precise-64"
+
+  # The url from where the 'config.vm.box' box will be fetched if it
+  # doesn't already exist on the user's system.
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  config.vm.network :private_network, ip: "192.168.88.88"
+
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  config.vm.synced_folder "../a-fro.dev", "/var/www/a-fro.dev", :nfs =&gt; true
+
+  # Configure VirtualBox.
+  config.vm.provider :virtualbox do |vb|
+    # Set the RAM for this VM to 512M.
+    vb.customize ["modifyvm", :id, "--memory", "512"]
+    vb.customize ["modifyvm", :id, "--name", "a-fro.dev"]
+  end
+
+  # Enable provisioning with Ansible.
+  config.vm.provision "ansible" do |ansible|
+    ansible.inventory_path = "provisioning/inventory"
+    ansible.sudo = true
+    # ansible.raw_arguments = ['-vvvv']
+    ansible.sudo = true
+    ansible.limit = 'dev'
+
+    initialized = false
+
+    if initialized
+      play = 'playbook'
+      ansible.extra_vars = { ansible_ssh_private_key_file: '~/.ssh/ikon' }
+    else
+      play = 'deploy_config'
+      ansible.extra_vars = {
+        ansible_ssh_user: 'vagrant',
+        ansible_ssh_private_key_file: '~/.vagrant.d/insecure_private_key'
+      }
+    end
+    ansible.playbook = "provisioning/#{play}.yml"
+  end
+end
+</code></pre>
+
+<p>The first time we run <code>vagrant up</code>, if <code>initialized</code> is set to <code>false</code>, then it's going to run deploy_config. Once it's been initialized the first time (assuming there were no errors), you can set <code>initialized</code> to <code>true</code> and from that point on, playbook.yml will run when we <code>vagrant provision</code>. Assuming everything worked for you, then we're ready to configure our remote server with <code>ansible-playbook provisioning/deploy_config.yml -i provisioning/inventory --limit=staging</code>.</p>
+
+<h3 id="installing-drupal">Installing Drupal</h3>
+
+<p>Whew! Take a deep breath, because we're really at the home stretch now. In part 1, we used a modified <a href="https://github.com/a-fro/drupal-dev-vm/blob/part1/provisioning/tasks/drupal.yml">Drupal task file</a> to install Drupal. Since then, however, Jeff has accepted a couple of pull requests that get us really close to being able to use his <a href="https://github.com/geerlingguy/ansible-role-drupal">Drupal Ansible Role</a> straight out of the box. I have another pull request issued that get's us 99% of the way there, but since that hasn't been accepted, we're going to follow the strategy we used with the security role and add a "drupal" folder to the roles.</p>
+
+<p>I've uploaded a branch of <a href="https://github.com/a-fro/ansible-role-drupal/tree/blog_part_2">ansible-role-drupal</a>, that includes the modifications we need. They're all in the <code>provisioning/drupal.yml</code> task, and I've outlined the changes and reasons in my <a href="https://github.com/geerlingguy/ansible-role-drupal/pull/8">pull request</a>. If you're following along, I suggest downloading <a href="https://github.com/a-fro/ansible-role-drupal/tree/blog_part_2">that branch from GitHub</a> and adding it to a <code>drupal</code> folder in your <code>provisioning/roles</code>. One additional change that I have not created a pull request for relates to the structure I use for Drupal projects. I like to put Drupal in a subfolder of the repository root (typically called <code>docroot</code>). As many readers will realize, this is in large part because we often host on Acquia. And while we're not doing that in this case, I still find it convenient to be able to add other folders (docs, bin scripts, etc.) alongside the Drupal docroot. The final modification we make, then, is to checkout the repository to <code>/var/www/{{ drupal_domain }}</code> (rather than <code>{{ drupal_core_path }}</code>, which points to the docroot folder of the repo).</p>
+
+<p>We now have all our drops in a row and we're ready to run our playbook to do the rest of the server configuration and install Drupal! As I mentioned above, we can modify our Vagrantfile to set <code>initialized</code> to <code>true</code> and run <code>vagrant provision</code>, and our provisioner should run. If you run into issues, you can uncomment the <code>ansible.raw_arguments</code> line and enable verbose output.</p>
+
+<p>One final note before we provision our staging server. While <code>vagrant provision</code> works just fine, I think I've made my preference clear for having consistency between environments. We can do that here by modifying the host_vars for dev:</p>
+
+<pre>
+<code>---
+drupal_domain: "a-fro.dev"
+security_ssh_port: 22
+ansible_ssh_port: "{{ security_ssh_port }}"
+ansible_ssh_user: "{{ deploy_user }}"
+ansible_ssh_private_key_file: '~/.ssh/id_rsa'
+</code></pre>
+
+<p>Now, assuming that you already ran <code>vagrant up</code> with <code>initialized</code> set to <code>false</code>, then you can run your playbook for dev in the same way you will for your remote servers:</p>
+
+<pre>
+<code>cd provisioning
+ansible-playbook playbook.yml -i inventory --limit=dev
+</code></pre>
+
+<p>If everything runs without a hitch on your vagrant server, then you're ready to run it remotely with <code>ansible-playbook playbook.yml -i inventory --limit=staging</code>. A couple of minutes later, you should see your Drupal site installed on your remote server.</p>
+
+<h3 id="simple-deployments">Simple Deployments</h3>
+
+<p>I'm probably not the only reader of Jeff's awesome book <a href="https://leanpub.com/ansible-for-devops">Ansible for Devops</a> who is looking forward to him completing Chapter 9, Deployments with Ansible. In the meantime, however, we can create a simple deploy playbook with two tasks:</p>
+
+<pre>
+<code>---
+- hosts: all
+
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: Check out the repository.
+      git: &gt;
+        repo='git@github.com:a-fro/a-fro.com.git'
+        version='master'
+        accept_hostkey=yes
+        dest=/var/www/{{ drupal_domain }}
+      sudo: no
+
+    - name: Clear cache on D8
+      command:
+        chdir={{ drupal_core_path }}
+        drush cr
+      when: drupal_major_version == 8
+
+    - name: Clear cache on D6/7
+      command:
+        chdir={{ drupal_core_path }}
+        drush cc all
+      when: drupal_major_version &lt; 8
+</code></pre>
+
+<p>Notice that we've added a conditional that checks for a variable called drupal_major_version, so you should add that to your <code>provisioniong/vars/main.yml</code> file. If I was running a D7 site, I'd probably add tasks to the deploy script such as <code>drush fr-all -y</code>, but this suffices for now. Since I'm pretty new to D8, if you have ideas on other tasks that would be helpful (such as a <a href="http://nuvole.org/blog/2014/aug/20/git-workflow-managing-drupal-8-configuration">git workflow for CM</a>), then I'm all ears!</p>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>I hope you enjoyed this 2 part series on Drupal and Ansible. One final note for the diligent reader relates to choosing the most basic hosting plan, which limits my server to 512MB of ram. I've therefore added an <a href="https://github.com/a-fro/ansible-drupal-lamp/blob/master/provisioning/tasks/swap.yml">additional task</a> that adds and configures <a href="https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-ubuntu-12-04">swap space</a> when not on Vagrant.</p>
+
+<p>Thanks to the many committed open source developers (and Jeff Geerling in particular), devops for Drupal are getting dramatically simpler. As the community still reels from the effects of Drupalgeddon, it's easy to see how incredibly valuable it is to be able to easily run commands across  a range of servers and codebases. Please let me know if you have questions, issues, tips or tricks, and as always, thanks for reading.</p>
+</div>
+      
+      </div>
+</div>
+          </div>
+  
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  <div class="field field--name-field-comments field--type-disqus-comment field--label-above">
+    <div class="field__label">Comments</div>
+              <div class="field__item"><div id="disqus_thread"><noscript>
+  <p>
+    <a href="http://a-fro.disqus.com/">View the discussion thread.</a>
+  </p>
+</noscript>
+</div>
+</div>
+          </div>
+
+  </div>
+
+</article>
+
+  </div>
+<div class="views-element-container block block-views block-views-blockrelated-content-block-1" id="block-views-block-related-content-block-1--3">
+  
+      <h2>Up Next</h2>
+    
+      <div><div class="view view-related-content view-id-related_content view-display-id-block_1 js-view-dom-id-4fc7744a7ef40c129d9e73fd013537fc5c2aeda729e40a27823360dc73d1ab10">
+  
+    
+      
+      <div class="view-content">
+          <div class="views-row">
+<article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
+
+  
+      <h2>
+      <a href="/blog/drupal/creating-reusable-dynamic-content-components" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Creating Reusable Dynamic Content Components</span>
+</a>
+    </h2>
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/creating-reusable-dynamic-content-components" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/reusable-components.jpg?itok=M349LY0e" width="798" height="342" alt="A screenshot showing the &quot;up next&quot; reusable tagged content block " loading="lazy" class="image-style-medium-21-9" />
+
+</a>
+</div>
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">This is part 2 in this series that explores how to use paragraph bundles to store configuration for dynamic content. The example I built in part 1 was a "read next" section, which could then be added as a component within the flow of the page. The strategy makes sense for component-based sites and landing pages, but probably less so for blogs or content heavy sites, since what we really want is for each article to include the read next section at the end of the page. For that, a view that displays as a block would perfectly suffice. In practice, however, it can be really useful to have a single custom block type, which I often call a "component block", that has an entity reference revisions field that we can leverage to create reusable components.</div>
+      
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  </div>
+
+</article>
+</div>
+    <div class="views-row">
+<article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
+
+  
+      <h2>
+      <a href="/blog/drupal/drupal-pullquotes" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Drupal Pullquotes</span>
+</a>
+    </h2>
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/drupal-pullquotes" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/pullqoutes.png?itok=tGjYx72p" width="798" height="342" alt="Several powerful quotes with a pullquote sprinkled off to the side to draw a reader&#039;s attention" loading="lazy" class="image-style-medium-21-9" />
+
+</a>
+</div>
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">"Pullquotes", as described here, differ from blockquotes because they duplicate a section of text within the page, and get styled in a way that draws the reader's attention to the quote. As such, one simple solution that I've been using is to allow content editors to select a section of text while editing and click a button in the interface to designate it as a pullquote.</div>
+      
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  </div>
+
+</article>
+</div>
+    <div class="views-row">
+<article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
+
+  
+      <h2>
+      <a href="/blog/drupal/creating-paragraphs-entities-dynamic-content" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Creating Paragraphs Entities for Dynamic Content</span>
+</a>
+    </h2>
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/creating-paragraphs-entities-dynamic-content" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/dynamic-content-paragraphs.png?itok=vm1bDqAN" width="798" height="342" alt="Logos  with Paragraphs, Drupal and Atomic Design" loading="lazy" class="image-style-medium-21-9" />
+
+</a>
+</div>
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">The paragraphs module has become a central ingredient for many component-based sites in recent years. However, our content strategy also often requires components that display dynamic content (think "Read Next", or "Also of Interest"). In this tutorial, I'll demonstrate how we've been solving this problem, by building paragraph bundles that serve as configuration entities that we can then use as arguments that we pass to a view via the Twig Tweak module. You can see a working version of the dynamic content component we'll be building in the "Up Next" card grid at the bottom of this tutorial. </div>
+      
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  </div>
+
+</article>
+</div>
+
+    </div>
+  
+          </div>
+</div>
+
+  </div>
+
+  </div>
+
+  </main>
+
+  <footer class="layout-footer full-width" role="contentinfo">
+    <div class="content__container">
+      
+      &copy; 2021
+    </div>
+  </footer>
+</div>
+  </div>
+
+    
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","scriptPath":null,"pathPrefix":"","currentPath":"node\/11","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"disqusComments":"a-fro","disqus":{"domain":"a-fro","url":"https:\/\/www.a-fro.com\/blog\/drupal\/ansible-and-drupal-development-part-2","title":"Ansible and Drupal Development - Part 2","identifier":"node\/11","disable_mobile":false},"user":{"uid":0,"permissionsHash":"8b77a53dff4ac7c8a670a08caf2ee2cdd9f11c5ef3ae76b5614326b7beba5016"}}</script>
+<script src="/sites/default/files/js/js_ikHENpTRqIrafEJhhsPgbVHiESl5NhLUshJzb0-uYC4.js"></script>
+
+  </body>
+</html>

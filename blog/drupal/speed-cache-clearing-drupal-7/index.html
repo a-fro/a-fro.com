@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+<meta name="Generator" content="Drupal 9 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="/core/misc/favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="canonical" href="https://www.a-fro.com/blog/drupal/speed-cache-clearing-drupal-7" />
+<link rel="shortlink" href="https://www.a-fro.com/node/12" />
+
+    <title>Speed Up Cache Clearing on Drupal 7 | a-fro.com</title>
+    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_Ov6iUDly3SngZgRuyy-vYboSettyRJo1rXFjgCfc1Jo.css" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_PJMDxwkMigKO_2N1HQiw7IqRu5kH5nGq1b5ZNHaXhnc.css" />
+<link rel="stylesheet" media="all" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<link rel="stylesheet" media="all" href="//fonts.googleapis.com/css?family=Merriweather:300,300italic,700,700italic,400,400italic|Merriweather+Sans:400,400italic,700,700italic,300italic,300" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_2ngw7hxQk_KLnBGvR27nQ0tv2gJXNDowjRK29HPdlKk.css" />
+
+    
+  </head>
+  <body class="path-node page-node-type-post">
+        <a href="#main-content" class="visually-hidden focusable skip-link">
+      Skip to main content
+    </a>
+    
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    
+
+<div class="layout-container">
+
+  <header class="layout-header full-width" role="banner">
+      <div class="region region-header">
+    <div id="block-simple-base-branding" class="block block-system block-system-branding-block">
+  
+    
+          <div class="site-name">
+      <a href="/" rel="home">a-fro.com</a>
+    </div>
+    </div>
+
+  </div>
+
+    <div class="region region--highlighted">
+      <div class="content__container">
+          <div class="region region-highlighted">
+    <div id="block-breadcrumbs--2" class="block block-system block-system-breadcrumb-block">
+  
+    
+        <nav class="breadcrumb" role="navigation" aria-labelledby="system-breadcrumb">
+    <h2 id="system-breadcrumb" class="visually-hidden">Breadcrumb</h2>
+    <ol>
+          <li>
+                  <a href="/">Home</a>
+              </li>
+          <li>
+                  <a href="/blog">Blog</a>
+              </li>
+          <li>
+                  <a href="/blog/drupal">Drupal</a>
+              </li>
+        </ol>
+  </nav>
+
+  </div>
+<div id="block-simple-base-page-title--2" class="block block-core block-page-title-block">
+  
+    
+      
+  <h1 class="page-title"><span class="field field--name-title field--type-string field--label-hidden">Speed Up Cache Clearing on Drupal 7</span>
+</h1>
+
+
+  </div>
+
+  </div>
+
+      </div>
+    </div>
+  </header>
+
+  <main role="main" class="layout-main">
+    <a id="main-content" tabindex="-1"></a>      <div class="region region-content">
+    <div data-drupal-messages-fallback class="hidden"></div>
+<div id="block-mainpagecontent--2" class="block block-system block-system-main-block">
+  
+    
+      
+<article role="article" class="node node--type-post node--promoted node--view-mode-full">
+
+  
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"><time datetime="2015-11-24T12:00:00Z" class="datetime">November 24, 2015</time>
+</div>
+      
+      <div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--rich-text paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"><h2>Cache clearing nirvana may be two vsets away</h2>
+
+<p><strong>tl;dr </strong>If your D7 site uses features or has many entity types, some recent patches to the <a href="https://www.drupal.org/node/2378343">features module</a> and the <a href="https://www.drupal.org/node/2241979">entity api module</a> may deliver dramatic performance increases when you clear Drupal's cache. The magic:</p>
+
+<pre>
+<code>
+    $ drush vset features_rebuild_on_flush FALSE
+    $ drush vset entity_rebuild_on_flush FALSE
+</code></pre>
+
+<h2>The Backstory</h2>
+
+<p>Given that <a href="https://www.drupal.org/u/tedbow">tedbow</a> is a good friend in our little slice of paradise, aka Ithaca, NY, we decided that we were going to embrace the <a href="https://www.drupal.org/project/entityform">entityform module</a> on the <a href="http://www.ilr.cornell.edu">large Drupal migration</a> I was hired to lead. Fifty-eight entityforms and 420 fields later (even with diligent field re-use), we now see how, in some cases, a <a href="http://drupal.org/project/webform">pseudo-field system</a> has real benefits, even if it's not the most future-proof solution. As our cache clears became slower and slower (at times taking nearly 10 minutes for a teammate with an older computer), I began to suspect that entityform and/or our extensive reliance on the Drupal field system might be a culprit. Two other corroborating data points were the length of time that feature reverts took when they involved entityforms. Even deployments became a hassle because we had to carefully time them if they required the cache to be cleared, which would make the site unresponsive for logged-in users and cache-cold pages for 5 minutes or more. Clearly, something needed to be done.</p>
+
+<h2>Diagnosing</h2>
+
+<p>I'm sure there are better ways to handle performance diagnostics (using xDebug, for example), but given the procedural nature of <code>drupal_flush_all_caches</code> it seemed like the devel module would work just fine. I modified the code in Drupal's common.inc file to include the following:</p>
+
+<pre>
+<code data-language="php">
+function time_elapsed($comment,$force=FALSE) {
+  static $time_elapsed_last = null;
+  static $time_elapsed_start = null;
+
+  $unit="s"; $scale=1000000; // output in seconds
+  $now = microtime(true);
+  if ($time_elapsed_last != null) {
+    $elapsed = round(($now - $time_elapsed_last)*1000000)/$scale;
+    $total_time = round(($now - $time_elapsed_start)*1000000)/$scale;
+    $msg = "$comment: Time elapsed: $elapsed $unit,";
+    $msg .= " total time: $total_time $unit";
+    dpm($msg);
+  }
+  else {
+      $time_elapsed_start=$now;
+  }
+  $time_elapsed_last = $now;
+}
+/**
+ * Flushes all cached data on the site.
+ *
+ * Empties cache tables, rebuilds the menu cache and theme registries, and
+ * invokes a hook so that other modules' cache data can be cleared as well.
+ */
+function drupal_flush_all_caches(){
+  // Change query-strings on css/js files to enforce reload for all users.
+  time_elapsed('_drupal_flush_css_js');
+  _drupal_flush_css_js();
+  time_elapsed('registry_rebuild');
+  registry_rebuild();
+  time_elapsed('drupal_clear_css_cache');
+  drupal_clear_css_cache();
+  time_elapsed('drupal_clear_js_cache');
+  drupal_clear_js_cache();
+
+  // Rebuild the theme data. Note that the module data is rebuilt above, as
+  // part of registry_rebuild().
+  time_elapsed('system_rebuild_theme_data');
+  system_rebuild_theme_data();
+  time_elapsed('drupal_theme_rebuild');
+  drupal_theme_rebuild();
+  time_elapsed('entity_info_cache_clear');
+  entity_info_cache_clear();
+  time_elapsed('node_types_rebuild');
+  node_types_rebuild();
+  // node_menu() defines menu items based on node types so it needs to come
+  // after node types are rebuilt.
+  time_elapsed('menu_rebuild');
+  menu_rebuild();
+
+  time_elapsed('actions_synchronize');
+  // Synchronize to catch any actions that were added or removed.
+  actions_synchronize();
+
+  // Don't clear cache_form - in-progress form submissions may break.
+  // Ordered so clearing the page cache will always be the last action.
+  $core = array('cache', 'cache_path', 'cache_filter', 'cache_bootstrap', 'cache_page');
+  $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
+  foreach ($cache_tables as $table) {
+    time_elapsed("clearing $table");
+    cache_clear_all('*', $table, TRUE);
+  }
+
+  // Rebuild the bootstrap module list. We do this here so that developers
+  // can get new hook_boot() implementations registered without having to
+  // write a hook_update_N() function.
+  _system_update_bootstrap_status();
+}
+</code></pre>
+
+<p>The next time I cleared cache (using admin_menu, since I wanted the dpm messages available), I saw the following:</p>
+
+<p class="messages messages--status">registry_rebuild: Time elapsed: 0.003464 s, total time: 0.003464 s</p>
+
+<p class="messages messages--status">drupal_clear_css_cache: Time elapsed: 3.556191 s, total time: 3.559655 s</p>
+
+<p class="messages messages--status">drupal_clear_js_cache: Time elapsed: 0.001589 s, total time: 3.561244 s</p>
+
+<p class="messages messages--status">system_rebuild_theme_data: Time elapsed: 0.003462 s, total time: 3.564706 s</p>
+
+<p class="messages messages--status">drupal_theme_rebuild: Time elapsed: 0.122944 s, total time: 3.68765 s</p>
+
+<p class="messages messages--status">entity_info_cache_clear: Time elapsed: 0.001606 s, total time: 3.689256 s</p>
+
+<p class="messages messages--status">node_types_rebuild: Time elapsed: 0.003054 s, total time: 3.69231 s</p>
+
+<p class="messages messages--status">menu_rebuild: Time elapsed: 0.052984 s, total time: 3.745294 s</p>
+
+<p class="messages messages--status">actions_synchronize: Time elapsed: 3.334542 s, total time: 7.079836 s</p>
+
+<p class="messages messages--status">clearing cache_block: Time elapsed: 31.149723 s, total time: 38.229559 s</p>
+
+<p class="messages messages--status">clearing cache_ctools_css: Time elapsed: 0.00618 s, total time: 38.235739 s</p>
+
+<p class="messages messages--status">clearing cache_feeds_http: Time elapsed: 0.003292 s, total time: 38.239031 s</p>
+
+<p class="messages messages--status">clearing cache_field: Time elapsed: 0.006714 s, total time: 38.245745 s</p>
+
+<p class="messages messages--status">clearing cache_image: Time elapsed: 0.013317 s, total time: 38.259062 s</p>
+
+<p class="messages messages--status">clearing cache_libraries: Time elapsed: 0.007708 s, total time: 38.26677 s</p>
+
+<p class="messages messages--status">clearing cache_token: Time elapsed: 0.007837 s, total time: 38.274607 s</p>
+
+<p class="messages messages--status">clearing cache_views: Time elapsed: 0.006798 s, total time: 38.281405 s</p>
+
+<p class="messages messages--status">clearing cache_views_data: Time elapsed: 0.008569 s, total time: 38.289974 s</p>
+
+<p class="messages messages--status">clearing cache: Time elapsed: 0.006926 s, total time: 38.2969 s</p>
+
+<p class="messages messages--status">clearing cache_path: Time elapsed: 0.009662 s, total time: 38.306562 s</p>
+
+<p class="messages messages--status">clearing cache_filter: Time elapsed: 0.007552 s, total time: 38.314114 s</p>
+
+<p class="messages messages--status">clearing cache_bootstrap: Time elapsed: 0.005526 s, total time: 38.31964 s</p>
+
+<p class="messages messages--status">clearing cache_page: Time elapsed: 0.009511 s, total time: 38.329151 s</p>
+
+<p class="messages messages--status">hook_flush_caches: total time: 38.348554 s</p>
+
+<p class="messages messages--status">Every cache cleared.</p>
+
+<p>My initial response was to wonder how and why the cache_block would take so long. Then, however, I noticed line 59 above, which calls <code>module_invoke_all('flush_caches')</code>, which should have been obvious. Also, given that I was just looking for bottlenecks, I modified both <code>module_invoke($module, $hook)</code> in module.inc, as well as the <code>time_elapsed</code> to get the following:</p>
+
+<pre>
+<code data-language="php">
+function time_elapsed($comment,$force=FALSE) {
+  static $time_elapsed_last = null;
+  static $time_elapsed_start = null;
+  static $last_action = null; // Stores the last action for the elapsed time message
+
+  $unit="s"; $scale=1000000; // output in seconds
+  $now = microtime(true);
+
+  if ($time_elapsed_last != null) {
+    $elapsed = round(($now - $time_elapsed_last)*1000000)/$scale;
+    if ($elapsed &gt; 1 || $force) {
+      $total_time = round(($now - $time_elapsed_start)*1000000)/$scale;
+      $msg = ($force)
+        ? "$comment: "
+        : "$last_action: Time elapsed: $elapsed $unit,";
+      $msg .= " total time: $total_time $unit";
+      dpm($msg);
+    }
+  } else {
+      $time_elapsed_start=$now;
+  }
+  $time_elapsed_last = $now;
+  $last_action = $comment;
+}
+
+
+/** From module.inc */
+function module_invoke_all($hook) {
+  $args = func_get_args();
+  // Remove $hook from the arguments.
+  unset($args[0]);
+  $return = array();
+  foreach (module_implements($hook) as $module) {
+    $function = $module . '_' . $hook;
+    if (function_exists($function)) {
+      if ($hook == 'flush_caches') {
+        time_elapsed($function);
+      }
+      $result = call_user_func_array($function, $args);
+      if (isset($result) &amp;&amp; is_array($result)) {
+        $return = array_merge_recursive($return, $result);
+      }
+      elseif (isset($result)) {
+        $return[] = $result;
+      }
+    }
+  }
+
+  return $return;
+}
+</code></pre>
+
+<p>The results pointed to the expected culprits:</p>
+
+<p class="messages messages--status">registry_rebuild: Time elapsed: 4.176781 s, total time: 4.182339 s</p>
+
+<p class="messages messages--status">menu_rebuild: Time elapsed: 3.367128 s, total time: 7.691533 s</p>
+
+<p class="messages messages--status">entity_flush_caches: Time elapsed: 22.899951 s, total time: 31.068898 s</p>
+
+<p class="messages messages--status">features_flush_caches: Time elapsed: 7.656231 s, total time: 39.112933 s</p>
+
+<p class="messages messages--status">hook_flush_caches: total time: 39.248036 s</p>
+
+<p class="messages messages--status">Every cache cleared.</p>
+
+<p>After a little digging into the features issue queue, I was delighted to find out that patches had already been committed to both modules (though entity api does not have it in the release yet, so you have to use the dev branch). Two module updates and two vsets later, I got the following results:</p>
+
+<p class="messages messages--status">registry_rebuild: Time elapsed: 3.645328 s, total time: 3.649398 s</p>
+
+<p class="messages messages--status">menu_rebuild: Time elapsed: 3.543039 s, total time: 7.378718 s</p>
+
+<p class="messages messages--status">hook_flush_caches: total time: 8.266036 s</p>
+
+<p class="messages messages--status">Every cache cleared.</p>
+
+<p>Cache clearing nirvana reached!</p>
+</div>
+      
+      </div>
+</div>
+          </div>
+  
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  <div class="field field--name-field-comments field--type-disqus-comment field--label-above">
+    <div class="field__label">Comments</div>
+              <div class="field__item"><div id="disqus_thread"><noscript>
+  <p>
+    <a href="http://a-fro.disqus.com/">View the discussion thread.</a>
+  </p>
+</noscript>
+</div>
+</div>
+          </div>
+
+  </div>
+
+</article>
+
+  </div>
+<div class="views-element-container block block-views block-views-blockrelated-content-block-1" id="block-views-block-related-content-block-1--2">
+  
+      <h2>Up Next</h2>
+    
+      <div><div class="view view-related-content view-id-related_content view-display-id-block_1 js-view-dom-id-34ad182560e38f0af7fa6f7f853d24eacf832c52c23cd0041c3df403b6de3964">
+  
+    
+      
+      <div class="view-content">
+          <div class="views-row">
+<article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
+
+  
+      <h2>
+      <a href="/blog/drupal/creating-reusable-dynamic-content-components" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Creating Reusable Dynamic Content Components</span>
+</a>
+    </h2>
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/creating-reusable-dynamic-content-components" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/reusable-components.jpg?itok=M349LY0e" width="798" height="342" alt="A screenshot showing the &quot;up next&quot; reusable tagged content block " loading="lazy" class="image-style-medium-21-9" />
+
+</a>
+</div>
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">This is part 2 in this series that explores how to use paragraph bundles to store configuration for dynamic content. The example I built in part 1 was a "read next" section, which could then be added as a component within the flow of the page. The strategy makes sense for component-based sites and landing pages, but probably less so for blogs or content heavy sites, since what we really want is for each article to include the read next section at the end of the page. For that, a view that displays as a block would perfectly suffice. In practice, however, it can be really useful to have a single custom block type, which I often call a "component block", that has an entity reference revisions field that we can leverage to create reusable components.</div>
+      
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  </div>
+
+</article>
+</div>
+    <div class="views-row">
+<article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
+
+  
+      <h2>
+      <a href="/blog/drupal/drupal-pullquotes" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Drupal Pullquotes</span>
+</a>
+    </h2>
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/drupal-pullquotes" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/pullqoutes.png?itok=tGjYx72p" width="798" height="342" alt="Several powerful quotes with a pullquote sprinkled off to the side to draw a reader&#039;s attention" loading="lazy" class="image-style-medium-21-9" />
+
+</a>
+</div>
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">"Pullquotes", as described here, differ from blockquotes because they duplicate a section of text within the page, and get styled in a way that draws the reader's attention to the quote. As such, one simple solution that I've been using is to allow content editors to select a section of text while editing and click a button in the interface to designate it as a pullquote.</div>
+      
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  </div>
+
+</article>
+</div>
+    <div class="views-row">
+<article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
+
+  
+      <h2>
+      <a href="/blog/drupal/creating-paragraphs-entities-dynamic-content" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Creating Paragraphs Entities for Dynamic Content</span>
+</a>
+    </h2>
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/creating-paragraphs-entities-dynamic-content" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/dynamic-content-paragraphs.png?itok=vm1bDqAN" width="798" height="342" alt="Logos  with Paragraphs, Drupal and Atomic Design" loading="lazy" class="image-style-medium-21-9" />
+
+</a>
+</div>
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">The paragraphs module has become a central ingredient for many component-based sites in recent years. However, our content strategy also often requires components that display dynamic content (think "Read Next", or "Also of Interest"). In this tutorial, I'll demonstrate how we've been solving this problem, by building paragraph bundles that serve as configuration entities that we can then use as arguments that we pass to a view via the Twig Tweak module. You can see a working version of the dynamic content component we'll be building in the "Up Next" card grid at the bottom of this tutorial. </div>
+      
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  </div>
+
+</article>
+</div>
+
+    </div>
+  
+          </div>
+</div>
+
+  </div>
+
+  </div>
+
+  </main>
+
+  <footer class="layout-footer full-width" role="contentinfo">
+    <div class="content__container">
+      
+      &copy; 2021
+    </div>
+  </footer>
+</div>
+  </div>
+
+    
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","scriptPath":null,"pathPrefix":"","currentPath":"node\/12","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"disqusComments":"a-fro","disqus":{"domain":"a-fro","url":"https:\/\/www.a-fro.com\/blog\/drupal\/speed-cache-clearing-drupal-7","title":"Speed Up Cache Clearing on Drupal 7","identifier":"node\/12","disable_mobile":false},"user":{"uid":0,"permissionsHash":"8b77a53dff4ac7c8a670a08caf2ee2cdd9f11c5ef3ae76b5614326b7beba5016"}}</script>
+<script src="/sites/default/files/js/js_ikHENpTRqIrafEJhhsPgbVHiESl5NhLUshJzb0-uYC4.js"></script>
+
+  </body>
+</html>

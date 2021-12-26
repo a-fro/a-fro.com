@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+<meta name="Generator" content="Drupal 9 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="/core/misc/favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="canonical" href="https://www.a-fro.com/blog/drupal/multiple-mailchimp-accounts-drupal" />
+<link rel="shortlink" href="https://www.a-fro.com/node/14" />
+
+    <title>Multiple MailChimp Accounts with Drupal | a-fro.com</title>
+    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_Ov6iUDly3SngZgRuyy-vYboSettyRJo1rXFjgCfc1Jo.css" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_PJMDxwkMigKO_2N1HQiw7IqRu5kH5nGq1b5ZNHaXhnc.css" />
+<link rel="stylesheet" media="all" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<link rel="stylesheet" media="all" href="//fonts.googleapis.com/css?family=Merriweather:300,300italic,700,700italic,400,400italic|Merriweather+Sans:400,400italic,700,700italic,300italic,300" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_2ngw7hxQk_KLnBGvR27nQ0tv2gJXNDowjRK29HPdlKk.css" />
+
+    
+  </head>
+  <body class="path-node page-node-type-post">
+        <a href="#main-content" class="visually-hidden focusable skip-link">
+      Skip to main content
+    </a>
+    
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    
+
+<div class="layout-container">
+
+  <header class="layout-header full-width" role="banner">
+      <div class="region region-header">
+    <div id="block-simple-base-branding" class="block block-system block-system-branding-block">
+  
+    
+          <div class="site-name">
+      <a href="/" rel="home">a-fro.com</a>
+    </div>
+    </div>
+
+  </div>
+
+    <div class="region region--highlighted">
+      <div class="content__container">
+          <div class="region region-highlighted">
+    <div id="block-breadcrumbs--4" class="block block-system block-system-breadcrumb-block">
+  
+    
+        <nav class="breadcrumb" role="navigation" aria-labelledby="system-breadcrumb">
+    <h2 id="system-breadcrumb" class="visually-hidden">Breadcrumb</h2>
+    <ol>
+          <li>
+                  <a href="/">Home</a>
+              </li>
+          <li>
+                  <a href="/blog">Blog</a>
+              </li>
+          <li>
+                  <a href="/blog/drupal">Drupal</a>
+              </li>
+        </ol>
+  </nav>
+
+  </div>
+<div id="block-simple-base-page-title--4" class="block block-core block-page-title-block">
+  
+    
+      
+  <h1 class="page-title"><span class="field field--name-title field--type-string field--label-hidden">Multiple MailChimp Accounts with Drupal</span>
+</h1>
+
+
+  </div>
+
+  </div>
+
+      </div>
+    </div>
+  </header>
+
+  <main role="main" class="layout-main">
+    <a id="main-content" tabindex="-1"></a>      <div class="region region-content">
+    <div data-drupal-messages-fallback class="hidden"></div>
+<div id="block-mainpagecontent--4" class="block block-system block-system-main-block">
+  
+    
+      
+<article role="article" class="node node--type-post node--promoted node--view-mode-full">
+
+  
+      <h2>
+      <a href="/blog/drupal/multiple-mailchimp-accounts-drupal" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Multiple MailChimp Accounts with Drupal</span>
+</a>
+    </h2>
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"><time datetime="2016-12-20T12:00:00Z" class="datetime">December 20, 2016</time>
+</div>
+      
+      <div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--rich-text paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"><p>A couple of months ago, <a href="https://github.com/thinkshout/">team ThinkShout</a> quietly introduced a feature to the <a href="https://www.drupal.org/project/mailchimp">MailChimp module</a> that some of us have really wanted for a long time—the ability to support multiple MailChimp accounts from a single Drupal installation. This happened, in part, after I reached out to them on behalf of the stakeholders at Cornell University's ILR School, where I work. Email addresses can be coveted resources within organizations, and along with complex governance requirements, it's not uncommon for a single organization to have internal groups who use separate MailChimp accounts. I'm not going to comment on whether this is a good or wise practice, just to acknowledge that it's a reality.</p>
+
+<p>In our case, we currently have three groups within school who are using MailChimp extensively to reach out to their constituents. Up until this week, this required a manual export of new subscribers (whom we are tracking with <a href="https://www.drupal.org/project/entityform">entityforms</a>), some custom code to transform the csv values into the correct format for MailChimp, and then a manual import to the respective list. However, as our most recent deployment, we are now able to support all three group's needs (including one who is using <a href="http://a-fro.com/introducing-mailchimp-automations">MailChimp automations</a>). Let's dig into how we're doing it.</p>
+
+<p>The important change that ThinkShout introduced came from <a href="https://github.com/thinkshout/mailchimp/commit/d5b8a3da20f4e058ec04115e380259e3c1da50d7#diff-bb0d240e8bb9e959c6e84bae87e337d4R157">this commit</a>, which invokes a new alter hook that allows a developer to modify the key being used for the API object. And though this is an essential hook if we want to enable multiple keys, it also doesn't accomplish much given that <code>mailchimp_get_api_object</code> is called in dozens of places through the suite of MailChimp modules and therefore it's difficult to know the exact context of the api request. For that reason, we really need a more powerful way to understand the context of a given API call.</p>
+
+<p>To that end, we created a new sandbox module called <a href="https://www.drupal.org/sandbox/a-fro/2835792">MailChimp Accounts</a>. This module is responsible for five things:</p>
+
+<ol>
+	<li>Allowing developers to register additional MailChimp accounts and account keys</li>
+	<li>Enabling developers to choose the appropriate account for MailChimp configuration tasks</li>
+	<li>Switching to the correct account when returning to configuration for an existing field or automation entity</li>
+	<li>Restarting the form rendering process when a field widget needs to be rendered with a different MailChimp account</li>
+	<li>Altering the key when the configuration of a MailChimp-related field or entity requires it</li>
+</ol>
+
+<p>If you want to try this for yourself, you'll first need to download the <a href="https://www.drupal.org/project/mailchimp/releases/7.x-4.7">newest release</a> of the MailChimp module, if you're not already running it. You'll also need to download the <a href="https://www.drupal.org/sandbox/a-fro/2835792">MailChimp Accounts</a> sandbox module. The core functionality of the MailChimp Accounts module relies on its implementation of a hook called <code>hook_mailchimp_accounts_api_key</code>, which allows a module to register one or more MailChimp accounts.</p>
+
+<p>In order to register a key, you will need to find the account id. Since MailChimp doesn't offer an easy way to discover an account id, we built a simple callback page that allows you to retrieve the account data for a given key. You'll find this in the admin interface at /admin/config/mailchimp/account-info on your site. When you first arrive at that page, you should see the account values for your "default" MailChimp account. In this case, "default" simply means it's the API key registered through the standard MailChimp module interface, which stores the value in the variables table. However, if you input a different key on that page, you can retrieve information about that account from the MailChimp API.</p>
+</div>
+      
+      </div>
+</div>
+              <div class="field__item">  <div class="component component--content-width paragraph paragraph--type--media paragraph--view-mode--default">
+            <img src="/sites/default/files/styles/full_content/public/2021-12/mc-account-info.jpg?itok=5xUImTqj" width="700" height="394" alt="MailChimp Account info callback page" loading="lazy" class="image-style-full-content" />
+
+
+
+      </div>
+</div>
+              <div class="field__item">  <div class="paragraph paragraph--type--rich-text paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"><p>The screenshot above offers an example of some of the data that is returned by the MailChimp API, but you will see additional information including list performance when you query an active account. The only essential piece of information, however, is the account_id, which we will use to register additional accounts that we can then use via <code>hook_mailchimp_accounts_api_key()</code>. Here's an example of how to implement that hook:</p>
+
+<pre>
+<code data-language="php">
+/**
+ * Register API key(s) for MailChimp Accounts
+ *
+ * @return array
+ *   The keys are the account id and the values are the API keys
+ */
+function mymodule_mailchimp_accounts_api_key() { 
+  $keys = array(
+    '2dd44aa1db1c924d42c047c96' =&gt; 'xxxxxxxx123434234xxxxxx3243xxxx3-us13',
+    '411abe81940121a1e89a02abc' =&gt; '123434234xxxxxx23233243xxxxxxx13-us12',
+  ); 
+  return $keys; 
+} 
+</code></pre>
+
+<p>Once there is more than one API key registered in a Drupal site, you will see a new option to select the current account to use for any MailChimp configuration taking place in the administrative interface. After selecting a different account, you will also see a notice clarifying which API key is currently active in the admin interface. You can see an example in the screenshot below.</p>
+</div>
+      
+      </div>
+</div>
+              <div class="field__item">  <div class="component component--content-width paragraph paragraph--type--media paragraph--view-mode--default">
+            <img src="/sites/default/files/styles/full_content/public/2021-12/mc-account-select-notice-fixed_0.jpg?itok=9PB4ZJST" width="700" height="394" alt="MailChimp account notice and select menu" loading="lazy" class="image-style-full-content" />
+
+
+
+      </div>
+</div>
+              <div class="field__item">  <div class="paragraph paragraph--type--rich-text paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"><p>After choosing an account to use for configuration, administrative tasks such as MailChimp subscription fields will use that key when making API calls. Therefore, the available options for lists, merge fields and interest groups will correspond to the appropriate account. Additionally, when the field widget renders the form element, the API key is altered yet again so that the subscriber will be added to the appropriate list, interest groups, etc. Additionally, I can confirm from my testing that the interface for Mailchimp Automations entities also uses the correct API key, enabling support for that MailChimp submodule.</p>
+
+<p>This concludes our walkthrough of the new MailChimp Accounts module. Admittedly, it's not the most elegant solution ever created, but it not only satisfies our organization's complex governance requirements, but it also allows our stakeholders to begin thinking about new possibilities for improving their marketing and communications efforts.</p>
+</div>
+      
+      </div>
+</div>
+          </div>
+  
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  <div class="field field--name-field-comments field--type-disqus-comment field--label-above">
+    <div class="field__label">Comments</div>
+              <div class="field__item"><div id="disqus_thread"><noscript>
+  <p>
+    <a href="http://a-fro.disqus.com/">View the discussion thread.</a>
+  </p>
+</noscript>
+</div>
+</div>
+          </div>
+
+  </div>
+
+</article>
+
+  </div>
+<div class="views-element-container block block-views block-views-blockrelated-content-block-1" id="block-views-block-related-content-block-1--4">
+  
+      <h2>Up Next</h2>
+    
+      <div><div class="view view-related-content view-id-related_content view-display-id-block_1 js-view-dom-id-67d22288ccca60297468e116eb925206dd28a39c4cf55b5ddbefa5bbd370785b">
+  
+    
+      
+      <div class="view-content">
+          <div class="views-row">
+<article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
+
+  
+      <h2>
+      <a href="/blog/drupal/creating-reusable-dynamic-content-components" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Creating Reusable Dynamic Content Components</span>
+</a>
+    </h2>
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/creating-reusable-dynamic-content-components" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/reusable-components.jpg?itok=M349LY0e" width="798" height="342" alt="A screenshot showing the &quot;up next&quot; reusable tagged content block " loading="lazy" class="image-style-medium-21-9" />
+
+</a>
+</div>
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">This is part 2 in this series that explores how to use paragraph bundles to store configuration for dynamic content. The example I built in part 1 was a "read next" section, which could then be added as a component within the flow of the page. The strategy makes sense for component-based sites and landing pages, but probably less so for blogs or content heavy sites, since what we really want is for each article to include the read next section at the end of the page. For that, a view that displays as a block would perfectly suffice. In practice, however, it can be really useful to have a single custom block type, which I often call a "component block", that has an entity reference revisions field that we can leverage to create reusable components.</div>
+      
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  </div>
+
+</article>
+</div>
+    <div class="views-row">
+<article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
+
+  
+      <h2>
+      <a href="/blog/drupal/drupal-pullquotes" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Drupal Pullquotes</span>
+</a>
+    </h2>
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/drupal-pullquotes" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/pullqoutes.png?itok=tGjYx72p" width="798" height="342" alt="Several powerful quotes with a pullquote sprinkled off to the side to draw a reader&#039;s attention" loading="lazy" class="image-style-medium-21-9" />
+
+</a>
+</div>
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">"Pullquotes", as described here, differ from blockquotes because they duplicate a section of text within the page, and get styled in a way that draws the reader's attention to the quote. As such, one simple solution that I've been using is to allow content editors to select a section of text while editing and click a button in the interface to designate it as a pullquote.</div>
+      
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  </div>
+
+</article>
+</div>
+    <div class="views-row">
+<article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
+
+  
+      <h2>
+      <a href="/blog/drupal/creating-paragraphs-entities-dynamic-content" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Creating Paragraphs Entities for Dynamic Content</span>
+</a>
+    </h2>
+    
+
+  
+  <div class="node__content">
+    
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/creating-paragraphs-entities-dynamic-content" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/dynamic-content-paragraphs.png?itok=vm1bDqAN" width="798" height="342" alt="Logos  with Paragraphs, Drupal and Atomic Design" loading="lazy" class="image-style-medium-21-9" />
+
+</a>
+</div>
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">The paragraphs module has become a central ingredient for many component-based sites in recent years. However, our content strategy also often requires components that display dynamic content (think "Read Next", or "Also of Interest"). In this tutorial, I'll demonstrate how we've been solving this problem, by building paragraph bundles that serve as configuration entities that we can then use as arguments that we pass to a view via the Twig Tweak module. You can see a working version of the dynamic content component we'll be building in the "Up Next" card grid at the bottom of this tutorial. </div>
+      
+  <div class="field field--name-field-tags field--type-entity-reference field--label-above">
+    <div class="field__label">Tags</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              </div>
+      </div>
+
+  </div>
+
+</article>
+</div>
+
+    </div>
+  
+          </div>
+</div>
+
+  </div>
+
+  </div>
+
+  </main>
+
+  <footer class="layout-footer full-width" role="contentinfo">
+    <div class="content__container">
+      
+      &copy; 2021
+    </div>
+  </footer>
+</div>
+  </div>
+
+    
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","scriptPath":null,"pathPrefix":"","currentPath":"node\/14","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"disqusComments":"a-fro","disqus":{"domain":"a-fro","url":"https:\/\/www.a-fro.com\/blog\/drupal\/multiple-mailchimp-accounts-drupal","title":"Multiple MailChimp Accounts with Drupal","identifier":"node\/14","disable_mobile":false},"user":{"uid":0,"permissionsHash":"8b77a53dff4ac7c8a670a08caf2ee2cdd9f11c5ef3ae76b5614326b7beba5016"}}</script>
+<script src="/sites/default/files/js/js_ikHENpTRqIrafEJhhsPgbVHiESl5NhLUshJzb0-uYC4.js"></script>
+
+  </body>
+</html>
