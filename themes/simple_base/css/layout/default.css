@@ -31,7 +31,8 @@ dynamically added to the top of the page. */
 }
 
 .full-width,
-.component--full-width {
+.component--full-width,
+.block-views-blockrelated-content-block-1 {
   width: 100vw;
   position: relative;
   left: 50%;
