@@ -45,3 +45,7 @@ dynamically added to the top of the page. */
   margin: 0 auto;
   padding: 0 var(--cu-ps1);
 }
+
+.node--type-page.node--view-mode-full {
+  margin-top: var(--cu-vr3);
+}
