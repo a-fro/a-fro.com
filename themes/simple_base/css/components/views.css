@@ -34,13 +34,13 @@
   margin: var(--cu-vr1) var(--cu-ps1);
 }
 
-.view-related-content .field--name-body {
+.view-related-content .field--name-body,
+.view-related-content .field--name-field-tags {
   display: none;
 }
 
 .view-related-content .node--view-mode-teaser .field--name-field-representative-image {
-  margin-left: 0;
-  margin-right: 0;
+  margin: 0;
 }
 
 @media (min-width: 44rem) {

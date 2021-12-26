@@ -5,7 +5,7 @@
 }
 
 .node--view-mode-teaser .field--name-field-representative-image {
-  margin-bottom: 0;
+  margin-bottom: var(--cu-vr1);
 }
 
 .node--view-mode-teaser h2 {
