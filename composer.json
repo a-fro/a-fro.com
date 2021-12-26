@@ -32,6 +32,7 @@
     "drupal/media_entity_soundcloud": "^3.0",
     "drupal/paragraphs": "^1.12",
     "drupal/pathauto": "^1.8",
+    "drupal/redirect": "^1.7",
     "drupal/tome": "^1.0",
     "drush/drush": "^10",
     "symfony/dotenv": "^5.3"
