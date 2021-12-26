@@ -9,7 +9,7 @@ _core:
 id: simple_base_page_title
 theme: simple_base
 region: highlighted
-weight: -3
+weight: 1
 provider: null
 plugin: page_title_block
 settings:
