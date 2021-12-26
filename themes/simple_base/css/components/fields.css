@@ -6,8 +6,3 @@
 .field--type-datetime {
   margin-top: var(--cu-vr2);
 }
-
-.field--type-entity-reference img {
-  width: 100%;
-  height: auto;
-}

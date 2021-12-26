@@ -4,21 +4,18 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.media.field_media_item
-    - image.style.large_21_9
     - paragraphs.paragraphs_type.media
-  module:
-    - media
 id: paragraph.media.default
 targetEntityType: paragraph
 bundle: media
 mode: default
 content:
   field_media_item:
-    type: media_thumbnail
+    type: entity_reference_entity_view
     label: hidden
     settings:
-      image_link: ''
-      image_style: large_21_9
+      view_mode: default
+      link: false
     third_party_settings: {  }
     weight: 0
     region: content

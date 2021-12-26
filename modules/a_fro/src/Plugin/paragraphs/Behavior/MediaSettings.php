@@ -52,20 +52,30 @@ class MediaSettings extends ParagraphsBehaviorBase {
    * {@inheritdoc}
    */
   public function preprocess(&$variables) {
+    $media_type = $variables['paragraph']->field_media_item->first()->entity->bundle();
     $media_placement = $variables['paragraph']->getBehaviorSetting($this->getPluginId(), 'media_placement');
 
-    if ($media_placement) {
+    if ($media_type === 'image') {
       $variables['attributes']['class'][] = 'component component--' . $media_placement;
+      $image_style = 'full_max';
 
       if (strpos($media_placement, 'portrait') === 0) {
-        $is_promo = FALSE;
         $variables['attributes']['class'][] = 'component--portrait';
-        $variables['content']['field_media_item'][0]['#image_style'] = 'portrait';
+        $image_style = 'portrait';
       }
 
       if ($media_placement === 'content-width') {
-        $variables['content']['field_media_item'][0]['#image_style'] = 'full_content';
+        $image_style = 'full_content';
       }
+
+      // Render it as a thumbnail with an image style
+      $variables['content']['field_media_item'] = [
+        "#theme" => "image_formatter",
+        "#item" =>  $variables['paragraph']->field_media_item->entity->field_media_image,
+        "#image_style" => $image_style,
+        "#url" => null,
+        "#view_mode" => "media_thumbnail",
+      ];
     }
   }
 

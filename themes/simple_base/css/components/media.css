@@ -25,3 +25,11 @@
   margin-left: -50px;
   margin-right: -50px;
 }
+
+/* Currently not working here, so copied to style.css.  */
+/* .field--type-entity-reference img,
+.paragraph--type--media img,
+.component img {
+  width: 100%;
+  height: auto;
+} */
