@@ -50,5 +50,7 @@ function simple_base_css_alter(&$css) {
  * Implements hook_preprocess_field().
  */
 function simple_base_preprocess_field__node__field_representative_image(&$variables) {
-  $variables['attributes']['class'][] = 'full-width';
+  if ($variables['element']['#view_mode'] === 'full') {
+    $variables['attributes']['class'][] = 'full-width';
+  }
 }

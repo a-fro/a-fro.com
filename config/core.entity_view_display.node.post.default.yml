@@ -49,7 +49,7 @@ content:
     region: content
   field_tags:
     type: entity_reference_label
-    label: hidden
+    label: above
     settings:
       link: true
     third_party_settings: {  }

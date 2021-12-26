@@ -11,6 +11,8 @@
 @import url('components/media.css');
 @import url('components/misc.css');
 @import url('components/tabs.css');
+@import url('components/teaser.css');
+@import url('components/views.css');
 
 :root {
   /* Color vars */
@@ -39,11 +41,4 @@
 
 a {
   color: var(--color-link);
-}
-
-.field--type-entity-reference img,
-.paragraph--type--media img,
-.component img {
-  width: 100%;
-  height: auto;
 }

@@ -14,7 +14,8 @@ h1 {
   font-size: var(--cu-ms7);
 }
 
-p {
+p,
+.node--view-mode-teaser .field--name-body {
   margin-top: 0;
   margin-bottom: var(--cu-vr1);
   line-height: var(--cu-vr1);

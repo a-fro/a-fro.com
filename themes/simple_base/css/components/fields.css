@@ -6,3 +6,7 @@
 .field--type-datetime {
   margin-top: var(--cu-vr2);
 }
+
+.field__label {
+  margin-bottom: var(--cu-vr-1);
+}

@@ -21,15 +21,15 @@
   margin-bottom: 0;
 }
 
+.node--view-mode-teaser .field--name-field-representative-image,
 .component--content-width {
   margin-left: -50px;
   margin-right: -50px;
 }
 
-/* Currently not working here, so copied to style.css.  */
-/* .field--type-entity-reference img,
+.field--type-entity-reference img,
 .paragraph--type--media img,
 .component img {
   width: 100%;
   height: auto;
-} */
+}

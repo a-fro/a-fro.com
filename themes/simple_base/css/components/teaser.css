@@ -1,0 +1,30 @@
+.node--view-mode-teaser {
+  display: grid;
+  margin-bottom: var(--cu-vr3);
+}
+
+.node--view-mode-teaser h2 {
+  order: 2;
+  margin-top: -1rem;
+}
+
+.node--view-mode-teaser h2 a {
+  text-decoration: none;
+}
+
+.node--view-mode-teaser h2 a:hover {
+  text-decoration: underline;
+}
+
+.node--view-mode-teaser .node__content {
+  display: contents;
+}
+
+.node--view-mode-teaser .field--name-field-representative-image {
+  order: 1;
+}
+
+.node--view-mode-teaser .field--name-body {
+  order: 3;
+}
+
