@@ -7,6 +7,82 @@
     <language>en</language>
     
     <item>
+  <title>Love Rekindled</title>
+  <link>https://www.a-fro.com/blog/personal/love-rekindled</link>
+  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Love Rekindled&lt;/span&gt;
+&lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
+&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Mon, 12/27/2021 - 11:34&lt;/span&gt;
+
+            &lt;div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item"&gt;  &lt;img src="https://www.a-fro.com/sites/default/files/styles/large_21_9/public/2021-12/IMG_2368.jpeg?h=02b5d948&amp;itok=Wdd3BWaB" width="1596" height="684" alt="Light reflects from the large, picture windows of a tiny home in the woods." loading="lazy" class="image-style-large-21-9" /&gt;
+
+
+&lt;/div&gt;
+      
+            &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2021-12-27T12:00:00Z" class="datetime"&gt;December 27, 2021&lt;/time&gt;
+&lt;/div&gt;
+      
+      &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
+          
+            &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;Walking, hand in hand&lt;br /&gt;
+On a glorious winter’s day&lt;br /&gt;
+Sun warming our faces&lt;br /&gt;
+Naked trees smiling down.&lt;/p&gt;
+
+&lt;p&gt;Look, it’s the white stag!&lt;br /&gt;
+She exclaims, staring in wonder&lt;br /&gt;
+At the bare limbs of the majestic Sycamore.&lt;br /&gt;
+Her radiant smile ignites my tinder heart.&lt;/p&gt;
+
+&lt;p&gt;Behind us, a stretch of shadows&lt;br /&gt;
+Blankets the forest floor&lt;br /&gt;
+Cast by the low winter sun,&lt;br /&gt;
+And two decades of parched longing.&lt;/p&gt;
+
+&lt;p&gt;We are learning to drink again.&lt;br /&gt;
+Moisture beads on our cracked lips.&lt;br /&gt;
+We have a long way to go,&lt;br /&gt;
+Even as we dance in this new arrival.&lt;/p&gt;
+
+&lt;p&gt;Love, watering this dry, dusty soil.&lt;br /&gt;
+Life, sprouting from ancient, cast away seeds.&lt;br /&gt;
+Had we pulled the tether of our deep roots&lt;br /&gt;
+We might have found our way back long ago.&lt;/p&gt;
+
+&lt;p&gt;Instead, we wandered,&lt;br /&gt;
+Alone, afraid, resentful and aching.&lt;br /&gt;
+In the darkness, we found a silent strength&lt;br /&gt;
+That could carry us through the night.&lt;/p&gt;
+
+&lt;p&gt;By daylight, we learned to move,&lt;br /&gt;
+Footfall by slow footfall,&lt;br /&gt;
+Never realizing our vast arcs&lt;br /&gt;
+Might lead us back together.&lt;/p&gt;
+
+&lt;p&gt;Under this bright winter sun,&lt;br /&gt;
+With the forest as our witness&lt;br /&gt;
+We smile and gaze into pools,&lt;br /&gt;
+Both long forgotten, and newly discovered.&lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
+&lt;/div&gt;
+      
+      &lt;/div&gt;
+&lt;/div&gt;
+          &lt;/div&gt;
+  
+  &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
+    &lt;div class="field__label"&gt;Tags&lt;/div&gt;
+          &lt;div class="field__items"&gt;
+              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/personal" hreflang="en"&gt;Personal&lt;/a&gt;&lt;/div&gt;
+              &lt;/div&gt;
+      &lt;/div&gt;
+</description>
+  <pubDate>Mon, 27 Dec 2021 11:34:01 +0000</pubDate>
+    <dc:creator>admin</dc:creator>
+    <guid isPermaLink="false">18 at https://www.a-fro.com</guid>
+    </item>
+<item>
   <title>Creating Reusable Dynamic Content Components</title>
   <link>https://www.a-fro.com/blog/drupal/creating-reusable-dynamic-content-components</link>
   <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Creating Reusable Dynamic Content Components&lt;/span&gt;
@@ -1397,37 +1473,6 @@ fi
   <pubDate>Sun, 26 Dec 2021 18:15:24 +0000</pubDate>
     <dc:creator>admin</dc:creator>
     <guid isPermaLink="false">9 at https://www.a-fro.com</guid>
-    </item>
-<item>
-  <title>Hello World from Drupal 8</title>
-  <link>https://www.a-fro.com/blog/drupal/hello-world-drupal-8</link>
-  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Hello World from Drupal 8&lt;/span&gt;
-&lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
-&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Sun, 12/26/2021 - 18:13&lt;/span&gt;
-
-            &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2014-10-08T12:00:00Z" class="datetime"&gt;October 8, 2014&lt;/time&gt;
-&lt;/div&gt;
-      
-      &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
-              &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
-            &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;Welcome! This site has been a while in the making, but I'm really excited to share it with you. Back in Austin at DrupalCon, I was inspired by Jeff Geerling's "Devops for Humans" presentation and immediately decided that I needed to start using Ansible. Well, it's been a long road, but the site is now live and I'm really looking forward to sharing the ups and downs of the journey. Oh, and if you don't have it already, Jeff's book &lt;em&gt;Ansible for Devops&lt;/em&gt; is well worth it. More soon...&lt;/p&gt;
-&lt;/div&gt;
-      
-      &lt;/div&gt;
-&lt;/div&gt;
-          &lt;/div&gt;
-  
-  &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
-    &lt;div class="field__label"&gt;Tags&lt;/div&gt;
-          &lt;div class="field__items"&gt;
-              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
-              &lt;/div&gt;
-      &lt;/div&gt;
-</description>
-  <pubDate>Sun, 26 Dec 2021 18:13:24 +0000</pubDate>
-    <dc:creator>admin</dc:creator>
-    <guid isPermaLink="false">8 at https://www.a-fro.com</guid>
     </item>
 
   </channel>
