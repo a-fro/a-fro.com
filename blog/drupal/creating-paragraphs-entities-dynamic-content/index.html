@@ -1,14 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="utf-8" />
+<link rel="canonical" href="https://www.a-fro.com/blog/drupal/creating-paragraphs-entities-dynamic-content" />
+<meta name="description" content="The paragraphs module has become a central ingredient for many component-based sites in recent years. However, our content strategy also often requires components that display dynamic content (think &quot;Read Next&quot;, or &quot;Also of Interest&quot;). In this tutorial, I&#039;ll demonstrate how we&#039;ve been solving this problem, by building paragraph bundles that serve as configuration entities that we can then use as arguments that we pass to a view via the Twig Tweak module. You can see a working version of the dynamic content component we&#039;ll be building in the &quot;Up Next&quot; card grid at the bottom of this tutorial." />
+<meta property="og:site_name" content="a-fro.com" />
+<meta property="og:title" content="Creating Paragraphs Entities for Dynamic Content" />
+<meta property="og:description" content="The paragraphs module has become a central ingredient for many component-based sites in recent years. However, our content strategy also often requires components that display dynamic content (think &quot;Read Next&quot;, or &quot;Also of Interest&quot;). In this tutorial, I&#039;ll demonstrate how we&#039;ve been solving this problem, by building paragraph bundles that serve as configuration entities that we can then use as arguments that we pass to a view via the Twig Tweak module. You can see a working version of the dynamic content component we&#039;ll be building in the &quot;Up Next&quot; card grid at the bottom of this tutorial." />
+<meta property="og:image" content="https://www.a-fro.com/sites/default/files/styles/open_graph/public/2021-12/dynamic-content-paragraphs.png?itok=N25o4cKi" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="The paragraphs module has become a central ingredient for many component-based sites in recent years. However, our content strategy also often requires components that display dynamic content (think &quot;Read Next&quot;, or &quot;Also of Interest&quot;). In this tutorial, I&#039;ll demonstrate how we&#039;ve been solving this problem, by building paragraph bundles that serve as configuration entities that we can then use as arguments that we pass to a view via the Twig Tweak module. You can see a working version of the dynamic content component we&#039;ll be building in the &quot;Up Next&quot; card grid at the bottom of this tutorial." />
+<meta name="twitter:title" content="Creating Paragraphs Entities for Dynamic Content | a-fro.com" />
+<meta name="twitter:image" content="https://www.a-fro.com/sites/default/files/styles/large_2_1/public/2021-12/dynamic-content-paragraphs.png?itok=V1P37eCW" />
 <meta name="Generator" content="Drupal 9 (https://www.drupal.org)" />
 <meta name="MobileOptimized" content="width" />
 <meta name="HandheldFriendly" content="true" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="icon" href="/core/misc/favicon.ico" type="image/vnd.microsoft.icon" />
-<link rel="canonical" href="https://www.a-fro.com/blog/drupal/creating-paragraphs-entities-dynamic-content" />
-<link rel="shortlink" href="https://www.a-fro.com/node/15" />
 
     <title>Creating Paragraphs Entities for Dynamic Content | a-fro.com</title>
     <link rel="stylesheet" media="all" href="/sites/default/files/css/css_Ov6iUDly3SngZgRuyy-vYboSettyRJo1rXFjgCfc1Jo.css" />
@@ -225,7 +233,7 @@ function component_helper_views_query_substitutions(ViewExecutable $view) {
   
       <h2>Up Next</h2>
     
-      <div><div class="view view-related-content view-id-related_content view-display-id-block_1 js-view-dom-id-eeba8fad6c9f4d0c242ce7f7c5f74d2472fd8f3afcf2ec04331bc255b8b4acd9">
+      <div><div class="view view-related-content view-id-related_content view-display-id-block_1 js-view-dom-id-ed66fa0b7173a28b322c3d34406e4321424ee8eadf5f32b6f269cb4fb83ad7c6">
   
     
       

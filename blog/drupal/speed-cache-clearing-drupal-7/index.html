@@ -1,14 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="utf-8" />
+<link rel="canonical" href="https://www.a-fro.com/blog/drupal/speed-cache-clearing-drupal-7" />
+<meta name="description" content="tl;dr If your D7 site uses features or has many entity types, some recent patches to the features module and the entity api module may deliver dramatic performance increases when you clear Drupal&#039;s cache. The magic: $ drush vset features_rebuild_on_flush FALSE $ drush vset entity_rebuild_on_flush FALSE" />
+<meta property="og:site_name" content="a-fro.com" />
+<meta property="og:title" content="Speed Up Cache Clearing on Drupal 7" />
+<meta property="og:description" content="tl;dr If your D7 site uses features or has many entity types, some recent patches to the features module and the entity api module may deliver dramatic performance increases when you clear Drupal&#039;s cache. The magic: $ drush vset features_rebuild_on_flush FALSE $ drush vset entity_rebuild_on_flush FALSE" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="tl;dr If your D7 site uses features or has many entity types, some recent patches to the features module and the entity api module may deliver dramatic performance increases when you clear Drupal&#039;s cache. The magic: $ drush vset features_rebuild_on_flush FALSE $ drush vset entity_rebuild_on_flush FALSE" />
+<meta name="twitter:title" content="Speed Up Cache Clearing on Drupal 7 | a-fro.com" />
 <meta name="Generator" content="Drupal 9 (https://www.drupal.org)" />
 <meta name="MobileOptimized" content="width" />
 <meta name="HandheldFriendly" content="true" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="icon" href="/core/misc/favicon.ico" type="image/vnd.microsoft.icon" />
-<link rel="canonical" href="https://www.a-fro.com/blog/drupal/speed-cache-clearing-drupal-7" />
-<link rel="shortlink" href="https://www.a-fro.com/node/12" />
 
     <title>Speed Up Cache Clearing on Drupal 7 | a-fro.com</title>
     <link rel="stylesheet" media="all" href="/sites/default/files/css/css_Ov6iUDly3SngZgRuyy-vYboSettyRJo1rXFjgCfc1Jo.css" />
@@ -340,7 +346,7 @@ function module_invoke_all($hook) {
   
       <h2>Up Next</h2>
     
-      <div><div class="view view-related-content view-id-related_content view-display-id-block_1 js-view-dom-id-c307d9b115076d3b2409162267890cb802a03c961cf532ebc87fb28717a65bb1">
+      <div><div class="view view-related-content view-id-related_content view-display-id-block_1 js-view-dom-id-78e48abefd6fd8e6a4a00cbcf8efafce7cd4e872c97d74fba41525d54a6e057c">
   
     
       
