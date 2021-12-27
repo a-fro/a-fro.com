@@ -49,3 +49,31 @@
     column-gap: var(--cu-ms1);
   }
 }
+
+.view-header .tags {
+  display: flex;
+  list-style-type: none;
+  padding: 0 0 var(--cu-vr3);
+}
+
+.tags__item {
+  margin: 0 var(--cu-ms-2);
+}
+.tags__item:first-child {
+  margin-right: calc(var(--cu-ms-2) * 0.5);
+}
+
+.tags__label {
+  font-weight: 400;
+}
+
+.tags__link {
+  padding: 0.2rem 1rem;
+  text-decoration: none;
+  border-radius: 15px;
+  background: #efefef;
+}
+
+.tags__link::hover {
+  text-decoration: underline;
+}
