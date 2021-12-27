@@ -30,6 +30,7 @@
     "drupal/easy_breadcrumb": "^2.0",
     "drupal/focal_point": "^1.5",
     "drupal/media_entity_soundcloud": "^3.0",
+    "drupal/metatag": "^1.18",
     "drupal/paragraphs": "^1.12",
     "drupal/pathauto": "^1.8",
     "drupal/redirect": "^1.7",

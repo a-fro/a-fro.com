@@ -1,0 +1,17 @@
+uuid: 2417095b-8fe9-42fc-aba8-844ff1405455
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: large_2_1
+label: 'Large 2:1 (1360x680)'
+effects:
+  267d807a-d5fd-46c9-957d-0079f1bc0b0b:
+    uuid: 267d807a-d5fd-46c9-957d-0079f1bc0b0b
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: 1360
+      height: 680
+      crop_type: focal_point
