@@ -9,7 +9,6 @@
 /content
 /modules
 /scripts
-/themes
 
 .editorconfig
 .env
