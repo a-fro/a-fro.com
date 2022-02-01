@@ -7,6 +7,50 @@
     <language>en</language>
     
     <item>
+  <title>Letting Go of the One-track Mind</title>
+  <link>https://www.a-fro.com/blog/personal/one-track-mind</link>
+  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Letting Go of the One-track Mind&lt;/span&gt;
+&lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
+&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Tue, 02/01/2022 - 11:04&lt;/span&gt;
+
+            &lt;div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item"&gt;  &lt;img src="https://www.a-fro.com/sites/default/files/styles/large_21_9/public/2022-01/IMG_2616.jpeg?h=465139b7&amp;itok=S7FBdPml" width="1596" height="684" alt="The early morning sun splays shadows on a snow-covered statue of the Buddha resting at the base of a tree." loading="lazy" class="image-style-large-21-9" /&gt;
+
+
+&lt;/div&gt;
+      
+            &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2022-02-01T12:00:00Z" class="datetime"&gt;February 1, 2022&lt;/time&gt;
+&lt;/div&gt;
+      
+      &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
+          
+            &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;A mentor once challenged me to simultaneously feel both gratitude and anger. Go ahead and try it. I’ve never been successful, and I’m not sure it’s possible. The inverse, of course, is also true. When “negative” emotions take root, it can be very hard to feel their opposite. It’s as if we have two basic energetic tracks in our mind/bodies: the “positive” emotions like happiness, joy, gratitude, love, etc., and the “negative” ruts of anger, frustration, hurt, fear, etc. From this dualistic paradigm, it’s easy to imagine an answer that is both simple and attainable: I’ll just cultivate the positive emotions and let go of the negative ones. I’ll train my emotions to be like one of those amusement park automobile rides, where the central guide rail allows even young children to drive a car and stay on the path.&lt;/p&gt;
+
+&lt;p&gt;Last night, a friend was lamenting his inability to meditate. “I keep trying, but my mind is just too busy. I think my mind isn’t well-suited for it,” he suggested. For anyone who’s taught meditation, this is a familiar narrative. It arises from a basic misconception of the purpose of meditation, which most assume is to experience a quiet mind. We believe that somehow, by assuming the correct posture and closing our eyes, we can bend consciousness to our will. We imagine that, like the amusement ride, we can let go of the wheel of thoughts (and suffering) and simply ride silence like a middle rail and keep the mind on course.&lt;/p&gt;
+
+&lt;p&gt;The real “work” of meditation is the art of letting go, and through that constant process of noticing our thoughts and returning to the present, a thick, Teflon coat gets applied to our tenaciously sticky mind. In a sense, it’s the exact opposite of the central guide rail; it’s a gentle slope on both sides of the lane that subtly coaxes us back onto the road. When we notice “thoughts,” (which include emotions), we are invited to &lt;span class="pullquote"&gt;let the thoughts go and return to the present moment with the energy of a feather landing on a pillow&lt;/span&gt;. This is not a cringe moment; a thousand thoughts during meditation offer a thousand opportunities to return. That is powerful work!&lt;/p&gt;
+
+&lt;p&gt;Over time, the state of our mind will indeed change. It won’t be a linear process, and one of the greatest challenges is allowing to continue to unfold without grasping. However, the real fruit of our practice has nothing to do with the time we spend meditating in silence. Rather, a moment arrives when we’re in the heat of an argument and we realize “this, too, is just a thought.” We relax our grip, little by little, and find it ever-slightly easier to let go of being right. Or, as another mentor used to put it, “we yell less loudly at our children.”&lt;/p&gt;
+
+&lt;p&gt;Eventually, we will come to realize—on a very deep level—that there never was and never will be a guide rail. That path is an illusion. We don’t have two emotional tracks in our mind, the good and the bad, that allow us to choose one over the other. It is all one life—one experience—and the real gift is learning to live with hands that relax their grip more easily and a mind that let’s go more often. As we do that, we begin to see how much the mind craves control, and falsely believes that a tight grip and a strong hold on thoughts are what keep us safe. Yet the exact opposite becomes our strength: &lt;span class="pullquote"&gt;rather than discovering an ocean of calm, we discover that the waves never were a problem, because we are the ocean itself&lt;/span&gt;.&lt;/p&gt;
+&lt;/div&gt;
+      
+      &lt;/div&gt;
+&lt;/div&gt;
+          &lt;/div&gt;
+  
+  &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
+    &lt;div class="field__label"&gt;Tags&lt;/div&gt;
+          &lt;div class="field__items"&gt;
+              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/personal" hreflang="en"&gt;Personal&lt;/a&gt;&lt;/div&gt;
+              &lt;/div&gt;
+      &lt;/div&gt;
+</description>
+  <pubDate>Tue, 01 Feb 2022 11:04:27 +0000</pubDate>
+    <dc:creator>admin</dc:creator>
+    <guid isPermaLink="false">20 at https://www.a-fro.com</guid>
+    </item>
+<item>
   <title>Enter the Mystery</title>
   <link>https://www.a-fro.com/blog/personal/enter-the-mystery</link>
   <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Enter the Mystery&lt;/span&gt;
@@ -1273,198 +1317,6 @@ ansible-playbook playbook.yml -i inventory --limit=dev
   <pubDate>Sun, 26 Dec 2021 18:20:35 +0000</pubDate>
     <dc:creator>admin</dc:creator>
     <guid isPermaLink="false">11 at https://www.a-fro.com</guid>
-    </item>
-<item>
-  <title>Keeping Compiled CSS Out of your Git Repository on Acquia [Updated]</title>
-  <link>https://www.a-fro.com/blog/drupal/keeping-compiled-css-out-your-git-repository-acquia-updated</link>
-  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Keeping Compiled CSS Out of your Git Repository on Acquia [Updated]&lt;/span&gt;
-&lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
-&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Sun, 12/26/2021 - 18:17&lt;/span&gt;
-
-            &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2014-10-27T12:00:00Z" class="datetime"&gt;October 27, 2014&lt;/time&gt;
-&lt;/div&gt;
-      
-      &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
-              &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
-            &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;A couple of months ago, after a harrowing cascade of git merge conflicts involving compiled css, we decided it was time to subscribe to the philosophy that &lt;a href="http://pointnorth.io/#preprocessed-languages"&gt;compiled CSS doesn't belong in a git repository&lt;/a&gt;. Sure, there are &lt;a href="http://carwinyoung.com/2013/01/23/avoiding-git-conflicts-involving-compiled-sass/"&gt;other technical solutions&lt;/a&gt; teams are &lt;a href="http://mobileresponse.blogspot.com/2013/11/using-sass-with-compass-and-large.html"&gt;tossing around&lt;/a&gt; that try to handle merging more gracefully, but I was more intererested in simply keeping the CSS out of the repo in the first place. After &lt;a href="http://stackoverflow.com/questions/1274057/making-git-forget-about-a-file-that-was-tracked-but-is-now-gitignored"&gt;removing the CSS from the repo&lt;/a&gt;, we suddenly faced two primary technical challenges:&lt;/p&gt;
-
-&lt;ul&gt;
-	&lt;li&gt;During development, switching branches will now need to trigger a recompliation of the stylesheets&lt;/li&gt;
-	&lt;li&gt;Without the CSS in the repo, it's hard to know how to get the code up to Acquia&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;In this article, I'll describe the solutions we came up with to handle these challenges, and welcome feedback if you have a different solution.&lt;/p&gt;
-
-&lt;h3&gt;Local Development&lt;/h3&gt;
-
-&lt;p&gt;If you're new to using tools like Sass, Compass, Guard and LiveReload, I recommend taking a look at a project like &lt;a href="http://singlebrook.com/blog/streamlined-drupal-project-setup-and-theming"&gt;Drupal Streamline&lt;/a&gt;. For the purpose of this post, I'm going to assume that you're already using Compass in your project. Once the CSS files have been removed, you'll want to &lt;code&gt;compass compile&lt;/code&gt; to trigger an initial compilation of the stylesheet. However, having to remember to compile every time you switch to a new branch introduces not only an inconvenience, but also a strong possiblily for human error.&lt;/p&gt;
-
-&lt;p&gt;Luckily, we can use git hooks to remove this risk and annoyance. In this case, we'll create a post-checkout hook that triggers compiling every time a new branch is checked out:&lt;/p&gt;
-
-&lt;ol&gt;
-	&lt;li&gt;Create a file called &lt;code&gt;post-checkout&lt;/code&gt; in the .git/hooks folder&lt;/li&gt;
-	&lt;li&gt;Add the following lines to that file:
-	&lt;pre&gt;
-&lt;code data-language="shell"&gt;#! /bin/sh
-# Start from the repository root.
-cd ./$(git rev-parse --show-cdup)
-compass compile&lt;/code&gt;&lt;/pre&gt;
-	&lt;/li&gt;
-	&lt;li&gt;From the command line in the repository root, type &lt;code&gt;chmod +x .git/hooks/post-checkout&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Assuming you have compass correctly configured, you should see the stylesheets getting re-compiled the next time you &lt;code&gt;git checkout [branch]&lt;/code&gt;, even if you're not already running Guard and LiveReload.&lt;/p&gt;
-
-&lt;h3&gt;Deploying to Acquia&lt;/h3&gt;
-
-&lt;p&gt;Now that CSS is no longer being deployed when we push our repo up to Acquia, we need to figure out how we're going to get it there. It would be possible to force-add the ignored stylesheets before I push the branch up, but I don't really want all those additional commits on my development branches in particular. Luckily, Acquia has a solution that we can hack which will allow us to push the files up to Dev and Stage (note, we'll handle prod differently).&lt;/p&gt;
-
-&lt;h3&gt;Enter LiveDev&lt;/h3&gt;
-
-&lt;p&gt;Acquia has a setting that you can toggle on both the dev and test environments that allows you to modify the files on the server. It's called 'livedev', and we're going to exploit its functionality to get our compiled CSS up to those environments. After enabling livedev in the &lt;a href="Get/url/%20and%20image%20here"&gt;Acquia workflow interface&lt;/a&gt;, you are now able to scp files up to the server during deployment. Because I like to reduce the possibility of human error, I prefer to create a deploy script that handles this part for me. It's basically going to do three things:&lt;/p&gt;
-
-&lt;ol&gt;
-	&lt;li&gt;Compile the css&lt;/li&gt;
-	&lt;li&gt;scp the css files up to Acquia livedev for the correct environment&lt;/li&gt;
-	&lt;li&gt;ssh into Acquia's server and checkout the code branch that we just pushed up.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Here's the basic deploy script that we can use to accomplish these goals:&lt;/p&gt;
-
-&lt;pre&gt;
-&lt;code data-language="shell"&gt;#!/bin/bash
-
-REPO_BASE='[project foldername here (the folder above docroot)]'
-
-# check running from the repository base
-CURRENT_DIR=${PWD##*/}
-if [ ! "$CURRENT_DIR" = $REPO_BASE ]; then
-  echo 'Please be sure that you are running this command from the root of the repo.'
-  exit 2
-fi
-
-# Figure out which environment to deploy to
-while getopts "e:" var; do
-    case $var in
-        e) ENV="${OPTARG}";;
-    esac
-done
-
-# Set the ENV to dev if 'e' wasn't passed as an argument
-if [ "${#ENV}" -eq "0" ]; then
-  ENV='dev'
-fi
-
-if [ "$ENV" = "dev" ] || [ "$ENV" = "test" ]; then
-  # Set the css_path and livedev path
-  CSS_PATH='docroot/sites/all/themes/theme_name/css/'
-
-  # Replace [user@devcloud.host] with your real Acquia Cloud SSH host
-  # Available in the AC interface under the "Users and keys" tab
-  ACQUIA_LIVEDEV='[user@devcloud.host]:~/$ENV/livedev/'
-
-  # Get the branch name
-  BRANCH_NAME="$(git symbolic-ref HEAD 2&gt;/dev/null)" ||
-  BRANCH_NAME="detached"     # detached HEAD
-  BRANCH_NAME=${BRANCH_NAME##refs/heads/}
-
-  echo "Pushing $BRANCH_NAME to acquia cloud $ENV"
-  git push -f ac $BRANCH_NAME # This assumes you have a git remote called "ac" that points to Acquia
-
-  echo "Compiling css"
-  compass compile
-
-  # Upload to server
-  echo "Uploading styles to server"
-  scp -r $CSS_PATH "$ACQUIA_LIVEDEV~/$ENV/livedev/$CSS_PATH":
-
-  # Pull the updates from the branch to livedev and clear cache
-  echo "Deploying $BRANCH_NAME to livedev on Acquia"
-  ssh $ACQUIA_LIVEDEV "git checkout .; git pull; git checkout $BRANCH_NAME; cd docroot; exit;"
-
-  echo "Clearing cache on $ENV"
-  cd docroot
-  drush [DRUSH_ALIAS].$ENV cc all -y
-
-  echo "Deployment complete"
-  exit
-fi
-
-# If not dev or test, throw an error
-echo 'Error: the deploy script is for the Acquia dev and test environments'
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now I don't pretend to be a shell scripting expert and I'm sure this script could be improved; however, it might be helpful to explain a few things. To start with, you will need to &lt;code&gt;chmod +x [path/to/file]&lt;/code&gt;. I always put scripts like this in a bin folder at the root of the repo. There are a few other variables that you'll need to change if you want to use this script, such as &lt;code&gt;REPO_BASE, CSS_PATH and ACQUIA_LIVEDEV&lt;/code&gt;. Also, the script assumes that you have a git remote called "ac", which should point to your Acquia Cloud instance. Finally, the drush cache clear portion assumes that you have a custom drush alias created for your livedev environment for both dev and test; if not, you can remove those lines. To deploy the site to dev, you would run the command &lt;code&gt;bin/deploy&lt;/code&gt;, or &lt;code&gt;bin/deploy -e test&lt;/code&gt; to deploy to the staging environment.&lt;/p&gt;
-
-&lt;h3&gt;Deploying to Prod&lt;/h3&gt;
-
-&lt;p&gt;Wisely, Acquia doesn't provide keys to run livedev on the production environment, and this approach is probably more fragile than we'd like anyway. For the production environment, we're going to use an approach that force-adds the stylesheet when necessary.&lt;/p&gt;
-
-&lt;p&gt;To do this, we're again going to rely on a git hook to help reduce the possibility of human error. Because our development philosophy relies on a single branch called "production" that we merge into and tag, we can use git's post-merge hook to handle the necessary force-adding of our stylesheet.&lt;/p&gt;
-
-&lt;pre&gt;
-&lt;code data-language="shell"&gt;#! /bin/sh
-
-BRANCH_NAME="$(git symbolic-ref HEAD 2&gt;/dev/null)" ||
-BRANCH_NAME="detached"
-BRANCH_NAME=${BRANCH_NAME##refs/heads/}
-CSS_PATH="docroot/sites/all/themes/theme_name/css/"
-
-if [ "$BRANCH_NAME" = "production" ]; then
-  compass compile
-  git add $CSS_PATH -f
-  git diff --cached --exit-code &gt; /dev/null
-  if [ "$?" -eq 1 ]; then
-    git commit -m 'Adding compiled css to production'
-  fi
-fi
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;As with the post-checkout hook, you'll need to make sure this file is executable. Note that after the script stages the css files, git is able to confirm whether there are differences in the current state of the files, and only commit the files when there are changes. After merging a feature branch into the production branch, the post-merge hook gets triggered, and I can then add a git tag, push the code and new tag to the Acquia remote, and then utilize Acquia's cloud interface to deploy the new tag.&lt;/p&gt;
-
-&lt;h3&gt;Conclusion&lt;/h3&gt;
-
-&lt;p&gt;While this may seem like a lot of hoops to jump through to keep compiled CSS out of the repository, the deploy script actually fits very nicely with my development workflow, because it allows me to easily push up the current branch to dev for acceptance testing. In the future, I'd like to rework this process to utilize Acquia's Cloud API, but frankly, my tests with the API thus far have returned unexpected results, and I haven't wanted to submit one of our coveted support tickets to figure out why the API isn't working correctly. If you're reading this and can offer tips for improving what's here, sharing how you accomplish the same thing, or happen to work at Acquia and want to talk about the bugs I'm seeing in the API, please leave a comment. And thanks for reading!&lt;/p&gt;
-
-&lt;h3&gt;Update&lt;/h3&gt;
-
-&lt;p&gt;Dave Reid made a comment below about alternatives to LiveDev and the possibility of using tags to accomplish this. As I mentioned above, LiveDev works well for me (on dev and test) because it fits well into my typical deployment workflow. The problem I see with using tags to trigger a hook is that we are in the practice of tagging production releases, but not for dev or test. Thinking through Dave's suggestion, however, led to me to an alternative approach to LiveDev that still keeps the repo clean using Git's "pre-push" hook:&lt;/p&gt;
-
-&lt;pre&gt;
-&lt;code data-language="shell"&gt;#! /bin/sh
-
-PUSH_REMOTE=$1
-ACQUIA_REMOTE='ac' #put your Acquia remote name here
-
-if [ $PUSH_REMOTE = $ACQUIA_REMOTE ]; then
-  compass compile
-  git add docroot/sites/all/themes/ilr_theme/css/ -f
-  git diff --cached --exit-code &gt; /dev/null
-  if [ "$?" -eq 1 ]; then
-    git commit -m "Adding compiled css"
-  fi
-fi
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The hook receives the remote as the first argument, which allows us to check whether we're pushing to our defined Acquia remote. If we are, the script then checks for CSS changes, and adds the additional commit if necessary. The thing I really like about this approach is that the GitHub repository won't get cluttered with the extra commit, but the CSS files can be deployed to Acquia without livedev.&lt;/p&gt;
-&lt;/div&gt;
-      
-      &lt;/div&gt;
-&lt;/div&gt;
-          &lt;/div&gt;
-  
-  &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
-    &lt;div class="field__label"&gt;Tags&lt;/div&gt;
-          &lt;div class="field__items"&gt;
-              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
-              &lt;/div&gt;
-      &lt;/div&gt;
-</description>
-  <pubDate>Sun, 26 Dec 2021 18:17:28 +0000</pubDate>
-    <dc:creator>admin</dc:creator>
-    <guid isPermaLink="false">10 at https://www.a-fro.com</guid>
     </item>
 
   </channel>
