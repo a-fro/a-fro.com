@@ -7,6 +7,45 @@
     <language>en</language>
     
     <item>
+  <title>Retreating and Returning - Part 2</title>
+  <link>https://www.a-fro.com/blog/personal/retreating-and-returning-part-2</link>
+  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Retreating and Returning - Part 2&lt;/span&gt;
+&lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;aaron&lt;/span&gt;&lt;/span&gt;
+&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Tue, 03/29/2022 - 09:34&lt;/span&gt;
+
+            &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2022-03-29T12:00:00Z" class="datetime"&gt;March 29, 2022&lt;/time&gt;
+&lt;/div&gt;
+      
+      &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
+          
+            &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;Here we arrive at the tricky part, because I want to share my own experience while also acknowledging that it’s not a blueprint for change: it’s simply how I transformed the structures of my own life. When the lockdown started, like many of us, I suddenly had a lot of extra time on my hands. So I started spending a lot more time walking barefoot in the grass, like I did as a child, and playing guitar by the campfire. I was rediscovering nature through my senses—gazing at the stars, listening to the birds at dawn, touching the bark of a tree, and getting dirt under my fingernails in the garden. As I did those things, I began to feel a strong call to cut back even further from my responsibilities, to have even more time free for wandering. I negotiated to cut back at work, and move from full-time employment to 3 days a week. This wasn’t an easy decision, because I knew it would force further changes. We would need to re-negotiate the financial aid at my son’s college, and we’d have to sell the house (since we’d no longer be able to service two mortgages and all the other debt we were carrying to support our lifestyle).&lt;/p&gt;
+
+&lt;p&gt;Fast-forwarding two years to the present moment, I can see that the structures of my life have changed dramatically. I’m now debt free. I have four-day “weekends” every week. My relationship to my wife of 23 years is deepening and transforming dramatically, and we’re closer than we’ve ever been. None of these things have been easy, but by taking one step at a time, and keeping the goal in sight, it’s been manageable.&lt;/p&gt;
+
+&lt;p&gt;One way I could summarize this goal—the compass I’ve been following—would be to simply look for aspects of my life where I see and feel scarcity, and instead seek to foster an experience of abundance. Looking back over the moments for which I hold the most regret in my life, I can easily see the powerful role that my experience of scarcity was playing in my psyche at those moments. How much of my life has been spent worrying that I had too little money, too little time, or too little love? Far more than I care to admit, even to myself.&lt;/p&gt;
+
+&lt;p&gt;Moving from the prison of scarcity into the field of abundance is not a single moment. It’s a process of learning to see the world, and our relationship to it, in new ways. We support that effort through conscious practices, such as taking on fewer responsibilities, changing our relationship to money, and looking for daily moments to be grateful for, over and over. At the end of the day, we can lie in bed and celebrate the small wins from that day: the moment we remembered to take a deep breath just before yelling at a loved one, the way we noticed the light and shadows playing on the earth as the clouds swept across the sky, or the moment we were feeling insecure about our future and remembered how many times we were fearful and everything worked out. As we awaken each morning, we can take a moment to remember Pachamama, and spend a few minutes in silence next to a favorite tree or gazing walking in the garden.&lt;/p&gt;
+
+&lt;p&gt;The habits of scarcity, for most of us, are supported by strong networks of neurons that have been firing together for many years. Day by day, however, we help our mind and body to build new pathways that become stronger as we continue. And as we experience that unfolding process, we see that the small, flickering flame of hope is growing. Eventually, I believe, we can begin to see that the fire we’ve been tending has grown bright enough to attract others, and to kindle their fires as well. That, for me, is a hopeful vision that I can get behind, and one that I also believe Pachamama is inviting us to embrace. &lt;em&gt;Do your work,&lt;/em&gt; she says. &lt;em&gt;It is time. &lt;/em&gt;And,&lt;em&gt; I’ve got you…you are not alone.&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+      &lt;/div&gt;
+&lt;/div&gt;
+          &lt;/div&gt;
+  
+  &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
+    &lt;div class="field__label"&gt;Tags&lt;/div&gt;
+          &lt;div class="field__items"&gt;
+              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/personal" hreflang="en"&gt;Personal&lt;/a&gt;&lt;/div&gt;
+              &lt;/div&gt;
+      &lt;/div&gt;
+</description>
+  <pubDate>Tue, 29 Mar 2022 09:34:43 +0000</pubDate>
+    <dc:creator>aaron</dc:creator>
+    <guid isPermaLink="false">23 at https://www.a-fro.com</guid>
+    </item>
+<item>
   <title>Retreating and Returning - Part 1</title>
   <link>https://www.a-fro.com/blog/personal/retreating-and-returning-part-1</link>
   <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Retreating and Returning - Part 1&lt;/span&gt;
@@ -758,259 +797,6 @@ function mymodule_mailchimp_accounts_api_key() {
   <pubDate>Sun, 26 Dec 2021 18:24:17 +0000</pubDate>
     <dc:creator>admin</dc:creator>
     <guid isPermaLink="false">13 at https://www.a-fro.com</guid>
-    </item>
-<item>
-  <title>Speed Up Cache Clearing on Drupal 7</title>
-  <link>https://www.a-fro.com/blog/drupal/speed-cache-clearing-drupal-7</link>
-  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Speed Up Cache Clearing on Drupal 7&lt;/span&gt;
-&lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
-&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Sun, 12/26/2021 - 18:21&lt;/span&gt;
-
-            &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2015-11-24T12:00:00Z" class="datetime"&gt;November 24, 2015&lt;/time&gt;
-&lt;/div&gt;
-      
-      &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
-              &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
-            &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;h2&gt;Cache clearing nirvana may be two vsets away&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;tl;dr &lt;/strong&gt;If your D7 site uses features or has many entity types, some recent patches to the &lt;a href="https://www.drupal.org/node/2378343"&gt;features module&lt;/a&gt; and the &lt;a href="https://www.drupal.org/node/2241979"&gt;entity api module&lt;/a&gt; may deliver dramatic performance increases when you clear Drupal's cache. The magic:&lt;/p&gt;
-
-&lt;pre&gt;
-&lt;code&gt;
-    $ drush vset features_rebuild_on_flush FALSE
-    $ drush vset entity_rebuild_on_flush FALSE
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2&gt;The Backstory&lt;/h2&gt;
-
-&lt;p&gt;Given that &lt;a href="https://www.drupal.org/u/tedbow"&gt;tedbow&lt;/a&gt; is a good friend in our little slice of paradise, aka Ithaca, NY, we decided that we were going to embrace the &lt;a href="https://www.drupal.org/project/entityform"&gt;entityform module&lt;/a&gt; on the &lt;a href="http://www.ilr.cornell.edu"&gt;large Drupal migration&lt;/a&gt; I was hired to lead. Fifty-eight entityforms and 420 fields later (even with diligent field re-use), we now see how, in some cases, a &lt;a href="http://drupal.org/project/webform"&gt;pseudo-field system&lt;/a&gt; has real benefits, even if it's not the most future-proof solution. As our cache clears became slower and slower (at times taking nearly 10 minutes for a teammate with an older computer), I began to suspect that entityform and/or our extensive reliance on the Drupal field system might be a culprit. Two other corroborating data points were the length of time that feature reverts took when they involved entityforms. Even deployments became a hassle because we had to carefully time them if they required the cache to be cleared, which would make the site unresponsive for logged-in users and cache-cold pages for 5 minutes or more. Clearly, something needed to be done.&lt;/p&gt;
-
-&lt;h2&gt;Diagnosing&lt;/h2&gt;
-
-&lt;p&gt;I'm sure there are better ways to handle performance diagnostics (using xDebug, for example), but given the procedural nature of &lt;code&gt;drupal_flush_all_caches&lt;/code&gt; it seemed like the devel module would work just fine. I modified the code in Drupal's common.inc file to include the following:&lt;/p&gt;
-
-&lt;pre&gt;
-&lt;code data-language="php"&gt;
-function time_elapsed($comment,$force=FALSE) {
-  static $time_elapsed_last = null;
-  static $time_elapsed_start = null;
-
-  $unit="s"; $scale=1000000; // output in seconds
-  $now = microtime(true);
-  if ($time_elapsed_last != null) {
-    $elapsed = round(($now - $time_elapsed_last)*1000000)/$scale;
-    $total_time = round(($now - $time_elapsed_start)*1000000)/$scale;
-    $msg = "$comment: Time elapsed: $elapsed $unit,";
-    $msg .= " total time: $total_time $unit";
-    dpm($msg);
-  }
-  else {
-      $time_elapsed_start=$now;
-  }
-  $time_elapsed_last = $now;
-}
-/**
- * Flushes all cached data on the site.
- *
- * Empties cache tables, rebuilds the menu cache and theme registries, and
- * invokes a hook so that other modules' cache data can be cleared as well.
- */
-function drupal_flush_all_caches(){
-  // Change query-strings on css/js files to enforce reload for all users.
-  time_elapsed('_drupal_flush_css_js');
-  _drupal_flush_css_js();
-  time_elapsed('registry_rebuild');
-  registry_rebuild();
-  time_elapsed('drupal_clear_css_cache');
-  drupal_clear_css_cache();
-  time_elapsed('drupal_clear_js_cache');
-  drupal_clear_js_cache();
-
-  // Rebuild the theme data. Note that the module data is rebuilt above, as
-  // part of registry_rebuild().
-  time_elapsed('system_rebuild_theme_data');
-  system_rebuild_theme_data();
-  time_elapsed('drupal_theme_rebuild');
-  drupal_theme_rebuild();
-  time_elapsed('entity_info_cache_clear');
-  entity_info_cache_clear();
-  time_elapsed('node_types_rebuild');
-  node_types_rebuild();
-  // node_menu() defines menu items based on node types so it needs to come
-  // after node types are rebuilt.
-  time_elapsed('menu_rebuild');
-  menu_rebuild();
-
-  time_elapsed('actions_synchronize');
-  // Synchronize to catch any actions that were added or removed.
-  actions_synchronize();
-
-  // Don't clear cache_form - in-progress form submissions may break.
-  // Ordered so clearing the page cache will always be the last action.
-  $core = array('cache', 'cache_path', 'cache_filter', 'cache_bootstrap', 'cache_page');
-  $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
-  foreach ($cache_tables as $table) {
-    time_elapsed("clearing $table");
-    cache_clear_all('*', $table, TRUE);
-  }
-
-  // Rebuild the bootstrap module list. We do this here so that developers
-  // can get new hook_boot() implementations registered without having to
-  // write a hook_update_N() function.
-  _system_update_bootstrap_status();
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The next time I cleared cache (using admin_menu, since I wanted the dpm messages available), I saw the following:&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;registry_rebuild: Time elapsed: 0.003464 s, total time: 0.003464 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;drupal_clear_css_cache: Time elapsed: 3.556191 s, total time: 3.559655 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;drupal_clear_js_cache: Time elapsed: 0.001589 s, total time: 3.561244 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;system_rebuild_theme_data: Time elapsed: 0.003462 s, total time: 3.564706 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;drupal_theme_rebuild: Time elapsed: 0.122944 s, total time: 3.68765 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;entity_info_cache_clear: Time elapsed: 0.001606 s, total time: 3.689256 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;node_types_rebuild: Time elapsed: 0.003054 s, total time: 3.69231 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;menu_rebuild: Time elapsed: 0.052984 s, total time: 3.745294 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;actions_synchronize: Time elapsed: 3.334542 s, total time: 7.079836 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;clearing cache_block: Time elapsed: 31.149723 s, total time: 38.229559 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;clearing cache_ctools_css: Time elapsed: 0.00618 s, total time: 38.235739 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;clearing cache_feeds_http: Time elapsed: 0.003292 s, total time: 38.239031 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;clearing cache_field: Time elapsed: 0.006714 s, total time: 38.245745 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;clearing cache_image: Time elapsed: 0.013317 s, total time: 38.259062 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;clearing cache_libraries: Time elapsed: 0.007708 s, total time: 38.26677 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;clearing cache_token: Time elapsed: 0.007837 s, total time: 38.274607 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;clearing cache_views: Time elapsed: 0.006798 s, total time: 38.281405 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;clearing cache_views_data: Time elapsed: 0.008569 s, total time: 38.289974 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;clearing cache: Time elapsed: 0.006926 s, total time: 38.2969 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;clearing cache_path: Time elapsed: 0.009662 s, total time: 38.306562 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;clearing cache_filter: Time elapsed: 0.007552 s, total time: 38.314114 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;clearing cache_bootstrap: Time elapsed: 0.005526 s, total time: 38.31964 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;clearing cache_page: Time elapsed: 0.009511 s, total time: 38.329151 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;hook_flush_caches: total time: 38.348554 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;Every cache cleared.&lt;/p&gt;
-
-&lt;p&gt;My initial response was to wonder how and why the cache_block would take so long. Then, however, I noticed line 59 above, which calls &lt;code&gt;module_invoke_all('flush_caches')&lt;/code&gt;, which should have been obvious. Also, given that I was just looking for bottlenecks, I modified both &lt;code&gt;module_invoke($module, $hook)&lt;/code&gt; in module.inc, as well as the &lt;code&gt;time_elapsed&lt;/code&gt; to get the following:&lt;/p&gt;
-
-&lt;pre&gt;
-&lt;code data-language="php"&gt;
-function time_elapsed($comment,$force=FALSE) {
-  static $time_elapsed_last = null;
-  static $time_elapsed_start = null;
-  static $last_action = null; // Stores the last action for the elapsed time message
-
-  $unit="s"; $scale=1000000; // output in seconds
-  $now = microtime(true);
-
-  if ($time_elapsed_last != null) {
-    $elapsed = round(($now - $time_elapsed_last)*1000000)/$scale;
-    if ($elapsed &gt; 1 || $force) {
-      $total_time = round(($now - $time_elapsed_start)*1000000)/$scale;
-      $msg = ($force)
-        ? "$comment: "
-        : "$last_action: Time elapsed: $elapsed $unit,";
-      $msg .= " total time: $total_time $unit";
-      dpm($msg);
-    }
-  } else {
-      $time_elapsed_start=$now;
-  }
-  $time_elapsed_last = $now;
-  $last_action = $comment;
-}
-
-
-/** From module.inc */
-function module_invoke_all($hook) {
-  $args = func_get_args();
-  // Remove $hook from the arguments.
-  unset($args[0]);
-  $return = array();
-  foreach (module_implements($hook) as $module) {
-    $function = $module . '_' . $hook;
-    if (function_exists($function)) {
-      if ($hook == 'flush_caches') {
-        time_elapsed($function);
-      }
-      $result = call_user_func_array($function, $args);
-      if (isset($result) &amp;&amp; is_array($result)) {
-        $return = array_merge_recursive($return, $result);
-      }
-      elseif (isset($result)) {
-        $return[] = $result;
-      }
-    }
-  }
-
-  return $return;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The results pointed to the expected culprits:&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;registry_rebuild: Time elapsed: 4.176781 s, total time: 4.182339 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;menu_rebuild: Time elapsed: 3.367128 s, total time: 7.691533 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;entity_flush_caches: Time elapsed: 22.899951 s, total time: 31.068898 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;features_flush_caches: Time elapsed: 7.656231 s, total time: 39.112933 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;hook_flush_caches: total time: 39.248036 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;Every cache cleared.&lt;/p&gt;
-
-&lt;p&gt;After a little digging into the features issue queue, I was delighted to find out that patches had already been committed to both modules (though entity api does not have it in the release yet, so you have to use the dev branch). Two module updates and two vsets later, I got the following results:&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;registry_rebuild: Time elapsed: 3.645328 s, total time: 3.649398 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;menu_rebuild: Time elapsed: 3.543039 s, total time: 7.378718 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;hook_flush_caches: total time: 8.266036 s&lt;/p&gt;
-
-&lt;p class="messages messages--status"&gt;Every cache cleared.&lt;/p&gt;
-
-&lt;p&gt;Cache clearing nirvana reached!&lt;/p&gt;
-&lt;/div&gt;
-      
-      &lt;/div&gt;
-&lt;/div&gt;
-          &lt;/div&gt;
-  
-  &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
-    &lt;div class="field__label"&gt;Tags&lt;/div&gt;
-          &lt;div class="field__items"&gt;
-              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
-              &lt;/div&gt;
-      &lt;/div&gt;
-</description>
-  <pubDate>Sun, 26 Dec 2021 18:21:52 +0000</pubDate>
-    <dc:creator>admin</dc:creator>
-    <guid isPermaLink="false">12 at https://www.a-fro.com</guid>
     </item>
 
   </channel>
