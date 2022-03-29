@@ -1,6 +1,9 @@
+:root {
+  --media-component-pullout: 100px;
+}
+
 .component--portrait {
   --media-component-margin: var(--cu-ps2);
-  --media-component-pullout: 100px;
   max-width: calc(400px + var(--media-component-margin) + var(--media-component-pullout));
   float: left;
   margin-right: var(--media-component-margin);
@@ -29,7 +32,27 @@
 
 .field--type-entity-reference img,
 .paragraph--type--media img,
-.component img {
+.component img,
+figure img {
   width: 100%;
   height: auto;
+}
+
+figcaption {
+  font-size: var(--cu-ms-3);
+}
+
+@media (min-width: 58rem) {
+  .field--name-field-body figure {
+    margin: var(--cu-vr2) 0;
+    width: calc(2 * var(--media-component-pullout) + 100%);
+  }
+
+  .field--name-field-body figure img {
+    width: 100%;
+  }
+
+  .field--name-field-body figure.align-center {
+    margin-left: calc(-1 * var(--media-component-pullout));
+  }
 }
