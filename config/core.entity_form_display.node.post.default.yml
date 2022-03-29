@@ -69,7 +69,7 @@ content:
       media_types: {  }
     third_party_settings: {  }
   field_tags:
-    type: entity_reference_autocomplete
+    type: entity_reference_autocomplete_tags
     weight: 5
     region: content
     settings:
