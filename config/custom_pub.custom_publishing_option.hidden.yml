@@ -1,0 +1,8 @@
+uuid: a3daaf26-2ff6-47cd-a5b8-dcdcc0aec8ed
+langcode: en
+status: true
+dependencies: {  }
+id: hidden
+label: Hidden
+description: 'Hidden posts are viewable on the static site but do not show up on the homepage or related articles. '
+publish_under_promote_options: false

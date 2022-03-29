@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fec86b0688446166f26adadcea0d1129",
+    "content-hash": "14a5a9ac3605020617c3592cb2b82e0f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1812,6 +1812,70 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/ctools",
                 "issues": "https://www.drupal.org/project/issues/ctools"
+            }
+        },
+        {
+            "name": "drupal/custom_pub",
+            "version": "1.0.0-beta3",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/custom_pub.git",
+                "reference": "8.x-1.0-beta3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/custom_pub-8.x-1.0-beta3.zip",
+                "reference": "8.x-1.0-beta3",
+                "shasum": "347cdb6a6c3eba20dea02c8f4216f66f16e847d2"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0-beta3",
+                    "datestamp": "1628530052",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Beta releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "VladimirAus",
+                    "homepage": "https://www.drupal.org/user/673120"
+                },
+                {
+                    "name": "arcaneadam",
+                    "homepage": "https://www.drupal.org/user/234551"
+                },
+                {
+                    "name": "dboulet",
+                    "homepage": "https://www.drupal.org/user/139316"
+                },
+                {
+                    "name": "gisle",
+                    "homepage": "https://www.drupal.org/user/409554"
+                },
+                {
+                    "name": "jacobbell84",
+                    "homepage": "https://www.drupal.org/user/3408772"
+                },
+                {
+                    "name": "kevinquillen",
+                    "homepage": "https://www.drupal.org/user/317279"
+                }
+            ],
+            "description": "Adds the ability to add Custom publishing options to the node Add/Edit forms.",
+            "homepage": "https://www.drupal.org/project/custom_pub",
+            "support": {
+                "source": "https://git.drupalcode.org/project/custom_pub"
             }
         },
         {
@@ -7297,7 +7361,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal-tome/tome_drush": 20
+        "drupal-tome/tome_drush": 20,
+        "drupal/custom_pub": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,
