@@ -18,3 +18,7 @@ composer.lock
 load.environment.php
 settings.php
 README.md
+
+CNAME
+gh-pages
+html/

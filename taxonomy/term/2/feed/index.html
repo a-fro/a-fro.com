@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xml:base="https://www.a-fro.com/">
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xml:base="https://www.a-fro.github.io/a-fro.com/">
   <channel>
     <title>Drupal</title>
-    <link>https://www.a-fro.com/</link>
+    <link>https://www.a-fro.github.io/a-fro.com/</link>
     <description/>
     <language>en</language>
-    
+
     <item>
   <title>Creating Reusable Dynamic Content Components</title>
-  <link>https://www.a-fro.com/blog/drupal/creating-reusable-dynamic-content-components</link>
+  <link>https://www.a-fro.github.io/a-fro.com/blog/drupal/creating-reusable-dynamic-content-components</link>
   <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Creating Reusable Dynamic Content Components&lt;/span&gt;
 &lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
 &lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Sun, 12/26/2021 - 18:36&lt;/span&gt;
 
-            &lt;div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item"&gt;  &lt;img src="https://www.a-fro.com/sites/default/files/styles/large_21_9/public/2021-12/reusable-components.jpg?itok=hSe8YAKH" width="1596" height="684" alt="A screenshot showing the "up next" reusable tagged content block " loading="lazy" class="image-style-large-21-9" /&gt;
+            &lt;div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item"&gt;  &lt;img src="https://www.a-fro.github.io/a-fro.github.io/a-fro.com/sites/default/files/styles/large_21_9/public/2021-12/reusable-components.jpg?itok=hSe8YAKH" width="1596" height="684" alt="A screenshot showing the "up next" reusable tagged content block " loading="lazy" class="image-style-large-21-9" /&gt;
 
 
 &lt;/div&gt;
-      
+
             &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2018-11-06T12:00:00Z" class="datetime"&gt;November 6, 2018&lt;/time&gt;
 &lt;/div&gt;
-      
+
       &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
               &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
-            &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;This is part 2 in this series that explores &lt;a href="https://a-fro.com/blog/creating-paragraphs-entities-dynamic-content"&gt;how to use paragraph bundles to store configuration for dynamic content&lt;/a&gt;. The example I built in part 1 was a "read next" section, which could then be added as a component within the flow of the page. The strategy makes sense for component-based sites and landing pages, but probably less so for blogs or content heavy sites, since what we really want is for each article to include the read next section at the end of the page. For that, a view that displays as a block would perfectly suffice. In practice, however, it can be really useful to have a single custom block type, which I often call a "component block", that has an entity reference revisions field that we can leverage to create reusable components.&lt;/p&gt;
+
+            &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;This is part 2 in this series that explores &lt;a href="https://a-fro.github.io/a-fro.com/blog/creating-paragraphs-entities-dynamic-content"&gt;how to use paragraph bundles to store configuration for dynamic content&lt;/a&gt;. The example I built in part 1 was a "read next" section, which could then be added as a component within the flow of the page. The strategy makes sense for component-based sites and landing pages, but probably less so for blogs or content heavy sites, since what we really want is for each article to include the read next section at the end of the page. For that, a view that displays as a block would perfectly suffice. In practice, however, it can be really useful to have a single custom block type, which I often call a "component block", that has an entity reference revisions field that we can leverage to create reusable components.&lt;/p&gt;
 
 &lt;p&gt;This strategy offers a simple and unified interface for creating reusable components and adding them to sections of the page. Combined with Pattern Lab and the block visibility groups module, we get a pretty powerful tool for page building and theming.&lt;/p&gt;
 
 &lt;p&gt;The image below captures the configuration screen for the "Up next" block you can find at the bottom of this page. As you see, it sets the heading, the primary tag, and the number of items to show. Astute readers might notice, however, that there is a small problem with this implementation. It makes sense if all the articles are about Drupal, but on sites where there are lots of topics, having a reusable component with a hard-coded taxonomy reference makes less sense. Rather, we'd like the related content component to show content that is actually related to the content of the article being read.&lt;/p&gt;
 &lt;/div&gt;
-      
+
       &lt;/div&gt;
 &lt;/div&gt;
               &lt;div class="field__item"&gt;  &lt;div class="component component--original paragraph paragraph--type--media paragraph--view-mode--default"&gt;
-            &lt;img src="https://www.a-fro.com/sites/default/files/styles/full_max/public/2021-12/screen_shot_2018-11-06_at_8.57.24_am.png?itok=pQLBaw9-" width="462" height="505" alt="Configuration fields for the tagged content block, including the heading, tag and number of items to show." loading="lazy" class="image-style-full-max" /&gt;
+            &lt;img src="https://www.a-fro.github.io/a-fro.github.io/a-fro.com/sites/default/files/styles/full_max/public/2021-12/screen_shot_2018-11-06_at_8.57.24_am.png?itok=pQLBaw9-" width="462" height="505" alt="Configuration fields for the tagged content block, including the heading, tag and number of items to show." loading="lazy" class="image-style-full-max" /&gt;
 
 
 
       &lt;/div&gt;
 &lt;/div&gt;
               &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
+
             &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;For the purpose of this article, let's define the following two requirements: first, if the tagged content component has been added as a paragraph bundle to the page itself, then we will respect the tag supplied in its configuration. If, however, the component is being rendered in the up next block, then we will use the first term the article has been tagged with.&lt;/p&gt;
 
 &lt;p&gt;To do that, we need three things: 1) we need our custom block to exist and to have a delta that we can use, 2) we need a preprocess hook to assign the theme variables, and 3) we need a twig template to render the component. If you're following along in your own project, then go ahead and create the component block now. I'll return momentarily to a discussion about custom block and the config system.&lt;/p&gt;
@@ -111,40 +111,40 @@ function component_helper_update_8001() {
 
 &lt;p&gt;Once we deploy and run the update hook, we're able to import the site config and our custom block should be rendering on the page. Please let me know if you have any questions or feedback in the comments below. Happy Drupaling.&lt;/p&gt;
 &lt;/div&gt;
-      
+
       &lt;/div&gt;
 &lt;/div&gt;
           &lt;/div&gt;
-  
+
   &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
     &lt;div class="field__label"&gt;Tags&lt;/div&gt;
           &lt;div class="field__items"&gt;
-              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
+              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.github.io/a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
               &lt;/div&gt;
       &lt;/div&gt;
 </description>
   <pubDate>Sun, 26 Dec 2021 18:36:24 +0000</pubDate>
     <dc:creator>admin</dc:creator>
-    <guid isPermaLink="false">17 at https://www.a-fro.com</guid>
+    <guid isPermaLink="false">17 at https://www.a-fro.github.io/a-fro.com</guid>
     </item>
 <item>
   <title>Drupal Pullquotes</title>
-  <link>https://www.a-fro.com/blog/drupal/drupal-pullquotes</link>
+  <link>https://www.a-fro.github.io/a-fro.com/blog/drupal/drupal-pullquotes</link>
   <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Drupal Pullquotes&lt;/span&gt;
 &lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
 &lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Sun, 12/26/2021 - 18:33&lt;/span&gt;
 
-            &lt;div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item"&gt;  &lt;img src="https://www.a-fro.com/sites/default/files/styles/large_21_9/public/2021-12/pullqoutes.png?itok=MCLDYCDI" width="1596" height="684" alt="Several powerful quotes with a pullquote sprinkled off to the side to draw a reader's attention" loading="lazy" class="image-style-large-21-9" /&gt;
+            &lt;div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item"&gt;  &lt;img src="https://www.a-fro.github.io/a-fro.github.io/a-fro.com/sites/default/files/styles/large_21_9/public/2021-12/pullqoutes.png?itok=MCLDYCDI" width="1596" height="684" alt="Several powerful quotes with a pullquote sprinkled off to the side to draw a reader's attention" loading="lazy" class="image-style-large-21-9" /&gt;
 
 
 &lt;/div&gt;
-      
+
             &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2018-10-29T12:00:00Z" class="datetime"&gt;October 29, 2018&lt;/time&gt;
 &lt;/div&gt;
-      
+
       &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
               &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
+
             &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;"Pullquotes", as described here, differ from blockquotes because they &lt;em&gt;duplicate&lt;/em&gt; a section of text within the page, and &lt;span class="pullquote"&gt;pullquotes get styled in a way that draws the reader's attention to the quote&lt;/span&gt;. As such, one simple solution that I've been using is to allow content editors to select a section of text while editing and click a button in the interface to designate it as a pullquote.&lt;/p&gt;
 
 &lt;p&gt;TL;DR: &lt;a href="http://bit.ly/2qgTEjv"&gt;Grab your copy&lt;/a&gt; on GitHub today.&lt;/p&gt;
@@ -169,18 +169,18 @@ function component_helper_update_8001() {
 
 &lt;p&gt;If the format includes "Limit allowed HTML tags and correct faulty HTML", then be sure to add &lt;code&gt;&lt;span class&gt;&lt;/code&gt; to the allowed HTML tags, since that is how the plugin modifies the html and prepares it for your theme's javascript. Finally, export your configuration and commit it to your project repo.&lt;/p&gt;
 &lt;/div&gt;
-      
+
       &lt;/div&gt;
 &lt;/div&gt;
               &lt;div class="field__item"&gt;  &lt;div class="component component--content-width paragraph paragraph--type--media paragraph--view-mode--default"&gt;
-            &lt;img src="https://www.a-fro.com/sites/default/files/styles/full_content/public/2021-12/pullquote-btn.png?itok=fBFjjYSi" width="700" height="394" alt="The ckeditor button for pullquotes that needs to be configured in the text format" loading="lazy" class="image-style-full-content" /&gt;
+            &lt;img src="https://www.a-fro.github.io/a-fro.github.io/a-fro.com/sites/default/files/styles/full_content/public/2021-12/pullquote-btn.png?itok=fBFjjYSi" width="700" height="394" alt="The ckeditor button for pullquotes that needs to be configured in the text format" loading="lazy" class="image-style-full-content" /&gt;
 
 
 
       &lt;/div&gt;
 &lt;/div&gt;
               &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
+
             &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;h2&gt;Theming the pullquotes&lt;/h2&gt;
 
 &lt;p&gt;The last step is to modify the javascript and styles that your theme uses to display the pullquotes that have been added in the editing interface. As you can see from the &lt;a href="http://bit.ly/2qgTEjv"&gt;GitHub repo&lt;/a&gt;, there are four files that will need to be updated or added to your theme:&lt;/p&gt;
@@ -192,44 +192,44 @@ function component_helper_update_8001() {
 	&lt;li&gt;the scss (or css) file&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;In our case, the javascript finds any/all pullquote spans on the page, and then adds them as asides to the DOM, alternating between right and left alignment (for desktop). The scss file then styles them appropriately for small and large breakpoints. Note, too, that the theme css includes specific styles that &lt;a href="https://a-fro.com/sites/default/files/styles/full_content/public/2018-10/pullquote-editing.png"&gt;display in the editing interface&lt;/a&gt;, so that content creators can easily see when a pullquote is being added or modified. To remove a pullquote, the editor simply selects it again (which turns the pullquote pink in our theme) and clicks the ckeditor button. &lt;/p&gt;
+&lt;p&gt;In our case, the javascript finds any/all pullquote spans on the page, and then adds them as asides to the DOM, alternating between right and left alignment (for desktop). The scss file then styles them appropriately for small and large breakpoints. Note, too, that the theme css includes specific styles that &lt;a href="https://a-fro.github.io/a-fro.github.io/a-fro.com/sites/default/files/styles/full_content/public/2018-10/pullquote-editing.png"&gt;display in the editing interface&lt;/a&gt;, so that content creators can easily see when a pullquote is being added or modified. To remove a pullquote, the editor simply selects it again (which turns the pullquote pink in our theme) and clicks the ckeditor button. &lt;/p&gt;
 
 &lt;p&gt;That wraps up this simple tutorial. &lt;span class="pullquote"&gt;You can now rest assured that your readers will never miss an important quote again.&lt;/span&gt; The strategy is in no way bulletproof, and so its mileage may vary, but if you have questions, feedback, or suggestions on how this strategy can be improved, please add your comment below. &lt;/p&gt;
 &lt;/div&gt;
-      
+
       &lt;/div&gt;
 &lt;/div&gt;
           &lt;/div&gt;
-  
+
   &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
     &lt;div class="field__label"&gt;Tags&lt;/div&gt;
           &lt;div class="field__items"&gt;
-              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
+              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.github.io/a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
               &lt;/div&gt;
       &lt;/div&gt;
 </description>
   <pubDate>Sun, 26 Dec 2021 18:33:36 +0000</pubDate>
     <dc:creator>admin</dc:creator>
-    <guid isPermaLink="false">16 at https://www.a-fro.com</guid>
+    <guid isPermaLink="false">16 at https://www.a-fro.github.io/a-fro.com</guid>
     </item>
 <item>
   <title>Creating Paragraphs Entities for Dynamic Content</title>
-  <link>https://www.a-fro.com/blog/drupal/creating-paragraphs-entities-dynamic-content</link>
+  <link>https://www.a-fro.github.io/a-fro.com/blog/drupal/creating-paragraphs-entities-dynamic-content</link>
   <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Creating Paragraphs Entities for Dynamic Content&lt;/span&gt;
 &lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
 &lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Sun, 12/26/2021 - 18:28&lt;/span&gt;
 
-            &lt;div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item"&gt;  &lt;img src="https://www.a-fro.com/sites/default/files/styles/large_21_9/public/2021-12/dynamic-content-paragraphs.png?itok=e5oTKHjU" width="1596" height="684" alt="Logos  with Paragraphs, Drupal and Atomic Design" loading="lazy" class="image-style-large-21-9" /&gt;
+            &lt;div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item"&gt;  &lt;img src="https://www.a-fro.github.io/a-fro.github.io/a-fro.com/sites/default/files/styles/large_21_9/public/2021-12/dynamic-content-paragraphs.png?itok=e5oTKHjU" width="1596" height="684" alt="Logos  with Paragraphs, Drupal and Atomic Design" loading="lazy" class="image-style-large-21-9" /&gt;
 
 
 &lt;/div&gt;
-      
+
             &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2018-09-26T12:00:00Z" class="datetime"&gt;September 26, 2018&lt;/time&gt;
 &lt;/div&gt;
-      
+
       &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
               &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
+
             &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;h2&gt;Preamble&lt;/h2&gt;
 
 &lt;p&gt;I've been working with (and loving) &lt;a href="https://patternlab.io/"&gt;Pattern Lab&lt;/a&gt; for the past year and a half, and trying to find time to share some of the most valuable lessons I've learned. This tutorial is the first in what I hope will become a series of articles that demonstrate how I'm solving common requests and requirements for our projects. The underlying concept here does not require Pattern Lab, though I find it a particularly flexible and (mostly) intuitive way to create highly predictable, modular and reusable components.&lt;/p&gt;
@@ -268,7 +268,7 @@ function component_helper_update_8001() {
 
 {{ view }}&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;After rebuilding the cache and refreshing the page, we'll now see the content teasers being rendered, though our "Number of items" setting isn't yet working. Also, the value of &lt;code&gt;nid&lt;/code&gt; is undefined, which is what we need in order to exclude the current node from the tagged content list. In order to accomplish those two things, as well as prepare for future component hook implementations, we'll create a small custom module called "&lt;a href="https://github.com/a-fro/a-fro.com/tree/master/web/modules/custom/component_helper"&gt;component helper&lt;/a&gt;". The relevant hooks are:&lt;/p&gt;
+&lt;p&gt;After rebuilding the cache and refreshing the page, we'll now see the content teasers being rendered, though our "Number of items" setting isn't yet working. Also, the value of &lt;code&gt;nid&lt;/code&gt; is undefined, which is what we need in order to exclude the current node from the tagged content list. In order to accomplish those two things, as well as prepare for future component hook implementations, we'll create a small custom module called "&lt;a href="https://github.com/a-fro/a-fro.github.io/a-fro.com/tree/master/web/modules/custom/component_helper"&gt;component helper&lt;/a&gt;". The relevant hooks are:&lt;/p&gt;
 
 &lt;pre&gt;
 &lt;code data-language="php"&gt;/**
@@ -304,7 +304,7 @@ function component_helper_views_query_substitutions(ViewExecutable $view) {
 &lt;p&gt;Now we're ready to map our variables in Drupal and send them to be rendered in Pattern Lab. If you're not familiar with it, I suggest you start by learning more about &lt;a href="http://emulsify.info"&gt;Emulsify&lt;/a&gt;, which is Four Kitchens' Pattern Lab-based Drupal 8 theme. Their team is not only super-helpful, they're also very active on the DrupalTwig #pattern-lab channel. In this case, we're going to render the teasers from our view as card molecules that are part of a card grid organism. In order to that, we can simply pass the view &lt;code&gt;rows&lt;/code&gt; to the the organism, with a newly created view template (views-view--tagged-content.html.twig):&lt;/p&gt;
 
 &lt;pre&gt;
-&lt;code data-language="php"&gt;{# Note that we can simply pass along the arguments we sent via twig_tweak  #} 
+&lt;code data-language="php"&gt;{# Note that we can simply pass along the arguments we sent via twig_tweak  #}
 
 {% set heading = view.args.3 %}
 
@@ -334,38 +334,38 @@ function component_helper_views_query_substitutions(ViewExecutable $view) {
 
 &lt;p&gt;Congrats! At this point, you've reached the end of this tutorial. Before signing off, I'll just mention other useful "configuration" settings we've used, such as "any" vs. "all" filtering when using multiple tags, styled "variations" that we can leverage as BEM modifiers, and checkboxes that allow a content creator to specify which content types should be included. The degree of flexibility required will depend on the content strategy for the project, but the underlying methodology works similarly in each case. Also, stay tuned, as in the coming weeks I'll show you how we've chosen to extend this implementation in a way that is both predictable and reusable (blocks, anyone?).&lt;/p&gt;
 &lt;/div&gt;
-      
+
       &lt;/div&gt;
 &lt;/div&gt;
           &lt;/div&gt;
-  
+
   &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
     &lt;div class="field__label"&gt;Tags&lt;/div&gt;
           &lt;div class="field__items"&gt;
-              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
+              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.github.io/a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
               &lt;/div&gt;
       &lt;/div&gt;
 </description>
   <pubDate>Sun, 26 Dec 2021 18:28:01 +0000</pubDate>
     <dc:creator>admin</dc:creator>
-    <guid isPermaLink="false">15 at https://www.a-fro.com</guid>
+    <guid isPermaLink="false">15 at https://www.a-fro.github.io/a-fro.com</guid>
     </item>
 <item>
   <title>Multiple MailChimp Accounts with Drupal</title>
-  <link>https://www.a-fro.com/blog/drupal/multiple-mailchimp-accounts-drupal</link>
+  <link>https://www.a-fro.github.io/a-fro.com/blog/drupal/multiple-mailchimp-accounts-drupal</link>
   <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Multiple MailChimp Accounts with Drupal&lt;/span&gt;
 &lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
 &lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Sun, 12/26/2021 - 18:25&lt;/span&gt;
 
             &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2016-12-20T12:00:00Z" class="datetime"&gt;December 20, 2016&lt;/time&gt;
 &lt;/div&gt;
-      
+
       &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
               &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
+
             &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;A couple of months ago, &lt;a href="https://github.com/thinkshout/"&gt;team ThinkShout&lt;/a&gt; quietly introduced a feature to the &lt;a href="https://www.drupal.org/project/mailchimp"&gt;MailChimp module&lt;/a&gt; that some of us have really wanted for a long time—the ability to support multiple MailChimp accounts from a single Drupal installation. This happened, in part, after I reached out to them on behalf of the stakeholders at Cornell University's ILR School, where I work. Email addresses can be coveted resources within organizations, and along with complex governance requirements, it's not uncommon for a single organization to have internal groups who use separate MailChimp accounts. I'm not going to comment on whether this is a good or wise practice, just to acknowledge that it's a reality.&lt;/p&gt;
 
-&lt;p&gt;In our case, we currently have three groups within school who are using MailChimp extensively to reach out to their constituents. Up until this week, this required a manual export of new subscribers (whom we are tracking with &lt;a href="https://www.drupal.org/project/entityform"&gt;entityforms&lt;/a&gt;), some custom code to transform the csv values into the correct format for MailChimp, and then a manual import to the respective list. However, as our most recent deployment, we are now able to support all three group's needs (including one who is using &lt;a href="http://a-fro.com/introducing-mailchimp-automations"&gt;MailChimp automations&lt;/a&gt;). Let's dig into how we're doing it.&lt;/p&gt;
+&lt;p&gt;In our case, we currently have three groups within school who are using MailChimp extensively to reach out to their constituents. Up until this week, this required a manual export of new subscribers (whom we are tracking with &lt;a href="https://www.drupal.org/project/entityform"&gt;entityforms&lt;/a&gt;), some custom code to transform the csv values into the correct format for MailChimp, and then a manual import to the respective list. However, as our most recent deployment, we are now able to support all three group's needs (including one who is using &lt;a href="http://a-fro.github.io/a-fro.com/introducing-mailchimp-automations"&gt;MailChimp automations&lt;/a&gt;). Let's dig into how we're doing it.&lt;/p&gt;
 
 &lt;p&gt;The important change that ThinkShout introduced came from &lt;a href="https://github.com/thinkshout/mailchimp/commit/d5b8a3da20f4e058ec04115e380259e3c1da50d7#diff-bb0d240e8bb9e959c6e84bae87e337d4R157"&gt;this commit&lt;/a&gt;, which invokes a new alter hook that allows a developer to modify the key being used for the API object. And though this is an essential hook if we want to enable multiple keys, it also doesn't accomplish much given that &lt;code&gt;mailchimp_get_api_object&lt;/code&gt; is called in dozens of places through the suite of MailChimp modules and therefore it's difficult to know the exact context of the api request. For that reason, we really need a more powerful way to understand the context of a given API call.&lt;/p&gt;
 
@@ -383,18 +383,18 @@ function component_helper_views_query_substitutions(ViewExecutable $view) {
 
 &lt;p&gt;In order to register a key, you will need to find the account id. Since MailChimp doesn't offer an easy way to discover an account id, we built a simple callback page that allows you to retrieve the account data for a given key. You'll find this in the admin interface at /admin/config/mailchimp/account-info on your site. When you first arrive at that page, you should see the account values for your "default" MailChimp account. In this case, "default" simply means it's the API key registered through the standard MailChimp module interface, which stores the value in the variables table. However, if you input a different key on that page, you can retrieve information about that account from the MailChimp API.&lt;/p&gt;
 &lt;/div&gt;
-      
+
       &lt;/div&gt;
 &lt;/div&gt;
               &lt;div class="field__item"&gt;  &lt;div class="component component--content-width paragraph paragraph--type--media paragraph--view-mode--default"&gt;
-            &lt;img src="https://www.a-fro.com/sites/default/files/styles/full_content/public/2021-12/mc-account-info.jpg?itok=5xUImTqj" width="700" height="394" alt="MailChimp Account info callback page" loading="lazy" class="image-style-full-content" /&gt;
+            &lt;img src="https://www.a-fro.github.io/a-fro.github.io/a-fro.com/sites/default/files/styles/full_content/public/2021-12/mc-account-info.jpg?itok=5xUImTqj" width="700" height="394" alt="MailChimp Account info callback page" loading="lazy" class="image-style-full-content" /&gt;
 
 
 
       &lt;/div&gt;
 &lt;/div&gt;
               &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
+
             &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;The screenshot above offers an example of some of the data that is returned by the MailChimp API, but you will see additional information including list performance when you query an active account. The only essential piece of information, however, is the account_id, which we will use to register additional accounts that we can then use via &lt;code&gt;hook_mailchimp_accounts_api_key()&lt;/code&gt;. Here's an example of how to implement that hook:&lt;/p&gt;
 
 &lt;pre&gt;
@@ -405,67 +405,67 @@ function component_helper_views_query_substitutions(ViewExecutable $view) {
  * @return array
  *   The keys are the account id and the values are the API keys
  */
-function mymodule_mailchimp_accounts_api_key() { 
+function mymodule_mailchimp_accounts_api_key() {
   $keys = array(
     '2dd44aa1db1c924d42c047c96' =&gt; 'xxxxxxxx123434234xxxxxx3243xxxx3-us13',
     '411abe81940121a1e89a02abc' =&gt; '123434234xxxxxx23233243xxxxxxx13-us12',
-  ); 
-  return $keys; 
-} 
+  );
+  return $keys;
+}
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Once there is more than one API key registered in a Drupal site, you will see a new option to select the current account to use for any MailChimp configuration taking place in the administrative interface. After selecting a different account, you will also see a notice clarifying which API key is currently active in the admin interface. You can see an example in the screenshot below.&lt;/p&gt;
 &lt;/div&gt;
-      
+
       &lt;/div&gt;
 &lt;/div&gt;
               &lt;div class="field__item"&gt;  &lt;div class="component component--content-width paragraph paragraph--type--media paragraph--view-mode--default"&gt;
-            &lt;img src="https://www.a-fro.com/sites/default/files/styles/full_content/public/2021-12/mc-account-select-notice-fixed_0.jpg?itok=9PB4ZJST" width="700" height="394" alt="MailChimp account notice and select menu" loading="lazy" class="image-style-full-content" /&gt;
+            &lt;img src="https://www.a-fro.github.io/a-fro.github.io/a-fro.com/sites/default/files/styles/full_content/public/2021-12/mc-account-select-notice-fixed_0.jpg?itok=9PB4ZJST" width="700" height="394" alt="MailChimp account notice and select menu" loading="lazy" class="image-style-full-content" /&gt;
 
 
 
       &lt;/div&gt;
 &lt;/div&gt;
               &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
+
             &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;After choosing an account to use for configuration, administrative tasks such as MailChimp subscription fields will use that key when making API calls. Therefore, the available options for lists, merge fields and interest groups will correspond to the appropriate account. Additionally, when the field widget renders the form element, the API key is altered yet again so that the subscriber will be added to the appropriate list, interest groups, etc. Additionally, I can confirm from my testing that the interface for Mailchimp Automations entities also uses the correct API key, enabling support for that MailChimp submodule.&lt;/p&gt;
 
 &lt;p&gt;This concludes our walkthrough of the new MailChimp Accounts module. Admittedly, it's not the most elegant solution ever created, but it not only satisfies our organization's complex governance requirements, but it also allows our stakeholders to begin thinking about new possibilities for improving their marketing and communications efforts.&lt;/p&gt;
 &lt;/div&gt;
-      
+
       &lt;/div&gt;
 &lt;/div&gt;
           &lt;/div&gt;
-  
+
   &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
     &lt;div class="field__label"&gt;Tags&lt;/div&gt;
           &lt;div class="field__items"&gt;
-              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
+              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.github.io/a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
               &lt;/div&gt;
       &lt;/div&gt;
 </description>
   <pubDate>Sun, 26 Dec 2021 18:25:25 +0000</pubDate>
     <dc:creator>admin</dc:creator>
-    <guid isPermaLink="false">14 at https://www.a-fro.com</guid>
+    <guid isPermaLink="false">14 at https://www.a-fro.github.io/a-fro.com</guid>
     </item>
 <item>
   <title>Introducing MailChimp Automations for Drupal</title>
-  <link>https://www.a-fro.com/blog/drupal/introducing-mailchimp-automations-drupal</link>
+  <link>https://www.a-fro.github.io/a-fro.com/blog/drupal/introducing-mailchimp-automations-drupal</link>
   <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Introducing MailChimp Automations for Drupal&lt;/span&gt;
 &lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
 &lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Sun, 12/26/2021 - 18:24&lt;/span&gt;
 
-            &lt;div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item"&gt;  &lt;img src="https://www.a-fro.com/sites/default/files/styles/large_21_9/public/2021-12/mastering-mailchimp-large.jpeg?itok=sNJg9FwL" width="1596" height="684" alt="Mailchimp banner with logo" loading="lazy" class="image-style-large-21-9" /&gt;
+            &lt;div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item"&gt;  &lt;img src="https://www.a-fro.github.io/a-fro.github.io/a-fro.com/sites/default/files/styles/large_21_9/public/2021-12/mastering-mailchimp-large.jpeg?itok=sNJg9FwL" width="1596" height="684" alt="Mailchimp banner with logo" loading="lazy" class="image-style-large-21-9" /&gt;
 
 
 &lt;/div&gt;
-      
+
             &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2016-11-30T12:00:00Z" class="datetime"&gt;November 30, 2016&lt;/time&gt;
 &lt;/div&gt;
-      
+
       &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
               &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
+
             &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;Recent additions to Drupal 7’s &lt;a href="https://www.drupal.org/project/mailchimp"&gt;MailChimp module&lt;/a&gt; and &lt;a href="https://github.com/thinkshout/mailchimp-api-php/"&gt;API library&lt;/a&gt; offer some powerful new ways for you to integrate Drupal and MailChimp. As of version 7.x-4.7, the Drupal MailChimp module now supports automations, which are incredibly powerful and flexible ways to trigger interactions with your users. Want to reach out to a customer with product recommendations based on their purchase history? Have you ever wished you could automatically send your newsletter to your subscribers when you publish it in Drupal? Or wouldn’t it be nice to be able to send a series of emails to participants leading up to an event without having to think about it? You can easily do all of those things and much more with MailChimp automations.&lt;/p&gt;
 
 &lt;p&gt;Recent additions to Drupal 7’s &lt;a href="https://www.drupal.org/project/mailchimp"&gt;MailChimp module&lt;/a&gt; and &lt;a href="https://github.com/thinkshout/mailchimp-api-php/"&gt;API library&lt;/a&gt; offer some powerful new ways for you to integrate Drupal and MailChimp. As of version 7.x-4.7, the Drupal MailChimp module now supports automations, which are incredibly powerful and flexible ways to trigger interactions with your users. Want to reach out to a customer with product recommendations based on their purchase history? Have you ever wished you could automatically send your newsletter to your subscribers when you publish it in Drupal? Or wouldn’t it be nice to be able to send a series of emails to participants leading up to an event without having to think about it? You can easily do all of those things and much more with MailChimp automations.&lt;/p&gt;
@@ -480,35 +480,35 @@ function mymodule_mailchimp_accounts_api_key() {
 
 &lt;p&gt;I’m only beginning to scratch the surface on the possibilities of the new MailChimp Automations module. If you're interested in learning more, feel free to take a look at our recent &lt;a href="http://slides.com/a-fro/automating-marketing-and-communication-with-mailchimp/"&gt;Drupal Camp presentation&lt;/a&gt;, or find additional inspiration in both the &lt;a href="https://mailchimp.com/features/automation/"&gt;feature documentation&lt;/a&gt; and &lt;a href="https://mailchimp.com/resources/guides/working-with-automation/html/"&gt;automation resource guide&lt;/a&gt;. Stay tuned, as well, for an upcoming post about another powerful new feature recently introduced into the MailChimp module: support for multiple MailChimp accounts from a single Drupal site!&lt;/p&gt;
 &lt;/div&gt;
-      
+
       &lt;/div&gt;
 &lt;/div&gt;
           &lt;/div&gt;
-  
+
   &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
     &lt;div class="field__label"&gt;Tags&lt;/div&gt;
           &lt;div class="field__items"&gt;
-              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
+              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.github.io/a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
               &lt;/div&gt;
       &lt;/div&gt;
 </description>
   <pubDate>Sun, 26 Dec 2021 18:24:17 +0000</pubDate>
     <dc:creator>admin</dc:creator>
-    <guid isPermaLink="false">13 at https://www.a-fro.com</guid>
+    <guid isPermaLink="false">13 at https://www.a-fro.github.io/a-fro.com</guid>
     </item>
 <item>
   <title>Speed Up Cache Clearing on Drupal 7</title>
-  <link>https://www.a-fro.com/blog/drupal/speed-cache-clearing-drupal-7</link>
+  <link>https://www.a-fro.github.io/a-fro.com/blog/drupal/speed-cache-clearing-drupal-7</link>
   <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Speed Up Cache Clearing on Drupal 7&lt;/span&gt;
 &lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
 &lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Sun, 12/26/2021 - 18:21&lt;/span&gt;
 
             &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2015-11-24T12:00:00Z" class="datetime"&gt;November 24, 2015&lt;/time&gt;
 &lt;/div&gt;
-      
+
       &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
               &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
+
             &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;h2&gt;Cache clearing nirvana may be two vsets away&lt;/h2&gt;
 
 &lt;p&gt;&lt;strong&gt;tl;dr &lt;/strong&gt;If your D7 site uses features or has many entity types, some recent patches to the &lt;a href="https://www.drupal.org/node/2378343"&gt;features module&lt;/a&gt; and the &lt;a href="https://www.drupal.org/node/2241979"&gt;entity api module&lt;/a&gt; may deliver dramatic performance increases when you clear Drupal's cache. The magic:&lt;/p&gt;
@@ -733,36 +733,36 @@ function module_invoke_all($hook) {
 
 &lt;p&gt;Cache clearing nirvana reached!&lt;/p&gt;
 &lt;/div&gt;
-      
+
       &lt;/div&gt;
 &lt;/div&gt;
           &lt;/div&gt;
-  
+
   &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
     &lt;div class="field__label"&gt;Tags&lt;/div&gt;
           &lt;div class="field__items"&gt;
-              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
+              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.github.io/a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
               &lt;/div&gt;
       &lt;/div&gt;
 </description>
   <pubDate>Sun, 26 Dec 2021 18:21:52 +0000</pubDate>
     <dc:creator>admin</dc:creator>
-    <guid isPermaLink="false">12 at https://www.a-fro.com</guid>
+    <guid isPermaLink="false">12 at https://www.a-fro.github.io/a-fro.com</guid>
     </item>
 <item>
   <title>Ansible and Drupal Development - Part 2</title>
-  <link>https://www.a-fro.com/blog/drupal/ansible-and-drupal-development-part-2</link>
+  <link>https://www.a-fro.github.io/a-fro.com/blog/drupal/ansible-and-drupal-development-part-2</link>
   <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Ansible and Drupal Development - Part 2&lt;/span&gt;
 &lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
 &lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Sun, 12/26/2021 - 18:20&lt;/span&gt;
 
             &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2014-11-03T12:00:00Z" class="datetime"&gt;November 3, 2014&lt;/time&gt;
 &lt;/div&gt;
-      
+
       &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
               &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
-            &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;In &lt;a href="https://www.a-fro.com/ansible-and-drupal-development"&gt;part 1&lt;/a&gt; of this tutorial, we covered how to configure and use Ansible for local Drupal development. If you didn't have a chance to read that article, you can download &lt;a href="https://github.com/a-fro/drupal-dev-vm/tree/part1"&gt;my fork&lt;/a&gt; of Jeff Geerling's &lt;a href="https://github.com/geerlingguy/drupal-dev-vm"&gt;Drupal Dev VM&lt;/a&gt; to see the final, working version from part 1. In this article, we'll be switching things up quite a bit as we take a closer look at the 2nd three requirements, namely:&lt;/p&gt;
+
+            &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;In &lt;a href="https://www.a-fro.github.io/a-fro.com/ansible-and-drupal-development"&gt;part 1&lt;/a&gt; of this tutorial, we covered how to configure and use Ansible for local Drupal development. If you didn't have a chance to read that article, you can download &lt;a href="https://github.com/a-fro/drupal-dev-vm/tree/part1"&gt;my fork&lt;/a&gt; of Jeff Geerling's &lt;a href="https://github.com/geerlingguy/drupal-dev-vm"&gt;Drupal Dev VM&lt;/a&gt; to see the final, working version from part 1. In this article, we'll be switching things up quite a bit as we take a closer look at the 2nd three requirements, namely:&lt;/p&gt;
 
 &lt;ol&gt;
 	&lt;li&gt;Using the same playbook for both local dev and remote administration (on DigitalOcean)&lt;/li&gt;
@@ -867,7 +867,7 @@ drupal_mysql_password: password
 drupal_mysql_database: drupal
 
 # The Drupal git url from which Drupal will be cloned.
-drupal_repo_url: "git@github.com:a-fro/a-fro.com.git"
+drupal_repo_url: "git@github.com:a-fro/a-fro.github.io/a-fro.com.git"
 
 # The Drupal install profile to be used
 drupal_install_profile: standard
@@ -894,10 +894,10 @@ deploy_user: deploy
 a-fro.dev
 
 [staging]
-stage.a-fro.com
+stage.a-fro.github.io/a-fro.com
 
 [production]
-a-fro.com
+a-fro.github.io/a-fro.com
 
 [droplets:children]
 staging
@@ -1085,7 +1085,7 @@ ansible-playbook playbook.yml -i inventory --limit=dev
   tasks:
     - name: Check out the repository.
       git: &gt;
-        repo='git@github.com:a-fro/a-fro.com.git'
+        repo='git@github.com:a-fro/a-fro.github.io/a-fro.com.git'
         version='master'
         accept_hostkey=yes
         dest=/var/www/{{ drupal_domain }}
@@ -1112,35 +1112,35 @@ ansible-playbook playbook.yml -i inventory --limit=dev
 
 &lt;p&gt;Thanks to the many committed open source developers (and Jeff Geerling in particular), devops for Drupal are getting dramatically simpler. As the community still reels from the effects of Drupalgeddon, it's easy to see how incredibly valuable it is to be able to easily run commands across  a range of servers and codebases. Please let me know if you have questions, issues, tips or tricks, and as always, thanks for reading.&lt;/p&gt;
 &lt;/div&gt;
-      
+
       &lt;/div&gt;
 &lt;/div&gt;
           &lt;/div&gt;
-  
+
   &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
     &lt;div class="field__label"&gt;Tags&lt;/div&gt;
           &lt;div class="field__items"&gt;
-              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
+              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.github.io/a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
               &lt;/div&gt;
       &lt;/div&gt;
 </description>
   <pubDate>Sun, 26 Dec 2021 18:20:35 +0000</pubDate>
     <dc:creator>admin</dc:creator>
-    <guid isPermaLink="false">11 at https://www.a-fro.com</guid>
+    <guid isPermaLink="false">11 at https://www.a-fro.github.io/a-fro.com</guid>
     </item>
 <item>
   <title>Keeping Compiled CSS Out of your Git Repository on Acquia [Updated]</title>
-  <link>https://www.a-fro.com/blog/drupal/keeping-compiled-css-out-your-git-repository-acquia-updated</link>
+  <link>https://www.a-fro.github.io/a-fro.com/blog/drupal/keeping-compiled-css-out-your-git-repository-acquia-updated</link>
   <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Keeping Compiled CSS Out of your Git Repository on Acquia [Updated]&lt;/span&gt;
 &lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
 &lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Sun, 12/26/2021 - 18:17&lt;/span&gt;
 
             &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2014-10-27T12:00:00Z" class="datetime"&gt;October 27, 2014&lt;/time&gt;
 &lt;/div&gt;
-      
+
       &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
               &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
+
             &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;A couple of months ago, after a harrowing cascade of git merge conflicts involving compiled css, we decided it was time to subscribe to the philosophy that &lt;a href="http://pointnorth.io/#preprocessed-languages"&gt;compiled CSS doesn't belong in a git repository&lt;/a&gt;. Sure, there are &lt;a href="http://carwinyoung.com/2013/01/23/avoiding-git-conflicts-involving-compiled-sass/"&gt;other technical solutions&lt;/a&gt; teams are &lt;a href="http://mobileresponse.blogspot.com/2013/11/using-sass-with-compass-and-large.html"&gt;tossing around&lt;/a&gt; that try to handle merging more gracefully, but I was more intererested in simply keeping the CSS out of the repo in the first place. After &lt;a href="http://stackoverflow.com/questions/1274057/making-git-forget-about-a-file-that-was-tracked-but-is-now-gitignored"&gt;removing the CSS from the repo&lt;/a&gt;, we suddenly faced two primary technical challenges:&lt;/p&gt;
 
 &lt;ul&gt;
@@ -1304,36 +1304,36 @@ fi
 
 &lt;p&gt;The hook receives the remote as the first argument, which allows us to check whether we're pushing to our defined Acquia remote. If we are, the script then checks for CSS changes, and adds the additional commit if necessary. The thing I really like about this approach is that the GitHub repository won't get cluttered with the extra commit, but the CSS files can be deployed to Acquia without livedev.&lt;/p&gt;
 &lt;/div&gt;
-      
+
       &lt;/div&gt;
 &lt;/div&gt;
           &lt;/div&gt;
-  
+
   &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
     &lt;div class="field__label"&gt;Tags&lt;/div&gt;
           &lt;div class="field__items"&gt;
-              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
+              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.github.io/a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
               &lt;/div&gt;
       &lt;/div&gt;
 </description>
   <pubDate>Sun, 26 Dec 2021 18:17:28 +0000</pubDate>
     <dc:creator>admin</dc:creator>
-    <guid isPermaLink="false">10 at https://www.a-fro.com</guid>
+    <guid isPermaLink="false">10 at https://www.a-fro.github.io/a-fro.com</guid>
     </item>
 <item>
   <title>Ansible and Drupal Development</title>
-  <link>https://www.a-fro.com/blog/drupal/ansible-and-drupal-development</link>
+  <link>https://www.a-fro.github.io/a-fro.com/blog/drupal/ansible-and-drupal-development</link>
   <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Ansible and Drupal Development&lt;/span&gt;
 &lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
 &lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Sun, 12/26/2021 - 18:15&lt;/span&gt;
 
             &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2014-10-22T12:00:00Z" class="datetime"&gt;October 22, 2014&lt;/time&gt;
 &lt;/div&gt;
-      
+
       &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
               &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
-            &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;As I mentioned in my &lt;a href="https://www.a-fro.com/hello-world-from-drupal-8"&gt;hello world post&lt;/a&gt;, I've been learning Ansible via Jeff Geerling's great book &lt;a href="https://leanpub.com/ansible-for-devops"&gt;Ansible for Devops&lt;/a&gt;. When learning new technologies, there is no substitute for diving in and playing with them on a real project. This blog is, in part, the byproduct of my efforts to learn and play with Ansible. Yet embedded within that larger goal were a number of additional technical requirements that were important to me, including:&lt;/p&gt;
+
+            &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;As I mentioned in my &lt;a href="https://www.a-fro.github.io/a-fro.com/hello-world-from-drupal-8"&gt;hello world post&lt;/a&gt;, I've been learning Ansible via Jeff Geerling's great book &lt;a href="https://leanpub.com/ansible-for-devops"&gt;Ansible for Devops&lt;/a&gt;. When learning new technologies, there is no substitute for diving in and playing with them on a real project. This blog is, in part, the byproduct of my efforts to learn and play with Ansible. Yet embedded within that larger goal were a number of additional technical requirements that were important to me, including:&lt;/p&gt;
 
 &lt;ol&gt;
 	&lt;li&gt;Setting up a local development environment using Vagrant&lt;/li&gt;
@@ -1374,7 +1374,7 @@ fi
 
 &lt;p&gt;&lt;code&gt;config.vm.synced_folder "../a-fro.dev", "/var/www/a-fro.dev", :nfs =&gt; true&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;Note that the folder we point to in /var/www should match the &lt;code&gt;{{ drupal_domain&lt;/code&gt; }} variable we previously declared. However, since this is now pointing to a folder on our local system (rather than on the vm), we'll run into a couple of issues when Ansible provisions the VM. Vagrant expects the synced_folder to exist, and will throw an error if it does not. Therefore, you need to make sure an point to an existing folder that includes the path specified in &lt;code&gt;{{ drupal_core_path }}&lt;/code&gt;. Alternatively, you could clone a-fro.com repo into the folder above your drupal-dev-vm folder using the command &lt;code&gt;git clone git@github.com:a-fro/a-fro.com.git a-fro.dev&lt;/code&gt;. Additionally, you will probably receive an error when the www.yml task tries to set permissions on the www folder. The final change we need to make, then, is to remove the "Set permissions on /var/www" task from provisioning/tasks/www.yml&lt;/p&gt;
+&lt;p&gt;Note that the folder we point to in /var/www should match the &lt;code&gt;{{ drupal_domain&lt;/code&gt; }} variable we previously declared. However, since this is now pointing to a folder on our local system (rather than on the vm), we'll run into a couple of issues when Ansible provisions the VM. Vagrant expects the synced_folder to exist, and will throw an error if it does not. Therefore, you need to make sure an point to an existing folder that includes the path specified in &lt;code&gt;{{ drupal_core_path }}&lt;/code&gt;. Alternatively, you could clone a-fro.github.io/a-fro.com repo into the folder above your drupal-dev-vm folder using the command &lt;code&gt;git clone git@github.com:a-fro/a-fro.github.io/a-fro.com.git a-fro.dev&lt;/code&gt;. Additionally, you will probably receive an error when the www.yml task tries to set permissions on the www folder. The final change we need to make, then, is to remove the "Set permissions on /var/www" task from provisioning/tasks/www.yml&lt;/p&gt;
 
 &lt;p&gt;With this final change in place, we should now be able to run &lt;code&gt;vagrant up&lt;/code&gt; and the the site should install correctly. If it doesn't work for you, one possible gotcha is with the task that checks if Drupal is already installed. That task looks for the settings.php file, and if it finds it, the Drush site-install task doesn't run. If you're working from a previously installed local site, the settings.php file may already exist.&lt;/p&gt;
 
@@ -1382,52 +1382,52 @@ fi
 
 &lt;p&gt;This completes our first three requirements, and should get you far enough that you could begin working on building your own local site and getting it ready to deploy to your new server. You can find the &lt;a href="https://github.com/a-fro/drupal-dev-vm/tree/part1"&gt;final working version&lt;/a&gt; from this post on GitHub. In the next blog post, we'll look more closely at the last three requirements, which I had to tackle in order to get the site up and running. Thanks for reading.&lt;/p&gt;
 &lt;/div&gt;
-      
+
       &lt;/div&gt;
 &lt;/div&gt;
           &lt;/div&gt;
-  
+
   &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
     &lt;div class="field__label"&gt;Tags&lt;/div&gt;
           &lt;div class="field__items"&gt;
-              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
+              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.github.io/a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
               &lt;/div&gt;
       &lt;/div&gt;
 </description>
   <pubDate>Sun, 26 Dec 2021 18:15:24 +0000</pubDate>
     <dc:creator>admin</dc:creator>
-    <guid isPermaLink="false">9 at https://www.a-fro.com</guid>
+    <guid isPermaLink="false">9 at https://www.a-fro.github.io/a-fro.com</guid>
     </item>
 <item>
   <title>Hello World from Drupal 8</title>
-  <link>https://www.a-fro.com/blog/drupal/hello-world-drupal-8</link>
+  <link>https://www.a-fro.github.io/a-fro.com/blog/drupal/hello-world-drupal-8</link>
   <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Hello World from Drupal 8&lt;/span&gt;
 &lt;span class="field field--name-uid field--type-entity-reference field--label-hidden"&gt;&lt;span&gt;admin&lt;/span&gt;&lt;/span&gt;
 &lt;span class="field field--name-created field--type-created field--label-hidden"&gt;Sun, 12/26/2021 - 18:13&lt;/span&gt;
 
             &lt;div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"&gt;&lt;time datetime="2014-10-08T12:00:00Z" class="datetime"&gt;October 8, 2014&lt;/time&gt;
 &lt;/div&gt;
-      
+
       &lt;div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items"&gt;
               &lt;div class="field__item"&gt;  &lt;div class="paragraph paragraph--type--rich-text paragraph--view-mode--default"&gt;
-          
+
             &lt;div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;Welcome! This site has been a while in the making, but I'm really excited to share it with you. Back in Austin at DrupalCon, I was inspired by Jeff Geerling's "Devops for Humans" presentation and immediately decided that I needed to start using Ansible. Well, it's been a long road, but the site is now live and I'm really looking forward to sharing the ups and downs of the journey. Oh, and if you don't have it already, Jeff's book &lt;em&gt;Ansible for Devops&lt;/em&gt; is well worth it. More soon...&lt;/p&gt;
 &lt;/div&gt;
-      
+
       &lt;/div&gt;
 &lt;/div&gt;
           &lt;/div&gt;
-  
+
   &lt;div class="field field--name-field-tags field--type-entity-reference field--label-above"&gt;
     &lt;div class="field__label"&gt;Tags&lt;/div&gt;
           &lt;div class="field__items"&gt;
-              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
+              &lt;div class="field__item"&gt;&lt;a href="https://www.a-fro.github.io/a-fro.com/blog/drupal" hreflang="en"&gt;Drupal&lt;/a&gt;&lt;/div&gt;
               &lt;/div&gt;
       &lt;/div&gt;
 </description>
   <pubDate>Sun, 26 Dec 2021 18:13:24 +0000</pubDate>
     <dc:creator>admin</dc:creator>
-    <guid isPermaLink="false">8 at https://www.a-fro.com</guid>
+    <guid isPermaLink="false">8 at https://www.a-fro.github.io/a-fro.com</guid>
     </item>
 
   </channel>

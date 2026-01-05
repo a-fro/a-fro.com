@@ -2,48 +2,48 @@
 <html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="utf-8" />
-<link rel="canonical" href="https://www.a-fro.com/blog/drupal/creating-reusable-dynamic-content-components" />
+<link rel="canonical" href="https://www.a-fro.github.io/a-fro.com/blog/drupal/creating-reusable-dynamic-content-components" />
 <meta name="description" content="This is part 2 in this series that explores how to use paragraph bundles to store configuration for dynamic content. The example I built in part 1 was a &quot;read next&quot; section, which could then be added as a component within the flow of the page. The strategy makes sense for component-based sites and landing pages, but probably less so for blogs or content heavy sites, since what we really want is for each article to include the read next section at the end of the page. For that, a view that displays as a block would perfectly suffice. In practice, however, it can be really useful to have a single custom block type, which I often call a &quot;component block&quot;, that has an entity reference revisions field that we can leverage to create reusable components." />
-<meta property="og:site_name" content="a-fro.com" />
+<meta property="og:site_name" content="a-fro.github.io/a-fro.com" />
 <meta property="og:title" content="Creating Reusable Dynamic Content Components" />
 <meta property="og:description" content="This is part 2 in this series that explores how to use paragraph bundles to store configuration for dynamic content. The example I built in part 1 was a &quot;read next&quot; section, which could then be added as a component within the flow of the page. The strategy makes sense for component-based sites and landing pages, but probably less so for blogs or content heavy sites, since what we really want is for each article to include the read next section at the end of the page. For that, a view that displays as a block would perfectly suffice. In practice, however, it can be really useful to have a single custom block type, which I often call a &quot;component block&quot;, that has an entity reference revisions field that we can leverage to create reusable components." />
-<meta property="og:image" content="https://www.a-fro.com/sites/default/files/styles/open_graph/public/2021-12/reusable-components.jpg?itok=3qM1Clpr" />
+<meta property="og:image" content="https://www.a-fro.github.io/a-fro.github.io/a-fro.com/sites/default/files/styles/open_graph/public/2021-12/reusable-components.jpg?itok=3qM1Clpr" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:description" content="This is part 2 in this series that explores how to use paragraph bundles to store configuration for dynamic content. The example I built in part 1 was a &quot;read next&quot; section, which could then be added as a component within the flow of the page. The strategy makes sense for component-based sites and landing pages, but probably less so for blogs or content heavy sites, since what we really want is for each article to include the read next section at the end of the page. For that, a view that displays as a block would perfectly suffice. In practice, however, it can be really useful to have a single custom block type, which I often call a &quot;component block&quot;, that has an entity reference revisions field that we can leverage to create reusable components." />
-<meta name="twitter:title" content="Creating Reusable Dynamic Content Components | a-fro.com" />
-<meta name="twitter:image" content="https://www.a-fro.com/sites/default/files/styles/large_2_1/public/2021-12/reusable-components.jpg?itok=MnVpwP6H" />
+<meta name="twitter:title" content="Creating Reusable Dynamic Content Components | a-fro.github.io/a-fro.com" />
+<meta name="twitter:image" content="https://www.a-fro.github.io/a-fro.github.io/a-fro.com/sites/default/files/styles/large_2_1/public/2021-12/reusable-components.jpg?itok=MnVpwP6H" />
 <meta name="Generator" content="Drupal 9 (https://www.drupal.org)" />
 <meta name="MobileOptimized" content="width" />
 <meta name="HandheldFriendly" content="true" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="icon" href="/themes/custom/simple_base/favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="icon" href="/a-fro.com/themes/custom/simple_base/favicon.ico" type="image/vnd.microsoft.icon" />
 
-    <title>Creating Reusable Dynamic Content Components | a-fro.com</title>
-    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_Ov6iUDly3SngZgRuyy-vYboSettyRJo1rXFjgCfc1Jo.css" />
-<link rel="stylesheet" media="all" href="/sites/default/files/css/css_PJMDxwkMigKO_2N1HQiw7IqRu5kH5nGq1b5ZNHaXhnc.css" />
-<link rel="stylesheet" media="all" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
-<link rel="stylesheet" media="all" href="//fonts.googleapis.com/css?family=Merriweather:300,300italic,700,700italic,400,400italic|Merriweather+Sans:400,400italic,700,700italic,300italic,300" />
-<link rel="stylesheet" media="all" href="/sites/default/files/css/css_zteaP9265pqkCrTlIP4d8ID7iz7I9K9aKYpVOUYHWF8.css" />
+    <title>Creating Reusable Dynamic Content Components | a-fro.github.io/a-fro.com</title>
+    <link rel="stylesheet" media="all" href="/a-fro.com/sites/default/files/css/css_Ov6iUDly3SngZgRuyy-vYboSettyRJo1rXFjgCfc1Jo.css" />
+<link rel="stylesheet" media="all" href="/a-fro.com/sites/default/files/css/css_PJMDxwkMigKO_2N1HQiw7IqRu5kH5nGq1b5ZNHaXhnc.css" />
+<link rel="stylesheet" media="all" href="/a-fro.com//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<link rel="stylesheet" media="all" href="/a-fro.com//fonts.googleapis.com/css?family=Merriweather:300,300italic,700,700italic,400,400italic|Merriweather+Sans:400,400italic,700,700italic,300italic,300" />
+<link rel="stylesheet" media="all" href="/a-fro.com/sites/default/files/css/css_zteaP9265pqkCrTlIP4d8ID7iz7I9K9aKYpVOUYHWF8.css" />
 
-    
+
   </head>
   <body class="path-node page-node-type-post">
         <a href="#main-content" class="visually-hidden focusable skip-link">
       Skip to main content
     </a>
-    
+
       <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
-    
+
 
 <div class="layout-container">
 
   <header class="layout-header full-width" role="banner">
       <div class="region region-header">
     <div id="block-simple-base-branding" class="block block-system block-system-branding-block">
-  
-    
+
+
           <div class="site-name">
-      <a href="/" rel="home">a-fro.com</a>
+      <a href="/a-fro.com/" rel="home">a-fro.github.io/a-fro.com</a>
     </div>
     </div>
 
@@ -53,28 +53,28 @@
       <div class="content__container">
           <div class="region region-highlighted">
     <div id="block-breadcrumbs" class="block block-system block-system-breadcrumb-block">
-  
-    
+
+
         <nav class="breadcrumb" role="navigation" aria-labelledby="system-breadcrumb">
     <h2 id="system-breadcrumb" class="visually-hidden">Breadcrumb</h2>
     <ol>
           <li>
-                  <a href="/">Home</a>
+                  <a href="/a-fro.com/">Home</a>
               </li>
           <li>
-                  <a href="/blog">Blog</a>
+                  <a href="/a-fro.com/blog">Blog</a>
               </li>
           <li>
-                  <a href="/blog/drupal">Drupal</a>
+                  <a href="/a-fro.com/blog/drupal">Drupal</a>
               </li>
         </ol>
   </nav>
 
   </div>
 <div id="block-simple-base-page-title" class="block block-core block-page-title-block">
-  
-    
-      
+
+
+
   <h1 class="page-title"><span class="field field--name-title field--type-string field--label-hidden">Creating Reusable Dynamic Content Components</span>
 </h1>
 
@@ -91,42 +91,42 @@
     <a id="main-content" tabindex="-1"></a>      <div class="region region-content">
     <div data-drupal-messages-fallback class="hidden"></div>
 <div id="block-mainpagecontent" class="block block-system block-system-main-block">
-  
-    
-      
+
+
+
 <article role="article" class="node node--type-post node--promoted node--view-mode-full">
-  
+
   <div class="node__content">
-    
-            <div class="full-width field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <img src="/sites/default/files/styles/large_21_9/public/2021-12/reusable-components.jpg?itok=hSe8YAKH" width="1596" height="684" alt="A screenshot showing the &quot;up next&quot; reusable tagged content block " loading="lazy" class="image-style-large-21-9" />
+
+            <div class="full-width field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <img src="/a-fro.com/sites/default/files/styles/large_21_9/public/2021-12/reusable-components.jpg?itok=hSe8YAKH" width="1596" height="684" alt="A screenshot showing the &quot;up next&quot; reusable tagged content block " loading="lazy" class="image-style-large-21-9" />
 
 
 </div>
-      
+
             <div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"><time datetime="2018-11-06T12:00:00Z" class="datetime">November 6, 2018</time>
 </div>
-      
+
       <div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items">
               <div class="field__item">  <div class="paragraph paragraph--type--rich-text paragraph--view-mode--default">
-          
-            <div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"><p>This is part 2 in this series that explores <a href="https://a-fro.com/blog/creating-paragraphs-entities-dynamic-content">how to use paragraph bundles to store configuration for dynamic content</a>. The example I built in part 1 was a "read next" section, which could then be added as a component within the flow of the page. The strategy makes sense for component-based sites and landing pages, but probably less so for blogs or content heavy sites, since what we really want is for each article to include the read next section at the end of the page. For that, a view that displays as a block would perfectly suffice. In practice, however, it can be really useful to have a single custom block type, which I often call a "component block", that has an entity reference revisions field that we can leverage to create reusable components.</p>
+
+            <div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"><p>This is part 2 in this series that explores <a href="https://a-fro.github.io/a-fro.com/blog/creating-paragraphs-entities-dynamic-content">how to use paragraph bundles to store configuration for dynamic content</a>. The example I built in part 1 was a "read next" section, which could then be added as a component within the flow of the page. The strategy makes sense for component-based sites and landing pages, but probably less so for blogs or content heavy sites, since what we really want is for each article to include the read next section at the end of the page. For that, a view that displays as a block would perfectly suffice. In practice, however, it can be really useful to have a single custom block type, which I often call a "component block", that has an entity reference revisions field that we can leverage to create reusable components.</p>
 
 <p>This strategy offers a simple and unified interface for creating reusable components and adding them to sections of the page. Combined with Pattern Lab and the block visibility groups module, we get a pretty powerful tool for page building and theming.</p>
 
 <p>The image below captures the configuration screen for the "Up next" block you can find at the bottom of this page. As you see, it sets the heading, the primary tag, and the number of items to show. Astute readers might notice, however, that there is a small problem with this implementation. It makes sense if all the articles are about Drupal, but on sites where there are lots of topics, having a reusable component with a hard-coded taxonomy reference makes less sense. Rather, we'd like the related content component to show content that is actually related to the content of the article being read.</p>
 </div>
-      
+
       </div>
 </div>
               <div class="field__item">  <div class="component component--original paragraph paragraph--type--media paragraph--view-mode--default">
-            <img src="/sites/default/files/styles/full_max/public/2021-12/screen_shot_2018-11-06_at_8.57.24_am.png?itok=pQLBaw9-" width="462" height="505" alt="Configuration fields for the tagged content block, including the heading, tag and number of items to show." loading="lazy" class="image-style-full-max" />
+            <img src="/a-fro.com/sites/default/files/styles/full_max/public/2021-12/screen_shot_2018-11-06_at_8.57.24_am.png?itok=pQLBaw9-" width="462" height="505" alt="Configuration fields for the tagged content block, including the heading, tag and number of items to show." loading="lazy" class="image-style-full-max" />
 
 
 
       </div>
 </div>
               <div class="field__item">  <div class="paragraph paragraph--type--rich-text paragraph--view-mode--default">
-          
+
             <div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"><p>For the purpose of this article, let's define the following two requirements: first, if the tagged content component has been added as a paragraph bundle to the page itself, then we will respect the tag supplied in its configuration. If, however, the component is being rendered in the up next block, then we will use the first term the article has been tagged with.</p>
 
 <p>To do that, we need three things: 1) we need our custom block to exist and to have a delta that we can use, 2) we need a preprocess hook to assign the theme variables, and 3) we need a twig template to render the component. If you're following along in your own project, then go ahead and create the component block now. I'll return momentarily to a discussion about custom block and the config system.</p>
@@ -196,15 +196,15 @@ function component_helper_update_8001() {
 
 <p>Once we deploy and run the update hook, we're able to import the site config and our custom block should be rendering on the page. Please let me know if you have any questions or feedback in the comments below. Happy Drupaling.</p>
 </div>
-      
+
       </div>
 </div>
           </div>
-  
+
   <div class="field field--name-field-tags field--type-entity-reference field--label-above">
     <div class="field__label">Tags</div>
           <div class="field__items">
-              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              <div class="field__item"><a href="/a-fro.com/blog/drupal" hreflang="en">Drupal</a></div>
               </div>
       </div>
 
@@ -213,36 +213,36 @@ function component_helper_update_8001() {
 
   </div>
 <div class="views-element-container block block-views block-views-blockrelated-content-block-1" id="block-views-block-related-content-block-1">
-  
+
       <h2>Up Next</h2>
-    
+
       <div><div class="view view-related-content view-id-related_content view-display-id-block_1 js-view-dom-id-5271e9eeb8cb97dd93101890690732dae00ee258b293df1a4545384f2130fa02">
-  
-    
-      
+
+
+
       <div class="view-content">
           <div class="views-row">
 <article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
-    
+
       <h2>
-      <a href="/blog/drupal/drupal-pullquotes" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Drupal Pullquotes</span>
+      <a href="/a-fro.com/blog/drupal/drupal-pullquotes" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Drupal Pullquotes</span>
 </a>
     </h2>
-    
-  
+
+
   <div class="node__content">
-    
-            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/drupal-pullquotes" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/pullqoutes.png?itok=tGjYx72p" width="798" height="342" alt="Several powerful quotes with a pullquote sprinkled off to the side to draw a reader&#039;s attention" loading="lazy" class="image-style-medium-21-9" />
+
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/a-fro.com/blog/drupal/drupal-pullquotes" hreflang="en"><img src="/a-fro.com/sites/default/files/styles/medium_21_9/public/2021-12/pullqoutes.png?itok=tGjYx72p" width="798" height="342" alt="Several powerful quotes with a pullquote sprinkled off to the side to draw a reader&#039;s attention" loading="lazy" class="image-style-medium-21-9" />
 
 </a>
 </div>
-      
+
             <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">"Pullquotes", as described here, differ from blockquotes because they duplicate a section of text within the page, and get styled in a way that draws the reader's attention to the quote. As such, one simple solution that I've been using is to allow content editors to select a section of text while editing and click a button in the interface to designate it as a pullquote.</div>
-      
+
   <div class="field field--name-field-tags field--type-entity-reference field--label-above">
     <div class="field__label">Tags</div>
           <div class="field__items">
-              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              <div class="field__item"><a href="/a-fro.com/blog/drupal" hreflang="en">Drupal</a></div>
               </div>
       </div>
 
@@ -251,26 +251,26 @@ function component_helper_update_8001() {
 </div>
     <div class="views-row">
 <article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
-    
+
       <h2>
-      <a href="/blog/drupal/creating-paragraphs-entities-dynamic-content" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Creating Paragraphs Entities for Dynamic Content</span>
+      <a href="/a-fro.com/blog/drupal/creating-paragraphs-entities-dynamic-content" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Creating Paragraphs Entities for Dynamic Content</span>
 </a>
     </h2>
-    
-  
+
+
   <div class="node__content">
-    
-            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/creating-paragraphs-entities-dynamic-content" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/dynamic-content-paragraphs.png?itok=vm1bDqAN" width="798" height="342" alt="Logos  with Paragraphs, Drupal and Atomic Design" loading="lazy" class="image-style-medium-21-9" />
+
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/a-fro.com/blog/drupal/creating-paragraphs-entities-dynamic-content" hreflang="en"><img src="/a-fro.com/sites/default/files/styles/medium_21_9/public/2021-12/dynamic-content-paragraphs.png?itok=vm1bDqAN" width="798" height="342" alt="Logos  with Paragraphs, Drupal and Atomic Design" loading="lazy" class="image-style-medium-21-9" />
 
 </a>
 </div>
-      
+
             <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">The paragraphs module has become a central ingredient for many component-based sites in recent years. However, our content strategy also often requires components that display dynamic content (think "Read Next", or "Also of Interest"). In this tutorial, I'll demonstrate how we've been solving this problem, by building paragraph bundles that serve as configuration entities that we can then use as arguments that we pass to a view via the Twig Tweak module. You can see a working version of the dynamic content component we'll be building in the "Up Next" card grid at the bottom of this tutorial. </div>
-      
+
   <div class="field field--name-field-tags field--type-entity-reference field--label-above">
     <div class="field__label">Tags</div>
           <div class="field__items">
-              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              <div class="field__item"><a href="/a-fro.com/blog/drupal" hreflang="en">Drupal</a></div>
               </div>
       </div>
 
@@ -279,21 +279,21 @@ function component_helper_update_8001() {
 </div>
     <div class="views-row">
 <article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
-    
+
       <h2>
-      <a href="/blog/drupal/multiple-mailchimp-accounts-drupal" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Multiple MailChimp Accounts with Drupal</span>
+      <a href="/a-fro.com/blog/drupal/multiple-mailchimp-accounts-drupal" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Multiple MailChimp Accounts with Drupal</span>
 </a>
     </h2>
-    
-  
+
+
   <div class="node__content">
-    
+
             <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">A couple of months ago, team ThinkShout quietly introduced a feature to the MailChimp module that some of us have really wanted for a long time—the ability to support multiple MailChimp accounts from a single Drupal installation. This happened, in part, after I reached out to them on behalf of the stakeholders at Cornell University's ILR School, where I work. Email addresses can be coveted resources within organizations, and along with complex governance requirements, it's not uncommon for a single organization to have internal groups who use separate MailChimp accounts. I'm not going to comment on whether this is a good or wise practice, just to acknowledge that it's a reality.</div>
-      
+
   <div class="field field--name-field-tags field--type-entity-reference field--label-above">
     <div class="field__label">Tags</div>
           <div class="field__items">
-              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              <div class="field__item"><a href="/a-fro.com/blog/drupal" hreflang="en">Drupal</a></div>
               </div>
       </div>
 
@@ -302,7 +302,7 @@ function component_helper_update_8001() {
 </div>
 
     </div>
-  
+
           </div>
 </div>
 
@@ -314,16 +314,16 @@ function component_helper_update_8001() {
 
   <footer class="layout-footer full-width" role="contentinfo">
     <div class="content__container">
-      
+
       &copy; 2022
     </div>
   </footer>
 </div>
   </div>
 
-    
+
     <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","scriptPath":null,"pathPrefix":"","currentPath":"node\/17","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"user":{"uid":0,"permissionsHash":"d296343800a3c10b172401621770f813b6b60761c12b4bdc0222ccbc78f546e6"}}</script>
-<script src="/sites/default/files/js/js_ZS9AjodWcK9bqkxTfsDFRvKHxRQ6BESfmM7P1pqgki8.js"></script>
+<script src="/a-fro.com/sites/default/files/js/js_ZS9AjodWcK9bqkxTfsDFRvKHxRQ6BESfmM7P1pqgki8.js"></script>
 
   </body>
 </html>

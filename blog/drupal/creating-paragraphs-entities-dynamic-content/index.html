@@ -2,48 +2,48 @@
 <html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="utf-8" />
-<link rel="canonical" href="https://www.a-fro.com/blog/drupal/creating-paragraphs-entities-dynamic-content" />
+<link rel="canonical" href="https://www.a-fro.github.io/a-fro.com/blog/drupal/creating-paragraphs-entities-dynamic-content" />
 <meta name="description" content="The paragraphs module has become a central ingredient for many component-based sites in recent years. However, our content strategy also often requires components that display dynamic content (think &quot;Read Next&quot;, or &quot;Also of Interest&quot;). In this tutorial, I&#039;ll demonstrate how we&#039;ve been solving this problem, by building paragraph bundles that serve as configuration entities that we can then use as arguments that we pass to a view via the Twig Tweak module. You can see a working version of the dynamic content component we&#039;ll be building in the &quot;Up Next&quot; card grid at the bottom of this tutorial." />
-<meta property="og:site_name" content="a-fro.com" />
+<meta property="og:site_name" content="a-fro.github.io/a-fro.com" />
 <meta property="og:title" content="Creating Paragraphs Entities for Dynamic Content" />
 <meta property="og:description" content="The paragraphs module has become a central ingredient for many component-based sites in recent years. However, our content strategy also often requires components that display dynamic content (think &quot;Read Next&quot;, or &quot;Also of Interest&quot;). In this tutorial, I&#039;ll demonstrate how we&#039;ve been solving this problem, by building paragraph bundles that serve as configuration entities that we can then use as arguments that we pass to a view via the Twig Tweak module. You can see a working version of the dynamic content component we&#039;ll be building in the &quot;Up Next&quot; card grid at the bottom of this tutorial." />
-<meta property="og:image" content="https://www.a-fro.com/sites/default/files/styles/open_graph/public/2021-12/dynamic-content-paragraphs.png?itok=N25o4cKi" />
+<meta property="og:image" content="https://www.a-fro.github.io/a-fro.github.io/a-fro.com/sites/default/files/styles/open_graph/public/2021-12/dynamic-content-paragraphs.png?itok=N25o4cKi" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:description" content="The paragraphs module has become a central ingredient for many component-based sites in recent years. However, our content strategy also often requires components that display dynamic content (think &quot;Read Next&quot;, or &quot;Also of Interest&quot;). In this tutorial, I&#039;ll demonstrate how we&#039;ve been solving this problem, by building paragraph bundles that serve as configuration entities that we can then use as arguments that we pass to a view via the Twig Tweak module. You can see a working version of the dynamic content component we&#039;ll be building in the &quot;Up Next&quot; card grid at the bottom of this tutorial." />
-<meta name="twitter:title" content="Creating Paragraphs Entities for Dynamic Content | a-fro.com" />
-<meta name="twitter:image" content="https://www.a-fro.com/sites/default/files/styles/large_2_1/public/2021-12/dynamic-content-paragraphs.png?itok=V1P37eCW" />
+<meta name="twitter:title" content="Creating Paragraphs Entities for Dynamic Content | a-fro.github.io/a-fro.com" />
+<meta name="twitter:image" content="https://www.a-fro.github.io/a-fro.github.io/a-fro.com/sites/default/files/styles/large_2_1/public/2021-12/dynamic-content-paragraphs.png?itok=V1P37eCW" />
 <meta name="Generator" content="Drupal 9 (https://www.drupal.org)" />
 <meta name="MobileOptimized" content="width" />
 <meta name="HandheldFriendly" content="true" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="icon" href="/themes/custom/simple_base/favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="icon" href="/a-fro.com/themes/custom/simple_base/favicon.ico" type="image/vnd.microsoft.icon" />
 
-    <title>Creating Paragraphs Entities for Dynamic Content | a-fro.com</title>
-    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_Ov6iUDly3SngZgRuyy-vYboSettyRJo1rXFjgCfc1Jo.css" />
-<link rel="stylesheet" media="all" href="/sites/default/files/css/css_PJMDxwkMigKO_2N1HQiw7IqRu5kH5nGq1b5ZNHaXhnc.css" />
-<link rel="stylesheet" media="all" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
-<link rel="stylesheet" media="all" href="//fonts.googleapis.com/css?family=Merriweather:300,300italic,700,700italic,400,400italic|Merriweather+Sans:400,400italic,700,700italic,300italic,300" />
-<link rel="stylesheet" media="all" href="/sites/default/files/css/css_zteaP9265pqkCrTlIP4d8ID7iz7I9K9aKYpVOUYHWF8.css" />
+    <title>Creating Paragraphs Entities for Dynamic Content | a-fro.github.io/a-fro.com</title>
+    <link rel="stylesheet" media="all" href="/a-fro.com/sites/default/files/css/css_Ov6iUDly3SngZgRuyy-vYboSettyRJo1rXFjgCfc1Jo.css" />
+<link rel="stylesheet" media="all" href="/a-fro.com/sites/default/files/css/css_PJMDxwkMigKO_2N1HQiw7IqRu5kH5nGq1b5ZNHaXhnc.css" />
+<link rel="stylesheet" media="all" href="/a-fro.com//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<link rel="stylesheet" media="all" href="/a-fro.com//fonts.googleapis.com/css?family=Merriweather:300,300italic,700,700italic,400,400italic|Merriweather+Sans:400,400italic,700,700italic,300italic,300" />
+<link rel="stylesheet" media="all" href="/a-fro.com/sites/default/files/css/css_zteaP9265pqkCrTlIP4d8ID7iz7I9K9aKYpVOUYHWF8.css" />
 
-    
+
   </head>
   <body class="path-node page-node-type-post">
         <a href="#main-content" class="visually-hidden focusable skip-link">
       Skip to main content
     </a>
-    
+
       <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
-    
+
 
 <div class="layout-container">
 
   <header class="layout-header full-width" role="banner">
       <div class="region region-header">
     <div id="block-simple-base-branding" class="block block-system block-system-branding-block">
-  
-    
+
+
           <div class="site-name">
-      <a href="/" rel="home">a-fro.com</a>
+      <a href="/a-fro.com/" rel="home">a-fro.github.io/a-fro.com</a>
     </div>
     </div>
 
@@ -53,28 +53,28 @@
       <div class="content__container">
           <div class="region region-highlighted">
     <div id="block-breadcrumbs--3" class="block block-system block-system-breadcrumb-block">
-  
-    
+
+
         <nav class="breadcrumb" role="navigation" aria-labelledby="system-breadcrumb">
     <h2 id="system-breadcrumb" class="visually-hidden">Breadcrumb</h2>
     <ol>
           <li>
-                  <a href="/">Home</a>
+                  <a href="/a-fro.com/">Home</a>
               </li>
           <li>
-                  <a href="/blog">Blog</a>
+                  <a href="/a-fro.com/blog">Blog</a>
               </li>
           <li>
-                  <a href="/blog/drupal">Drupal</a>
+                  <a href="/a-fro.com/blog/drupal">Drupal</a>
               </li>
         </ol>
   </nav>
 
   </div>
 <div id="block-simple-base-page-title--3" class="block block-core block-page-title-block">
-  
-    
-      
+
+
+
   <h1 class="page-title"><span class="field field--name-title field--type-string field--label-hidden">Creating Paragraphs Entities for Dynamic Content</span>
 </h1>
 
@@ -91,24 +91,24 @@
     <a id="main-content" tabindex="-1"></a>      <div class="region region-content">
     <div data-drupal-messages-fallback class="hidden"></div>
 <div id="block-mainpagecontent--3" class="block block-system block-system-main-block">
-  
-    
-      
+
+
+
 <article role="article" class="node node--type-post node--promoted node--view-mode-full">
-  
+
   <div class="node__content">
-    
-            <div class="full-width field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <img src="/sites/default/files/styles/large_21_9/public/2021-12/dynamic-content-paragraphs.png?itok=e5oTKHjU" width="1596" height="684" alt="Logos  with Paragraphs, Drupal and Atomic Design" loading="lazy" class="image-style-large-21-9" />
+
+            <div class="full-width field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <img src="/a-fro.com/sites/default/files/styles/large_21_9/public/2021-12/dynamic-content-paragraphs.png?itok=e5oTKHjU" width="1596" height="684" alt="Logos  with Paragraphs, Drupal and Atomic Design" loading="lazy" class="image-style-large-21-9" />
 
 
 </div>
-      
+
             <div class="field field--name-field-published-date field--type-datetime field--label-hidden field__item"><time datetime="2018-09-26T12:00:00Z" class="datetime">September 26, 2018</time>
 </div>
-      
+
       <div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items">
               <div class="field__item">  <div class="paragraph paragraph--type--rich-text paragraph--view-mode--default">
-          
+
             <div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__item"><h2>Preamble</h2>
 
 <p>I've been working with (and loving) <a href="https://patternlab.io/">Pattern Lab</a> for the past year and a half, and trying to find time to share some of the most valuable lessons I've learned. This tutorial is the first in what I hope will become a series of articles that demonstrate how I'm solving common requests and requirements for our projects. The underlying concept here does not require Pattern Lab, though I find it a particularly flexible and (mostly) intuitive way to create highly predictable, modular and reusable components.</p>
@@ -147,7 +147,7 @@
 
 {{ view }}</code></pre>
 
-<p>After rebuilding the cache and refreshing the page, we'll now see the content teasers being rendered, though our "Number of items" setting isn't yet working. Also, the value of <code>nid</code> is undefined, which is what we need in order to exclude the current node from the tagged content list. In order to accomplish those two things, as well as prepare for future component hook implementations, we'll create a small custom module called "<a href="https://github.com/a-fro/a-fro.com/tree/master/web/modules/custom/component_helper">component helper</a>". The relevant hooks are:</p>
+<p>After rebuilding the cache and refreshing the page, we'll now see the content teasers being rendered, though our "Number of items" setting isn't yet working. Also, the value of <code>nid</code> is undefined, which is what we need in order to exclude the current node from the tagged content list. In order to accomplish those two things, as well as prepare for future component hook implementations, we'll create a small custom module called "<a href="https://github.com/a-fro/a-fro.github.io/a-fro.com/tree/master/web/modules/custom/component_helper">component helper</a>". The relevant hooks are:</p>
 
 <pre>
 <code data-language="php">/**
@@ -183,7 +183,7 @@ function component_helper_views_query_substitutions(ViewExecutable $view) {
 <p>Now we're ready to map our variables in Drupal and send them to be rendered in Pattern Lab. If you're not familiar with it, I suggest you start by learning more about <a href="http://emulsify.info">Emulsify</a>, which is Four Kitchens' Pattern Lab-based Drupal 8 theme. Their team is not only super-helpful, they're also very active on the DrupalTwig #pattern-lab channel. In this case, we're going to render the teasers from our view as card molecules that are part of a card grid organism. In order to that, we can simply pass the view <code>rows</code> to the the organism, with a newly created view template (views-view--tagged-content.html.twig):</p>
 
 <pre>
-<code data-language="php">{# Note that we can simply pass along the arguments we sent via twig_tweak  #} 
+<code data-language="php">{# Note that we can simply pass along the arguments we sent via twig_tweak  #}
 
 {% set heading = view.args.3 %}
 
@@ -213,15 +213,15 @@ function component_helper_views_query_substitutions(ViewExecutable $view) {
 
 <p>Congrats! At this point, you've reached the end of this tutorial. Before signing off, I'll just mention other useful "configuration" settings we've used, such as "any" vs. "all" filtering when using multiple tags, styled "variations" that we can leverage as BEM modifiers, and checkboxes that allow a content creator to specify which content types should be included. The degree of flexibility required will depend on the content strategy for the project, but the underlying methodology works similarly in each case. Also, stay tuned, as in the coming weeks I'll show you how we've chosen to extend this implementation in a way that is both predictable and reusable (blocks, anyone?).</p>
 </div>
-      
+
       </div>
 </div>
           </div>
-  
+
   <div class="field field--name-field-tags field--type-entity-reference field--label-above">
     <div class="field__label">Tags</div>
           <div class="field__items">
-              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              <div class="field__item"><a href="/a-fro.com/blog/drupal" hreflang="en">Drupal</a></div>
               </div>
       </div>
 
@@ -230,36 +230,36 @@ function component_helper_views_query_substitutions(ViewExecutable $view) {
 
   </div>
 <div class="views-element-container block block-views block-views-blockrelated-content-block-1" id="block-views-block-related-content-block-1--3">
-  
+
       <h2>Up Next</h2>
-    
+
       <div><div class="view view-related-content view-id-related_content view-display-id-block_1 js-view-dom-id-f952e56613de27b87e11e6f7e9f2c73a73fda297fc3e0cbf5144a56da60be573">
-  
-    
-      
+
+
+
       <div class="view-content">
           <div class="views-row">
 <article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
-    
+
       <h2>
-      <a href="/blog/drupal/creating-reusable-dynamic-content-components" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Creating Reusable Dynamic Content Components</span>
+      <a href="/a-fro.com/blog/drupal/creating-reusable-dynamic-content-components" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Creating Reusable Dynamic Content Components</span>
 </a>
     </h2>
-    
-  
+
+
   <div class="node__content">
-    
-            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/creating-reusable-dynamic-content-components" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/reusable-components.jpg?itok=M349LY0e" width="798" height="342" alt="A screenshot showing the &quot;up next&quot; reusable tagged content block " loading="lazy" class="image-style-medium-21-9" />
+
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/a-fro.com/blog/drupal/creating-reusable-dynamic-content-components" hreflang="en"><img src="/a-fro.com/sites/default/files/styles/medium_21_9/public/2021-12/reusable-components.jpg?itok=M349LY0e" width="798" height="342" alt="A screenshot showing the &quot;up next&quot; reusable tagged content block " loading="lazy" class="image-style-medium-21-9" />
 
 </a>
 </div>
-      
+
             <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">This is part 2 in this series that explores how to use paragraph bundles to store configuration for dynamic content. The example I built in part 1 was a "read next" section, which could then be added as a component within the flow of the page. The strategy makes sense for component-based sites and landing pages, but probably less so for blogs or content heavy sites, since what we really want is for each article to include the read next section at the end of the page. For that, a view that displays as a block would perfectly suffice. In practice, however, it can be really useful to have a single custom block type, which I often call a "component block", that has an entity reference revisions field that we can leverage to create reusable components.</div>
-      
+
   <div class="field field--name-field-tags field--type-entity-reference field--label-above">
     <div class="field__label">Tags</div>
           <div class="field__items">
-              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              <div class="field__item"><a href="/a-fro.com/blog/drupal" hreflang="en">Drupal</a></div>
               </div>
       </div>
 
@@ -268,26 +268,26 @@ function component_helper_views_query_substitutions(ViewExecutable $view) {
 </div>
     <div class="views-row">
 <article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
-    
+
       <h2>
-      <a href="/blog/drupal/drupal-pullquotes" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Drupal Pullquotes</span>
+      <a href="/a-fro.com/blog/drupal/drupal-pullquotes" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Drupal Pullquotes</span>
 </a>
     </h2>
-    
-  
+
+
   <div class="node__content">
-    
-            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/blog/drupal/drupal-pullquotes" hreflang="en"><img src="/sites/default/files/styles/medium_21_9/public/2021-12/pullqoutes.png?itok=tGjYx72p" width="798" height="342" alt="Several powerful quotes with a pullquote sprinkled off to the side to draw a reader&#039;s attention" loading="lazy" class="image-style-medium-21-9" />
+
+            <div class="field field--name-field-representative-image field--type-entity-reference field--label-hidden field__item">  <a href="/a-fro.com/blog/drupal/drupal-pullquotes" hreflang="en"><img src="/a-fro.com/sites/default/files/styles/medium_21_9/public/2021-12/pullqoutes.png?itok=tGjYx72p" width="798" height="342" alt="Several powerful quotes with a pullquote sprinkled off to the side to draw a reader&#039;s attention" loading="lazy" class="image-style-medium-21-9" />
 
 </a>
 </div>
-      
+
             <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">"Pullquotes", as described here, differ from blockquotes because they duplicate a section of text within the page, and get styled in a way that draws the reader's attention to the quote. As such, one simple solution that I've been using is to allow content editors to select a section of text while editing and click a button in the interface to designate it as a pullquote.</div>
-      
+
   <div class="field field--name-field-tags field--type-entity-reference field--label-above">
     <div class="field__label">Tags</div>
           <div class="field__items">
-              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              <div class="field__item"><a href="/a-fro.com/blog/drupal" hreflang="en">Drupal</a></div>
               </div>
       </div>
 
@@ -296,21 +296,21 @@ function component_helper_views_query_substitutions(ViewExecutable $view) {
 </div>
     <div class="views-row">
 <article role="article" class="node node--type-post node--promoted node--view-mode-teaser">
-    
+
       <h2>
-      <a href="/blog/drupal/multiple-mailchimp-accounts-drupal" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Multiple MailChimp Accounts with Drupal</span>
+      <a href="/a-fro.com/blog/drupal/multiple-mailchimp-accounts-drupal" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Multiple MailChimp Accounts with Drupal</span>
 </a>
     </h2>
-    
-  
+
+
   <div class="node__content">
-    
+
             <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">A couple of months ago, team ThinkShout quietly introduced a feature to the MailChimp module that some of us have really wanted for a long time—the ability to support multiple MailChimp accounts from a single Drupal installation. This happened, in part, after I reached out to them on behalf of the stakeholders at Cornell University's ILR School, where I work. Email addresses can be coveted resources within organizations, and along with complex governance requirements, it's not uncommon for a single organization to have internal groups who use separate MailChimp accounts. I'm not going to comment on whether this is a good or wise practice, just to acknowledge that it's a reality.</div>
-      
+
   <div class="field field--name-field-tags field--type-entity-reference field--label-above">
     <div class="field__label">Tags</div>
           <div class="field__items">
-              <div class="field__item"><a href="/blog/drupal" hreflang="en">Drupal</a></div>
+              <div class="field__item"><a href="/a-fro.com/blog/drupal" hreflang="en">Drupal</a></div>
               </div>
       </div>
 
@@ -319,7 +319,7 @@ function component_helper_views_query_substitutions(ViewExecutable $view) {
 </div>
 
     </div>
-  
+
           </div>
 </div>
 
@@ -331,16 +331,16 @@ function component_helper_views_query_substitutions(ViewExecutable $view) {
 
   <footer class="layout-footer full-width" role="contentinfo">
     <div class="content__container">
-      
+
       &copy; 2022
     </div>
   </footer>
 </div>
   </div>
 
-    
+
     <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","scriptPath":null,"pathPrefix":"","currentPath":"node\/15","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"user":{"uid":0,"permissionsHash":"d296343800a3c10b172401621770f813b6b60761c12b4bdc0222ccbc78f546e6"}}</script>
-<script src="/sites/default/files/js/js_ZS9AjodWcK9bqkxTfsDFRvKHxRQ6BESfmM7P1pqgki8.js"></script>
+<script src="/a-fro.com/sites/default/files/js/js_ZS9AjodWcK9bqkxTfsDFRvKHxRQ6BESfmM7P1pqgki8.js"></script>
 
   </body>
 </html>
